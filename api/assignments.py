@@ -369,3 +369,72 @@ def ListSubmissions(**kwargs):
         data.append(temp)
 
     return http.Ok(json.dumps(data))
+
+@assignments_api.route("/assignments/<assignmentId>/board")
+@auth_required
+@group_access_level("member")
+def Board(**kwargs):
+    groupId = kwargs.get('groupId')
+    assignmentId = kwargs.get('assignmentId')
+    
+    pipeline = [
+        {
+            '$match': {
+                'group':groupId,
+                'assignment':assignmentId
+            }
+        },
+        {
+            '$group': {
+                '_id': {
+                    'username':'$username',
+                    'testsuite': "$testsuite",
+                },
+                'attempts':{
+                    '$sum': 1
+                },
+                'submissions':{
+                    '$push':{
+                        '_id':'$_id',
+                        'status':'$status'
+                    }
+                }
+
+            }
+        }, 
+        {
+            '$group': {
+                '_id': "$_id.username", 
+                'testsuites':{
+                    '$push': {
+                        'attempts': "$attempts", 
+                        'testsuite':'$_id.testsuite', 
+                        'submissions': "$submissions"
+                    }
+                }
+            }
+        }
+    ]
+
+    result = Submission.objects.aggregate(*pipeline)
+    return json.dumps(list(result))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
