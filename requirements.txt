@@ -1,0 +1,6 @@
+flask
+mongoengine
+requests
+pyjwt
+pyyaml
+mistune

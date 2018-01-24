@@ -1,0 +1,39 @@
+{% set page_title = 'HEXA-A - Groups' %}
+{% extends 'layout.html' %}
+
+{% block container %}
+
+    {% include 'navbar.html' %}
+
+    <div class="container-fluid"> 
+        <div class="wrapper">
+            
+            <div class="content2">
+                
+                <div class="row">
+                    <div class="col-4">
+                        <input type="text" class="form-control form-control-sm" id="search-filter" placeholder="Search">
+                    </div>
+
+                    <div class="col-auto ml-auto">
+                        <button class="btn btn-success btn-sm" type="button"  data-toggle="modal" data-target="#create-group">Create group</button>
+                    </div>
+                </div>
+
+                <hr class="half-rule"/>
+
+                <div class="list-group">
+                    {% if not groups %}
+                        <p class="text-muted text-center mt-3">You don't have any group yet, <a href="#creategroup" data-toggle="modal" data-target="#create-group">Create</a> your first now</p>
+                    {% endif %}
+
+                    {% for group in groups %}
+                        {% include 'items/group-item.html'%}
+                    {% endfor %}
+                </div>
+        </div>
+    </div>    
+
+    {% include 'modals/createGroup.html' %}        
+{% endblock %}
+

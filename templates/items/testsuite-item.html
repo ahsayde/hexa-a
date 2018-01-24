@@ -1,0 +1,16 @@
+<li  class="list-group-item list-group-item-action item-list" name="item" search-key="{{testsuite.name}}">
+    <div class="row">
+        <div class="col-4 text-truncate">
+            <a href="/groups/{{group._id}}/testsuites/{{testsuite._id}}">{{testsuite.name}}</a>
+        </div>
+        <div class="col-1 ml-auto">
+            <small class="text-muted">{{'Public' if testsuite.public else 'Private'}}</small>
+        </div>
+        <div class="col-1 ml-auto">
+            <small class="text-muted">{{testsuite.level|capitalize}}</small>
+        </div>
+        <div class="col-auto ml-auto">
+            <small class="text-muted">Created by <a href="/users/{{testsuite.created_by}}">{{testsuite.created_by}}</a></small>
+        </div>
+    </div>
+</li>

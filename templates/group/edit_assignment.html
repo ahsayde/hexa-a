@@ -1,0 +1,41 @@
+{% set page_title = 'HEXA-A - Edit assignment' %}
+{% extends 'group/group_page.html' %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-12">
+            <h4 class="mb-0">Edit Assignment</h4>
+        </div>
+    </div>
+        
+    <hr class="half-rule"/>
+
+    <div class="row">
+        <div class="col-9">
+            <form id="edit-assignment-form">
+                <input type="hidden" name="groupId" value="{{group._id}}">
+                <input type="hidden" name="assignmentId" value="{{assignment._id}}">
+                <div class="form-group">
+                    <input type="text" class="form-control" name="name" value="{{assignment.name}}">
+                </div>
+                <div class="form-group">
+                    <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                        <div class="input-group-addon">Deadline</div>
+                        <input type="datetime-local" class="form-control" name="deadline" value="{{datatimeFromTimestamp(assignment.deadline)}}">
+                    </div>                    
+                </div>
+                <div class="form-group">
+                    <textarea class="form-control code-text" rows="15" name="description" placeholder="Description" aria-describedby="markdown-hint">{{assignment.description}}</textarea>
+                    <small id="markdown-hint" class="form-text text-muted">Styling with Markdown is supported</small>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+{% endblock %}
+
+

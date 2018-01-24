@@ -1,0 +1,184 @@
+{% set page_title = 'HEXA-A - Assignments' %}
+{% extends 'group/group_page.html' %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-auto">
+            <h4>{{assignment.name}}</h4>
+            {% if not assignment.published %}
+                <span class="badge badge-secondary item-status-badge">Unpublished</span>
+            {% elif assignment.status == 'open' %}
+                <span class="badge badge-success item-status-badge">Open</span>
+            {% elif assignment.status == 'closed' %}
+                <span class="badge badge-danger item-status-badge">Closed</span>
+            {% endif %}
+            <small class="text-muted ml-1">
+                Created {{timestamp_to_age(assignment.created_at)}} by {{assignment.created_by.username}}
+                {% if assignment.updated_at %}
+                    - Updated {{timestamp_to_age(assignment.updated_at)}} by {{assignment.updated_by.username}}
+                {% endif %}
+            </small>
+        </div>
+        {% if group.is_admin %}
+            <div class="col-auto ml-auto" style="text-align:right">
+                <a href="/groups/{{group._id}}/assignments/{{assignment._id}}/edit" class="btn btn-default btn-sm">Edit</a>                    
+                <button type="button" data-toggle="modal" data-target="#delete-assignment" class="btn btn-danger btn-sm">
+                    Delete
+                </button>
+            </div>
+        {% endif %}
+    </div>
+        
+    <hr class="half-rule"/>
+
+    <ul class="nav nav-tabs card-header-tabs m-0">
+        <div class="btn-group" role="group">
+            <a class="btn btn-sm btn-default {{'active' if tab != 'submissions'}}" href="?tab=details">Details</a>
+            <a class="btn btn-sm btn-default {{'active' if tab == 'submissions'}}" href="?tab=submissions">Submissions</a>
+        </div>
+    </ul>
+
+    <div class="row mt-3">
+
+        {% if tab == 'details' %}
+
+            <div class="col-9">
+                <div class="card">
+                    <div class="card-header card-header-sm">
+                        <p class="text-muted m-0">Description</p>
+                    </div>
+                    <div class="card-body">
+                        {% if assignment.description %}
+                            <article class="markdown-body">{{render_markdown(assignment.description)}}</article>
+                        {% else %}
+                            <small class="text-muted">No description provided</small>
+                        {% endif %}
+                    </div>      
+                </div>
+            </div>
+
+            <div class="col-3">
+                {% if assignment.published and assignment.status == 'open' %}
+                    <div class="card">
+                        <div class="card-header card-header-sm">
+                            <p class="text-muted mb-0">Submit</p>
+                        </div>
+                        <div class="card-body pb-0">
+
+                            <form class="form" id="submit-code-form" data-group="{{group._id}}" data-assignment="{{assignment._id}}">
+                                <div class="form-group">
+                                    <select class="form-control form-control-sm" name="testsuite">
+                                        {% for testsuite in assignment.testsuites %}
+                                            <option value="{{testsuite._id}}">{{testsuite.name}} ({{testsuite.level|capitalize}})</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <select class="form-control form-control-sm" name="language">
+                                        <option value="cpp_98">C++ 98</option>
+                                        <option value="cpp_98">C++ 11</option>
+                                        <option value="cpp_98">C++ 14</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <input type="file" name="source_file" id="custom-file-handler-sourcecode" style="display:none"/>
+                                    <button class="btn btn-default btn-sm" id="custom-file-button-sourcecode" type="button">Browse ...</button>
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-success btn-sm btn-block">Submit</button>
+                                </div>
+                            </form> 
+                        </div>
+                    </div><br>
+                {% endif %}
+                    
+                {% if group.is_admin %}
+                    <div class="card">
+                        <div class="card-header card-header-sm d-flex justify-content-between align-items-center">
+                            <p class="text-muted m-0">Testsuites</p>
+                            <div class="dropdown show">
+                                <a class="btn btn-light btn-sm" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
+                                    <img src="/static/photos/members-action.png" width="16px">
+                                </a>
+                    
+                                <div class="dropdown-menu p-0" style="min-width:200px;">
+                                    <div class="card-header card-header-sm text-muted" style="margin-bottom:-1px;">Link / unlink testsuites</div>
+                                        {% if not testsuites %}
+                                            <div class="card-body p-2">
+                                                <small class="text-muted">There is no testsuites in this group</small>
+                                            </div>
+                                        {% endif %}
+                                        <ul class="list-group list-group-flush">
+                                            {% for testsuite in testsuites %}
+                                                <li class="list-group-item">
+                                                    <input type="checkbox" name="link-unlink-testsuite-checkbox" data-group="{{group._id}}" data-assignment="{{assignment._id}}" data-testsuite="{{testsuite._id}}" {{'checked' if testsuite._id in get_object_attr(assignment.testsuites, '_id') }}> {{testsuite.name}}   
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            {% if not assignment.testsuites %}
+                                <li class="list-group-item pt-2 pb-2 text-muted">
+                                    <small>No testsuites linked to this problem</small> 
+                                </li>
+                            {% endif %}
+                            {% for testsuite in assignment.testsuites %}
+                                <li  class="list-group-item pt-2 pb-2">
+                                    <a class="text-sm" href="/groups/{{group._id}}/testsuites/{{testsuite._id}}"> {{testsuite.name}}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div><br>
+                {% endif %}
+                
+                {% if not assignment.published %}
+                    <button id="publish-assignment-button" type="button" class="btn btn-success btn-md btn-block" data-group="{{group._id}}" data-assignment="{{assignment._id}}">Publish</button>        
+                {% endif %}
+            </div>
+
+        {% elif tab == 'submissions' %}
+            
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header card-header-sm">
+                        <span class="text-muted">{{submissions|length}} Submissions</span>
+                    </div>
+                    
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item pt-2 pb-2 text-muted">
+                            <div class="row">
+                                <div class="col text-muted"><small># ID</small></div>
+                                {% if group.is_admin %} 
+                                    <div class="col text-muted"><small>User</small></div>
+                                {% endif %}
+                                <div class="col text-muted"><small>Testsuite</small></div>                        
+                                <div class="col text-muted"><small>Submitted at</small></div>
+                                <div class="col text-muted"><small>Result</small></div>
+                                <div class="col text-muted"><small>Status</small></div>                        
+                            </div>
+                        </li>
+                
+                        {% if not submissions %}
+                            <li class="list-group-item pt-2 pb-2 text-muted">
+                                <small>No submissions were found in this group</small> 
+                            </li>
+                        {% endif %}
+                        {% for submission in submissions %}{% include 'items/submission-item.html' %}{% endfor %}
+
+                
+                    </ul>
+                </div>
+            </div>
+            
+        {% endif %}
+
+    </div><br>
+
+{% include 'modals/deleteAssignment.html' %}
+
+{% endblock %}
+
+

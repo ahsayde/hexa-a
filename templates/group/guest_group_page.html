@@ -1,0 +1,40 @@
+{% extends 'layout.html' %}
+
+{% block container %}
+
+    {% include 'navbar.html' %}
+
+    <div class="container w-50" style="margin-top:120px; height:100%">
+        <div class="bg-white p-3 border">
+            <div class="row">
+                <div class="col">
+                    <h4>{{group.name}}</h4>
+                    <p class="text-muted m-0">{{group.description}}</p>
+                </div>
+            </div>
+
+            <div class="row mt-2">
+                <div class="col-auto">
+                    <small class="text-muted">Created by <a href="/users/{{group.created_at.username}}">{{group.created_by.username}}</a></small>   
+                </div>
+                <div class="col-auto">
+                    <small class="text-muted">{{group.members_count}} members</small>
+                </div>
+            </div>
+
+            <hr class="half-rule"/>
+            
+            <div class="row">
+                <div class="col">
+                    {% if not group.join_request %}
+                        <button id="join-group-button" type="button" class="btn btn-success" data-group="{{group._id}}">Join group</button>
+                    {% else %}
+                        <button type="button" class="btn btn-primary">Join request sent</button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+

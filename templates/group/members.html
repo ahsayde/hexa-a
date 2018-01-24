@@ -1,0 +1,62 @@
+{% set page_title = 'HEXA-A - Members' %}
+{% extends 'group/group_page.html' %}
+
+{% block content %}
+
+  <div class="row">
+    <div class="col-4 mb-0">
+        <input type="text" class="form-control form-control-sm" id="search-filter" aria-describedby="members-filter-result" placeholder="Search">
+    </div>
+
+    {% if group.is_admin %}
+      <ul class="nav nav-tabs card-header-tabs m-0">
+          <div class="btn-group" role="group">
+                <button type="button" class="btn btn-sm btn-default active" data-toggle="tab" role="tab" href="#members">
+                  Members
+                </button>
+                <button type="button" class="btn btn-sm btn-default" data-toggle="tab" role="tab" href="#requests">
+                  Requests <span class="badge badge-light">{{group.join_requests_count}}</span>
+                </button>
+          </div>
+      </ul>
+
+      <div class="col-auto ml-auto">
+          <form class="form-row mb-0" id="add-member-form">
+              <input type="hidden" name="groupId" value="{{group._id}}">
+              <div class="form-group mb-0 col-auto">
+                <input id="group-member-search" type="text" list="users-search-list" class="form-control form-control-sm" name="member" placeholder="Username" required>
+                <datalist id="users-search-list"></datalist>
+              </div>
+              <div class="form-group mb-0 col-auto">
+                <button type="submit" class="btn btn-success btn-sm">Add member</button>
+              </div>
+          </form>
+      </div>
+    {% endif %}
+
+  </div>
+
+  <hr class="half-rule"/> 
+
+  <div class="tab-content mt-4 p-0">
+      <div class="tab-pane show active" id="members" role="tabpanel">
+          <div class="list-group">
+            {% for member in members %}{% include 'items/member-item.html' %}{% endfor %}
+          </div>
+      </div>
+
+      {% if group.is_admin %}
+        <div class="tab-pane show" id="requests" role="tabpanel">
+          {% if not requests %}
+            <span class="text-muted">No join requests were found in this group</span>
+          {% else %}
+            {% for request in requests %}{% include 'items/request-item.html' %}{% endfor %}
+          {% endif %}
+        </div>
+      {% endif %}
+  </div>
+  
+
+  
+
+{% endblock %}

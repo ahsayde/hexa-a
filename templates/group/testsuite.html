@@ -1,0 +1,96 @@
+{% set page_title = 'HEXA-A - Testsuites' %}
+{% extends 'group/group_page.html' %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-auto">
+            <h4>{{testsuite.name}}</h4>
+            <small class="text-muted ml-1">{{testsuite.level|capitalize}}</small>
+            <small class="text-muted ml-1">{{'Public' if testsuite.public else 'Private'}}</small>            
+            <small class="text-muted ml-1">
+                Created {{timestamp_to_age(testsuite.created_at)}} by {{testsuite.created_by.username}}
+                {% if testsuite.updated_at %}
+                    - Updated {{timestamp_to_age(testsuite.updated_at)}} by {{testsuite.updated_by.username}}
+                {% endif %}
+            </small>
+        </div>
+        {% if group.is_admin %}
+            <div class="col-auto ml-auto" style="text-align:right">
+                <button data-toggle="modal" data-target="#edit-testsuite" class="btn btn-default btn-sm">Edit</button>
+                <button type="button" data-toggle="modal" data-target="#delete-testsuite" class="btn btn-danger btn-sm">Delete</button>
+            </div>
+        {% endif %}
+    </div>
+        
+    <hr class="half-rule"/>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header card-header-sm">
+                    <div class="row p-0">
+                        <div class="col-auto">
+                            <ul class="nav nav-tabs card-header-tabs">
+                                <li class="nav-item">
+                                    <a class="nav-link active" data-toggle="tab" role="tab" href="#testcases">Testcases </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" role="tab" href="#suggested-testcases">
+                                        Suggestions
+                                        {% if suggested %}
+                                            <span class="badge badge-primary">{{suggested|length}}</span>
+                                        {% endif %}
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-auto ml-auto"> 
+                            <button type="button" data-toggle="modal" data-target="#add-testcase" class="btn btn-success btn-sm ml-auto">
+                                {% if group.is_admin %} Add {% else %} Suggest {% endif %} testcase
+                            </button>                    
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-content mt-2">
+
+                    <!-- =================================== Testcases tabpanel ========================================= -->
+
+                    <div class="tab-pane show active" id="testcases" role="tabpanel">
+                        <ul class="list-group list-group-flush">
+                            {% if not testsuite.testcases %}
+                                <li class="list-group-item pt-2 pb-2 text-muted">
+                                    <small>No testcases were added to this testsuite</small> 
+                                </li>
+                            {% endif %}
+                            {% for testcase in testsuite.testcases %}{% include 'items/testcase-item.html'%}{% endfor %}
+                        </ul>
+                    </div>
+
+                    <!-- =================================== Suggested testcases tabpanel ========================================= -->
+
+                    <div class="tab-pane" id="suggested-testcases" role="tabpanel">
+                        <ul class="list-group list-group-flush">
+                            {% if not suggested_testcases %}
+                                <li class="list-group-item pt-2 pb-2 text-muted">
+                                    <small>No suggested testcases were added to this testsuite</small> 
+                                </li>
+                            {% endif %}
+                            {% for testcase in suggested_testcases %}{% include 'items/suggested-testcase-item.html'%}{% endfor %}
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% include 'modals/addTestcase.html' %}
+    {% include 'modals/createTestsuite.html' %}
+    {% include 'modals/editTestsuite.html' %}        
+    {% include 'modals/deleteTestsuite.html' %} 
+     
+{% endblock %}
+
+
+    

@@ -1,0 +1,44 @@
+<nav class="navbar fixed-top navbar-expand-lg navbar-dark" style="background:#283747">
+    <div class="container-fluid"> 
+        <a class="navbar-brand" href="/">HEXA-A</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#menu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="menu">
+
+            {% if userInfo %}
+            
+                <ul class="navbar-nav ml-5">
+                    <li class="nav-item">
+                        <a class="nav-link {{'active' if tab == 'dashboard'}}" href="/dashboard">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{'active' if tab == 'groups'}}" href="/groups">Groups</a>
+                    </li>
+                </ul>
+
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item dropdown">
+                        <a href="#" class="nav-link" id="userDropDown" data-toggle="dropdown">
+                            <img class="rounded-circle mr-2" width="20px" src="{{userInfo.profile_photo}}">{{userInfo.username}}
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="userDropDown">
+                            <a class="dropdown-item" href="/settings">Settings</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="/logout">Logout</a>
+                        </div>
+                    </li>
+                </ul>
+
+            {% else %}
+
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/signup">Signup</a></li>
+                </ul>
+
+            {% endif %}
+
+        </div>
+    </div> 
+</nav>

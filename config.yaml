@@ -1,0 +1,19 @@
+server:
+  host:
+  port:
+  debug: true
+  threaded: true
+
+database:
+  db:
+  host:
+  port:
+  username: null
+  password: null
+
+dirs:
+  USERS_TMP_CODE_DIR: 
+  USERS_PROFILE_PHOTOS_DIR: 
+
+jwt-secret:
+session-secret:

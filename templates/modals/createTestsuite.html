@@ -1,0 +1,38 @@
+<div class="modal fade" id="create-testsuite" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Create new testsuite</h4>
+            </div>
+            <div class="modal-body">
+                <form id="create-testsuite-form" group="{{group._id}}">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" class="form-control" name="name">
+                    </div>
+                    <div class="form-group">
+                        <select class="form-control" name="level" aria-placeholder="Level">
+                            <option value="basic">Basic</option>
+                            <option value="extended">Extended</option>
+                            <option value="advanced">Advanced</option>                        
+                        </select>
+                    </div>   
+                    <div class="form-group">
+                        <input type="checkbox" name="public"> Public
+                    </div> 
+                    <div class="form-group">
+                        <input name="attempts" type="number" class="form-control" placeholder="Attempts">
+                    </div>
+                    <div class="form-group">
+                        <input type="file" name="file" id="custom-file-handler-new-testsuite" style="display:none"/>
+                        <button class="btn btn-dark" id="custom-file-button-new-testsuite" type="button">Import testcases</button>
+                    </div>
+                </form>
+            </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-success" form="create-testsuite-form">Create</button>
+        </div>
+        </div>
+    </div>
+</div>

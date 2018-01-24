@@ -1,0 +1,34 @@
+{% set page_title = 'HEXA-A - Signup' %}
+{% extends 'layout.html' %}
+{% block container %}
+
+    <div class="container" style="width:400px; margin-top:50px">
+        <h3>Sign Up</h3>
+        <hr class="half-rule">
+
+        {% if error %}
+            <div class="alert alert-danger" role="alert">
+                {% for key, value in error.items() %}
+                    <p class="m-0"><strong>{{key}}</strong> : {{value}}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <form action="/signup" method="post">
+            <div class="form-group">
+                 <label for="username">Username</label>
+                <input type="text" class="form-control" name="username" placeholder="Username" required>
+            </div>
+            <div class="form-group">
+                 <label for="email">Email</label>
+                <input type="email" class="form-control" name="email" required>
+            </div>
+            <div class="form-group">
+                 <label for="password">Password</label>
+                <input type="password" class="form-control" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-success btn-block">Signup</button>
+        </form>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,27 @@
+<li  class="list-group-item pt-2 pb-2">
+    <div class="row d-flex align-items-center">
+        <div class="col-auto">
+            <div class="row">
+                <div class="col-auto"><code class="testcase">stdin : {{testcase.stdin}}</code></div>
+            </div>
+            <div class="row">
+                <div class="col-auto"><code class="testcase">stdout: {{testcase.expected_stdout}}</code></div>
+            </div>                            
+        </div>
+    </div>
+    <div class="row mt-2 align-items-center">
+        <div class="col-auto">
+            <small><code>{{testcase._id}}</code></small>
+        </div>
+        <div class="col-auto">
+            <small class="text-muted">
+                {% if testcase.suggested_by%} Suggested by {{testcase.suggested_by}}, {% endif %} Added by {{testcase.added_by}} {{timestamp_to_age(testcase.added_at)}}
+            </small>
+        </div>
+        {% if group.is_admin %}
+            <div class="col-auto ml-auto">
+                <button name="deleteTestcase" class="btn btn-sm btn-default" data-group="{{group._id}}" data-testsuite="{{testsuite._id}}"data-testcase="{{testcase._id}}">Delete</button>
+            </div>
+        {% endif %}
+    </div>
+</li>

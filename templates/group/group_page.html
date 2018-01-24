@@ -1,0 +1,40 @@
+{% extends 'layout.html' %}
+
+{% block container %}
+
+    {% include 'navbar.html' %}
+    <div class="container-fluid"> 
+    <div class="wrapper">
+        <div class="sidebar">
+            <a href="/groups/{{group._id}}"><h5>{{group.name}}</h5></a>
+            {% if group.description %}
+                <p class="text-muted"><small>{{group.description}}<br></small></p>
+            {% endif %}
+            
+            <hr class="half-rule"/> 
+
+            <ul class="list-group sidebar-nav">
+                <a href="/groups/{{group._id}}/assignments" class="list-group-item d-flex justify-content-between align-items-center {{'active' if page =='assignments'}}">
+                    Assignments
+                </a>
+                <a href="/groups/{{group._id}}/testsuites" class="list-group-item d-flex justify-content-between align-items-center {{'active' if page =='testsuites'}}">
+                    Testsuites
+                </a>
+                <a href="/groups/{{group._id}}/members" class="list-group-item d-flex justify-content-between align-items-center {{'active' if page =='members'}}">
+                    Members
+                </a>
+                {% if group.is_admin %}
+                    <a href="/groups/{{group._id}}/settings" class="list-group-item d-flex justify-content-between align-items-center {{'active' if page =='settings'}}">
+                        Settings
+                    </a>
+                {% endif %}
+            </ul>
+        </div>
+        <div class="content">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+    </div>
+
+{% endblock %}
+

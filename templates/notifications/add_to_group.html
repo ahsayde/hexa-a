@@ -1,0 +1,19 @@
+<a class="dropdown-item" href="/notifications">
+    <div class="media">
+        <div class="media-left">
+        <img src="{{notification.from_user.profile_photo}}" class="align-self-center rounded-circle mr-2" style="width:25px">
+        </div>
+        <div class="media-body">
+            <p class="m-0">
+                <small>
+                <strong>{{notification.from_user.username}}</strong> add you to group <strong>{{notification.entity.name}}</strong>qq
+                </small>
+            </p>
+            <p class="text-muted ">
+                <small>
+                    {{timestamp_to_age(notification.created_at)}}
+                </small>
+            </p>
+        </div>
+    </div>
+</a>

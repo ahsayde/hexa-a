@@ -1,0 +1,17 @@
+<li class="list-group-item list-group-item-action item-list" name="item" search-key="{{request.user.username}}">
+    <div class="row">
+        <div class="col-4 text-truncate">
+            <img class="rounded-circle mr-3 " width="32px" src="{{request.user.profile_photo}}">
+            <a href="/users/{{request.user.username}}">{{request.user.username}}</a>
+        </div>
+
+        <div class="col ml-auto">
+            <small class="text-muted">Send at {{timestamp_to_age(request.created_at)}}</small>
+        </div>
+
+        <div class="col-auto ml-auto">
+            <button name="acceptJoinRequest" class="btn btn-sm btn-default" data-group="{{group._id}}" data-request="{{request._id}}">Accept</button>
+            <button name="rejectJoinRequest" class="btn btn-sm btn-default" data-group="{{group._id}}" data-request="{{request._id}}">Reject</button>                                                
+        </div>
+    </div>
+</li>
