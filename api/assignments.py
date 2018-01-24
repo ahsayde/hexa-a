@@ -370,13 +370,13 @@ def ListSubmissions(**kwargs):
 
     return http.Ok(json.dumps(data))
 
-@assignments_api.route("/assignments/<assignmentId>/board")
+@assignments_api.route("/assignments/<assignmentId>/leaderboard")
 @auth_required
 @group_access_level("member")
 def Board(**kwargs):
     groupId = kwargs.get('groupId')
     assignmentId = kwargs.get('assignmentId')
-    
+
     pipeline = [
         {
             '$match': {
