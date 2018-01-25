@@ -406,40 +406,10 @@ def Board(**kwargs):
                         'status':'$status',
                         'attempts':'$attempts',
                         'testsuite':'$_id.testsuite',
-                        'summary':'$summary'
                     }
                 },
             }
-        },
-        # {
-        #     '$group': {
-        #         '_id': {
-        #             'username':'$username',
-        #             'testsuite': "$testsuite",
-        #         },
-        #         'attempts':{
-        #             '$sum': 1
-        #         },
-        #         'submissions':{
-        #             '$push':{
-        #                 '_id':'$_id',
-        #                 'status':'$status'
-        #             }
-        #         }
-        #     }
-        # }, 
-        # {
-        #     '$group': {
-        #         '_id': "$_id.username", 
-        #         'testsuites':{
-        #             '$push': {
-        #                 'attempts': "$attempts", 
-        #                 'testsuite':'$_id.testsuite', 
-        #                 'submissions': "$submissions"
-        #             }
-        #         }
-        #     }
-        #}
+        }
     ]
 
     result = Submission.objects.aggregate(*pipeline)
