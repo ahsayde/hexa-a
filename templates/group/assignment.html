@@ -34,15 +34,15 @@
 
     <ul class="nav nav-tabs card-header-tabs m-0">
         <div class="btn-group" role="group">
-            <a class="btn btn-sm btn-default {{'active' if tab != 'submissions'}}" href="?tab=details">Details</a>
+            <a class="btn btn-sm btn-default {{'active' if tab == 'details'}}" href="?tab=details">Details</a>
             <a class="btn btn-sm btn-default {{'active' if tab == 'submissions'}}" href="?tab=submissions">Submissions</a>
+            <a class="btn btn-sm btn-default {{'active' if tab == 'leaderboard'}}" href="?tab=leaderboard">Leaderboard</a>
         </div>
     </ul>
 
     <div class="row mt-3">
 
         {% if tab == 'details' %}
-
             <div class="col-9">
                 <div class="card">
                     <div class="card-header card-header-sm">
@@ -172,7 +172,38 @@
                     </ul>
                 </div>
             </div>
-            
+
+        {% elif tab == 'leaderboard' %}
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header card-header-sm">
+                        <span class="text-muted">Leaderboard</span>
+                    </div>
+                    
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item pt-2 pb-2 text-muted">
+                            <div class="row">
+                                <div class="col-1 text-muted"><small>#</small></div>
+                                <div class="col-2 text-muted"><small>User</small></div>
+                                {% for testsuite in assignment.testsuites %}
+                                    <div class="col text-muted">
+                                        <small>{{testsuite.name}}</small>
+                                    </div> 
+                                {% endfor %}
+                            </div>
+                        </li>
+
+                    {% if not leaderboard %}
+                        <li class="list-group-item pt-2 pb-2 text-muted">
+                            <small>No available data</small> 
+                        </li>
+                    {% endif %}
+
+                        {% for record in leaderboard %}{% include 'items/leaderboard-item.html' %}{% endfor %}
+
+                    </ul>
+                </div>
+            </div>
         {% endif %}
 
     </div><br>

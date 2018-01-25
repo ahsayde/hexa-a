@@ -45,4 +45,9 @@ class Assignments:
         method = 'get'
         return self.client.api_handler(url=url, method=method, params=params)
 
+    def leaderBoard(self, groupId, assignmentId):
+        url = self.client.api_url + '/groups/' + groupId + '/assignments/' + assignmentId + '/leaderboard'
+        method = 'get'
+        return self.client.api_handler(url=url, method=method)
+
         

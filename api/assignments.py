@@ -385,35 +385,61 @@ def Board(**kwargs):
             }
         },
         {
-            '$group': {
-                '_id': {
+            '$group':{
+                '_id':{
                     'username':'$username',
-                    'testsuite': "$testsuite",
+                    'testsuite':'$testsuite'
                 },
                 'attempts':{
                     '$sum': 1
                 },
-                'submissions':{
-                    '$push':{
-                        '_id':'$_id',
-                        'status':'$status'
-                    }
+                'status':{
+                    '$push':'$status'
                 }
-
             }
-        }, 
+        },
         {
-            '$group': {
-                '_id': "$_id.username", 
+            '$group':{
+                '_id':'$_id.username',
                 'testsuites':{
-                    '$push': {
-                        'attempts': "$attempts", 
-                        'testsuite':'$_id.testsuite', 
-                        'submissions': "$submissions"
+                    '$push':{
+                        'status':'$status',
+                        'attempts':'$attempts',
+                        'testsuite':'$_id.testsuite',
+                        'summary':'$summary'
                     }
-                }
+                },
             }
-        }
+        },
+        # {
+        #     '$group': {
+        #         '_id': {
+        #             'username':'$username',
+        #             'testsuite': "$testsuite",
+        #         },
+        #         'attempts':{
+        #             '$sum': 1
+        #         },
+        #         'submissions':{
+        #             '$push':{
+        #                 '_id':'$_id',
+        #                 'status':'$status'
+        #             }
+        #         }
+        #     }
+        # }, 
+        # {
+        #     '$group': {
+        #         '_id': "$_id.username", 
+        #         'testsuites':{
+        #             '$push': {
+        #                 'attempts': "$attempts", 
+        #                 'testsuite':'$_id.testsuite', 
+        #                 'submissions': "$submissions"
+        #             }
+        #         }
+        #     }
+        #}
     ]
 
     result = Submission.objects.aggregate(*pipeline)

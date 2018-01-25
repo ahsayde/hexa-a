@@ -17,6 +17,7 @@ app.jinja_env.globals.update(timestamp_to_age=timestamp_to_age)
 app.jinja_env.globals.update(render_markdown=render_markdown)
 app.jinja_env.globals.update(datatimeFromTimestamp=datatimeFromTimestamp)
 app.jinja_env.globals.update(get_object_attr=get_object_attr)
+app.jinja_env.globals.update(search_for_object=search_for_object)
 
 USERS_PROFILE_PHOTOS_DIR = config['dirs']['USERS_PROFILE_PHOTOS_DIR']
 app.config['UPLOAD_FOLDER'] = config['dirs']['USERS_TMP_CODE_DIR']

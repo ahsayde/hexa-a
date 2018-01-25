@@ -98,3 +98,10 @@ def datatimeFromTimestamp(timestamp):
 
 def get_object_attr(obj, attr):
     return [x[attr] for x in obj] 
+
+def search_for_object(objList, key, value):
+    obj = [x for x in objList if x[key] == value] 
+    if obj:
+        return obj[0]
+    
+    return None

@@ -31,26 +31,12 @@ def AssignmentPage(** kwargs):
     groupId = kwargs.get('groupId')
     assignmentId = kwargs.get('assignmentId')
     filters = dict(request.args)
-    tab = request.args.get('tab', None)
+    tab = request.args.get('tab', 'details')
 
     group = api.groups.get(groupId=groupId).json()
     assignment = api.groups.assignments.get(groupId, assignmentId).json()
 
-    if tab != 'submissions':
-        testsuites = []
-        if user_role == 'admin':
-            testsuites = api.groups.testsuites.list(groupId).json()
-
-        return render_template(
-            'group/assignment.html', 
-            page=page, 
-            tab='details', 
-            group=group, 
-            assignment=assignment,
-            testsuites=testsuites,            
-        )
-
-    else:
+    if tab == 'submissions':
         members = api.groups.members.list(groupId).json()        
         submissions = api.groups.assignments.submissions(groupId, assignmentId, filters).json()
         return render_template(
@@ -63,6 +49,33 @@ def AssignmentPage(** kwargs):
             members=members,
             filters=filters
         )
+
+    elif tab == 'leaderboard':
+        leaderboard = api.groups.assignments.leaderBoard(groupId, assignmentId).json()
+        return render_template(
+            'group/assignment.html', 
+            page=page, 
+            tab='leaderboard', 
+            group=group, 
+            assignment=assignment, 
+            leaderboard=leaderboard
+        )
+
+
+    else:
+        testsuites = []
+        if user_role == 'admin':
+            testsuites = api.groups.testsuites.list(groupId).json()
+
+        return render_template(
+            'group/assignment.html', 
+            page=page, 
+            tab='details', 
+            group=group, 
+            assignment=assignment,
+            testsuites=testsuites,            
+        )
+        
 
 @assignments_pages.route("/groups/<groupId>/assignments/new")
 @login_required

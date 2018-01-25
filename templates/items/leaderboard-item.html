@@ -1,0 +1,34 @@
+<li class="list-group-item">
+    <div class="row">
+        <div class="col-1 text-truncate"><small>#</small></div>
+        <div class="col-2 text-truncate">
+            <small><a href="/users/{{record._id}}">{{record._id}}</a> 
+                {% if record._id == userInfo.username %}
+                    <span class="text-muted">(you)</span>
+                {% endif %}
+            </small>
+        </div>
+
+        {% for testsuite in assignment.testsuites %}
+
+            {% set testsuite_obj = search_for_object(record.testsuites, 'testsuite', testsuite._id) %}
+
+            {% if testsuite_obj %}
+                <div class="col text-truncate">
+                    {% if 'Passed' in testsuite_obj.status %}
+                        <span class="text-success">&#10004</span>
+                    {% else %}
+                        <span class="text-danger">&#10007</span>
+                    {% endif %}
+                    <small>{{testsuite_obj.attempts}} attempts</small>
+                </div>
+
+            {% else %}
+                <div class="col text-muted">
+                    ---
+                </div>
+            {% endif %}
+
+        {% endfor %}
+    </div>
+</li>
