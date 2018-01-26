@@ -391,11 +391,18 @@ def Board(**kwargs):
                     'testsuite':'$testsuite'
                 },
                 'attempts':{
-                    '$sum': 1
+                    '$sum':{
+                        '$cond':[{'$ne': ['$status', 'Passed']}, 1, 0]
+                    }
                 },
                 'status':{
                     '$push':'$status'
-                }
+                },
+                'score':{
+                    '$max':{
+                        '$cond':[{'$eq': ['$status', 'Passed']}, '$result.summary.passed', 0] 
+                    }
+                },
             }
         },
         {
@@ -406,10 +413,23 @@ def Board(**kwargs):
                         'status':'$status',
                         'attempts':'$attempts',
                         'testsuite':'$_id.testsuite',
+                        'score':'$score'
                     }
                 },
+                'total_score':{
+                    '$sum':'$score'
+                },
+                'total_wrong_try':{
+                    '$sum':'$attempts'
+                }
             }
-        }
+        },
+         {
+            '$sort': {
+                'total_score' : -1,
+                 'total_wrong_try': 1
+                } 
+            }
     ]
 
     result = Submission.objects.aggregate(*pipeline)

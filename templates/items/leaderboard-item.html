@@ -1,6 +1,6 @@
 <li class="list-group-item">
     <div class="row">
-        <div class="col-1 text-truncate"><small>#</small></div>
+        <div class="col-1 text-truncate"><small>{{rank}}</small></div>
         <div class="col-2 text-truncate">
             <small><a href="/users/{{record._id}}">{{record._id}}</a> 
                 {% if record._id == userInfo.username %}
@@ -14,21 +14,40 @@
             {% set testsuite_obj = search_for_object(record.testsuites, 'testsuite', testsuite._id) %}
 
             {% if testsuite_obj %}
-                <div class="col text-truncate">
-                    {% if 'Passed' in testsuite_obj.status %}
-                        <span class="text-success">&#10004</span>
-                    {% else %}
-                        <span class="text-danger">&#10007</span>
-                    {% endif %}
-                    <small>{{testsuite_obj.attempts}} attempts</small>
+
+                <div class="col">
+                    <div class="row">
+                        <div class="col text-center">
+                            {% if 'Passed' in testsuite_obj.status %}
+                                <span class="text-success">&#10004</span>
+                            {% else %}
+                                <span class="text-danger">&#10007</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col text-center">
+                            <small class="text-muted">
+                                {% if testsuite_obj.attempts %}
+                                    {{testsuite_obj.attempts}} wrong try
+                                {% endif %}
+                            </small>
+                        </div>
+                    </div>
                 </div>
 
             {% else %}
-                <div class="col text-muted">
-                    ---
+                <div class="col text-muted text-center">
+                    -
                 </div>
             {% endif %}
 
         {% endfor %}
+
+        <div class="col-2 text-center">
+            <small>{{record.total_score}}</small>
+        </div>
+
     </div>
 </li>

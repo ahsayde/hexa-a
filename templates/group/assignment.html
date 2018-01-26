@@ -183,13 +183,14 @@
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item pt-2 pb-2 text-muted">
                             <div class="row">
-                                <div class="col-1 text-muted"><small>#</small></div>
+                                <div class="col-1 text-muted"><small>Rank</small></div>
                                 <div class="col-2 text-muted"><small>User</small></div>
                                 {% for testsuite in assignment.testsuites %}
-                                    <div class="col text-muted">
+                                    <div class="col text-muted text-center">
                                         <small>{{testsuite.name}}</small>
                                     </div> 
                                 {% endfor %}
+                                <div class="col-2 text-muted text-center"><small>Score</small></div>
                             </div>
                         </li>
 
@@ -199,7 +200,10 @@
                         </li>
                     {% endif %}
 
-                        {% for record in leaderboard %}{% include 'items/leaderboard-item.html' %}{% endfor %}
+                        {% for record in leaderboard %}
+                            {% set rank = loop.index %}
+                            {% include 'items/leaderboard-item.html' %}
+                        {% endfor %}
 
                     </ul>
                 </div>
