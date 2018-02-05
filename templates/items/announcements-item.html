@@ -1,0 +1,28 @@
+<div class="card mb-2">
+    <div class="card-body">
+        <div class="media">
+            <img class="rounded-circle mr-3" src="{{announcement.created_by.profile_photo}}" width="30px" alt="{{announcement.created_by.username}}">
+            <div class="media-body">
+                <div class="row">
+                    <div class="col-auto">
+                        <h6 class="m-0 mb-1">{{announcement.created_by.username}}</h6>
+                        <span class="text-muted mr-1" style="font-size:13px">{{timestamp_to_age(announcement.created_at)}} </span> 
+                        {% if announcement.updated_by %}
+                            <span class="text-muted">edited</span> 
+                        {% endif %}
+                    </div>
+                    <div class="col-auto ml-auto">
+                        <button type="button" class="close" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col">
+                        {{announcement.content}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

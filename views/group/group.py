@@ -20,6 +20,6 @@ def GroupPage(** kwargs):
     group = api.groups.get(groupId=groupId).json()
 
     if group['is_admin'] or group['is_member']:
-        return redirect('/groups/' + groupId + '/assignments')
+        return redirect('/groups/' + groupId + '/announcements')
 
     return render_template('group/guest_group_page.html', group=group)

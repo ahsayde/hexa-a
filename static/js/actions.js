@@ -180,6 +180,21 @@ $(document).ready(function () {
         return false
     });
 
+    
+
+    // =========================== Announcements ============================ 
+
+    $("#create-announcements-form").submit(function(){
+        var data = $(this).getFormData();
+        hexaa.groups.announcements.create(data.groupId, data.content)
+        .then((response)=>{
+            window.location.reload();
+        }).catch((error)=>{
+            alert(error.responseText);
+        });
+        return false
+    });
+
     // =========================== Assignments ============================    
 
     $("#create-assignment-form").submit(function(){

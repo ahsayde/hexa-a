@@ -29,6 +29,7 @@ class HEXAA:
         self._app.register_blueprint(groups_api, url_prefix='/api')
         self._app.register_blueprint(submission_api, url_prefix='/api')        
         self._app.register_blueprint(assignments_api, url_prefix='/api/groups/<groupId>')
+        self._app.register_blueprint(announcements_api, url_prefix='/api/groups/<groupId>')
         self._app.register_blueprint(testsuites_api, url_prefix='/api/groups/<groupId>')
 
     def _load_portal_blueprints(self):
@@ -36,6 +37,7 @@ class HEXAA:
         self._app.register_blueprint(user_pages)        
         self._app.register_blueprint(group_pages)
         self._app.register_blueprint(assignments_pages)
+        self._app.register_blueprint(announcements_pages)   
         self._app.register_blueprint(testsuites_pages)
         self._app.register_blueprint(submissions_pages) 
         self._app.register_blueprint(members_page) 

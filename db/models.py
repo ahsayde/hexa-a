@@ -46,7 +46,7 @@ class BaseModel(Document):
     def extract_list(self, objList):
         data = []
         for item in objList:
-            if isinstance(item, (User, Group, Assignment, Testsuite, Testcase, SuggestedTestcase, Notification)):
+            if isinstance(item, (User, Group, Assignment, Announcement, Testsuite, Testcase, SuggestedTestcase, Notification)):
                 item_data = self.extract_object(item)
                 data.append(item_data)
             elif isinstance(item, list):
@@ -66,7 +66,7 @@ class BaseModel(Document):
             instance = obj[item]
             if isinstance(instance, list):
                 output[item] = self.extract_list(instance)
-            elif isinstance(instance, (User, Group, Assignment, Testsuite, Testcase, SuggestedTestcase, Notification)):
+            elif isinstance(instance, (User, Group, Assignment, Announcement, Testsuite, Testcase, SuggestedTestcase, Notification)):
                 output[item] = self.extract_object(instance)
             else:
                 output[item] = instance
@@ -171,6 +171,16 @@ class Assignment(BaseModel):
     settings = fields.DictField(default={})
     # db collection
     meta = {"collection":"assignemnts"}
+
+class Announcement(BaseModel):
+    _id = fields.StringField(required=True, primary_key=True)
+    content = fields.StringField(required=True, min_length=1, max_length=10000)
+    group = fields.ReferenceField(Group, required=True, reverse_delete_rule=2)
+    created_at = fields.IntField(required=True)
+    created_by = fields.ReferenceField(User, required=True)
+    updated_at = fields.IntField()
+    # db collection
+    meta = {"collection":"announcements"}
 
 class Session(BaseModel):
     key = fields.StringField(required=True, primary_key=True)    

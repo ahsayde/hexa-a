@@ -1,0 +1,47 @@
+{% set page_title = 'HEXA-A - Announcements' %}
+{% extends 'group/group_page.html' %}
+
+{% block content %}
+
+
+{% if group.is_admin %}
+  <div class="row">
+      <div class="col">
+
+          <div class="card">
+              <div class="card-header card-header-sm">
+                  <div class="row p-0">
+                      <div class="col-auto">
+                        <span class="text-muted">Post new announcement</span>
+                      </div>
+                      <div class="col-auto ml-auto"> 
+                          <button type="submit" form="create-announcements-form" class="btn btn-success btn-sm ml-auto">
+                              Post
+                          </button>                    
+                      </div>
+                  </div>
+              </div>
+              <div class="card-body">
+                  <form id="create-announcements-form">
+                      <input type="hidden" name="groupId" value="{{group._id}}">
+                      <div class="form-group">
+                          <textarea class="form-control code-text" rows="4" name="content" placeholder=""></textarea>
+                      </div>
+                  </form>
+              </div>
+          </div>
+      </div>
+  </div>
+{% endif %}
+
+  <hr class="half-rule"/> 
+  
+  {% if not announcements %}
+      <span class="text-muted">No announcements were found in this group</span>
+  {% else %}
+    <div class="list-group">
+      {% for announcement in announcements %} {% include 'items/announcements-item.html' %} {% endfor %}
+    </div>
+  {% endif %}
+
+{% endblock %}

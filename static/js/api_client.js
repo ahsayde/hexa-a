@@ -63,6 +63,7 @@ function Group(client) {
     this.client = client;
     this.memberships = new Membership(client);
     this.assignments = new Assignment(client);
+    this.announcements = new Announcement(client);
     this.testsuites = new Testsuite(client);
 
     // method for GET /groups
@@ -143,6 +144,39 @@ function Membership(client){
     // method for DELETE /groups/<groupId>/members/<member>    
     this.delete = function(groupId, member){
         let url = 'groups/' + groupId + '/members/' + member;
+        return this.client.call_api(url, 'delete');
+    }
+}
+
+function Announcement(client) {
+    this.client = client;
+
+    // method for GET /groups/<groupId>/announcements
+    this.list = function(groupId){
+        let url = 'groups/' + groupId + '/announcements';
+        let dataType = 'json';
+        return this.client.call_api(url, 'get', null, null, dataType);
+    }
+    // method for POST /groups/<groupId>/announcements    
+    this.create = function(groupId, content){
+        let url = 'groups/' + groupId + '/announcements';
+        let contentType = 'application/json'; 
+        let dataType = 'json';
+        let data = {'content':content};
+        let body = JSON.stringify(data);
+        return this.client.call_api(url, 'POST',  body, contentType, dataType);
+    }
+    // method for PUT /groups/<groupId>/announcements/<announcementId> 
+    this.update = function(groupId, announcementId, content){
+        let url = 'groups/' + groupId + '/announcements/' + announcementId;
+        let contentType = 'application/json'; 
+        let data = {'content':content};
+        let body = JSON.stringify(data);
+        return this.client.call_api(url, 'put', body, contentType);
+    }
+    // method for DELETE /groups/<groupId>/announcements/<announcementId>    
+    this.delete = function(groupId, announcementId){
+        let url = 'groups/' + groupId + '/announcements/' + announcementId;
         return this.client.call_api(url, 'delete');
     }
 }

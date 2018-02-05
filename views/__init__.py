@@ -6,3 +6,4 @@ from views.group.testsuites import testsuites_pages
 from views.group.submissions import submissions_pages
 from views.group.members import members_page
 from views.group.settings import settings_page
+from views.group.announcements import announcements_pages

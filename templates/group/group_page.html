@@ -14,6 +14,9 @@
             <hr class="half-rule"/> 
 
             <ul class="list-group sidebar-nav">
+                <a href="/groups/{{group._id}}/announcements" class="list-group-item d-flex justify-content-between align-items-center {{'active' if page =='announcements'}}">
+                    Announcements
+                </a>
                 <a href="/groups/{{group._id}}/assignments" class="list-group-item d-flex justify-content-between align-items-center {{'active' if page =='assignments'}}">
                     Assignments
                 </a>

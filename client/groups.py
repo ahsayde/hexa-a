@@ -1,4 +1,5 @@
 from client.assignments import Assignments
+from client.announcements import Announcements
 from client.testsuites import Testsuites
 from client.member import Members
 from client.submissions import Submissions
@@ -9,6 +10,7 @@ class Groups:
         self.client = client
         self.members = Members(client)
         self.assignments = Assignments(client)
+        self.announcements = Announcements(client)
         self.testsuites = Testsuites(client)
         self.submissions = Submissions(client)
         self.requests = Requests(client)

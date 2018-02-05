@@ -199,3 +199,5 @@ a:hover{
     content:"*";
     
 }
+
+textarea{resize:none}
