@@ -186,7 +186,7 @@ $(document).ready(function () {
 
     function editAnnouncement(announcementId){
         $("button[id^='announcementOptionsOf_']").prop('disabled', true);
-        $("#announcementContentOf_"+ announcementId).attr('contenteditable', true);
+        $("#announcementContentOf_"+ announcementId).attr('readonly', false);
         $("#announcementContentOf_"+ announcementId).attr('rows', '5');
         $("#announcementContentOf_"+ announcementId).addClass('border');
         $('#saveChangesOf_' + announcementId).show();
@@ -195,7 +195,7 @@ $(document).ready(function () {
 
     function saveAnnouncementChanges(announcementId){
         $("button[id^='announcementOptionsOf_']").prop('disabled', false);
-        $("#announcementContentOf_"+ announcementId).attr('contenteditable', false);
+        $("#announcementContentOf_"+ announcementId).attr('readonly', true);
         $("#announcementContentOf_"+ announcementId).attr('rows', "auto");
         $("#announcementContentOf_"+ announcementId).removeClass('border');
         $('#saveChangesOf_' + announcementId).hide();
@@ -204,7 +204,7 @@ $(document).ready(function () {
 
     function cancelAnnouncementChanges(announcementId){
         $("button[id^='announcementOptionsOf_']").prop('disabled', false);
-        $("#announcementContentOf_"+ announcementId).attr('contenteditable', false);
+        $("#announcementContentOf_"+ announcementId).attr('readonly', true);
         $("#announcementContentOf_"+ announcementId).attr('rows', "auto");
         $("#announcementContentOf_"+ announcementId).removeClass('border');
         $('#saveChangesOf_' + announcementId).hide();
@@ -241,7 +241,7 @@ $(document).ready(function () {
 
     $("button[id^='saveChangesOf_']").click(function(){
         var data = $(this).data();
-        var content = $('#announcementContentOf_' + data.announcement).text();
+        var content = $('#announcementContentOf_' + data.announcement).val();
 
         hexaa.groups.announcements.update(data.group, data.announcement, content)
         .then((data)=>{

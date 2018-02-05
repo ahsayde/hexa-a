@@ -7,8 +7,8 @@
                     <div class="col-auto">
                         <h6 class="m-0 mb-1">{{announcement.created_by.username}}</h6>
                         <span class="text-muted mr-1" style="font-size:13px">{{timestamp_to_age(announcement.created_at)}} </span> 
-                        {% if announcement.updated_by %}
-                            <span class="text-muted">edited</span> 
+                        {% if announcement.updated_at %}
+                            <span class="text-muted" style="font-size:13px">edited</span> 
                         {% endif %}
                     </div>
 
@@ -21,9 +21,6 @@
                             <div class="dropdown">
                                 <button class="btn btn-default btn-sm pt-0 pb-0" id="announcementOptionsOf_{{announcement._id}}" data-toggle="dropdown">...</button>
                                 <div class="dropdown-menu" aria-labelledby="announcementOptionsOf_{{announcement._id}}">
-                                    {% if userInfo.username == announcement.created_by.username %}
-                                        <button class="dropdown-item btn-sm" type="button" name="editAnnouncement" data-group="{{group._id}}" data-announcement="{{announcement._id}}">Edit</button>
-                                    {% endif %}
                                     <button class="dropdown-item btn-sm" name="removeAnnouncement" type="button" data-group="{{group._id}}" data-announcement="{{announcement._id}}">Delete</button>
                                 </div>
                             </div>
@@ -33,7 +30,7 @@
                 </div>
                 <div class="row mt-3">
                     <div class="col">
-                        <p id="announcementContentOf_{{announcement._id}}" class="form-control" max-rows="6" readonly="true">{{announcement.content}}</p>
+                        <p id="announcementContentOf_{{announcement._id}}">{{announcement.content}}</p>
                     </div>
                 </div>
             </div>

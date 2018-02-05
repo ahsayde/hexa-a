@@ -204,8 +204,8 @@ textarea{
     resize:none;
 }
 
-textarea[readonly]
+p, textarea[readonly]
 {
-    border:none !important;
+    /* border:none !important; */
     background:none !important;
 }
