@@ -184,6 +184,33 @@ $(document).ready(function () {
 
     // =========================== Announcements ============================ 
 
+    function editAnnouncement(announcementId){
+        $("button[id^='announcementOptionsOf_']").prop('disabled', true);
+        $("#announcementContentOf_"+ announcementId).attr('contenteditable', true);
+        $("#announcementContentOf_"+ announcementId).attr('rows', '5');
+        $("#announcementContentOf_"+ announcementId).addClass('border');
+        $('#saveChangesOf_' + announcementId).show();
+        $('#cancelChangesOf_' + announcementId).show();
+    }
+
+    function saveAnnouncementChanges(announcementId){
+        $("button[id^='announcementOptionsOf_']").prop('disabled', false);
+        $("#announcementContentOf_"+ announcementId).attr('contenteditable', false);
+        $("#announcementContentOf_"+ announcementId).attr('rows', "auto");
+        $("#announcementContentOf_"+ announcementId).removeClass('border');
+        $('#saveChangesOf_' + announcementId).hide();
+        $('#cancelChangesOf_' + announcementId).hide();
+    }
+
+    function cancelAnnouncementChanges(announcementId){
+        $("button[id^='announcementOptionsOf_']").prop('disabled', false);
+        $("#announcementContentOf_"+ announcementId).attr('contenteditable', false);
+        $("#announcementContentOf_"+ announcementId).attr('rows', "auto");
+        $("#announcementContentOf_"+ announcementId).removeClass('border');
+        $('#saveChangesOf_' + announcementId).hide();
+        $('#cancelChangesOf_' + announcementId).hide();
+    }
+
     $("#create-announcements-form").submit(function(){
         var data = $(this).getFormData();
         hexaa.groups.announcements.create(data.groupId, data.content)
@@ -193,6 +220,43 @@ $(document).ready(function () {
             alert(error.responseText);
         });
         return false
+    });
+
+
+    $("button[name='removeAnnouncement']").click(function(){
+        var data = $(this).data();
+        hexaa.groups.announcements.delete(data.group, data.announcement)
+        .then((data)=>{
+            window.location.reload();
+        }).catch((error)=>{
+            alert(error.responseText);
+        });
+        return false
+    });
+
+    $("button[name='editAnnouncement']").click(function(){
+        var data = $(this).data();
+        editAnnouncement(data.announcement);
+    });
+
+    $("button[id^='saveChangesOf_']").click(function(){
+        var data = $(this).data();
+        var content = $('#announcementContentOf_' + data.announcement).text();
+
+        hexaa.groups.announcements.update(data.group, data.announcement, content)
+        .then((data)=>{
+            window.location.reload();
+        }).catch((error)=>{
+            alert(error.responseText);
+        }).finally(()=>{
+            saveAnnouncementChanges(data.announcement);
+        });
+        return false
+    });
+
+    $("button[id^='cancelChangesOf_']").click(function(){
+        var data = $(this).data();
+        cancelAnnouncementChanges(data.announcement);
     });
 
     // =========================== Assignments ============================    

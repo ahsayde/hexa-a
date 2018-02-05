@@ -200,4 +200,12 @@ a:hover{
     
 }
 
-textarea{resize:none}
+textarea{
+    resize:none;
+}
+
+textarea[readonly]
+{
+    border:none !important;
+    background:none !important;
+}
