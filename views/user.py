@@ -13,7 +13,8 @@ def client_auth(**kwargs):
 @user_pages.route("/dashboard")
 @login_required
 def DashboardPage(username):
-    return render_template('user/dashboard.html')
+    notifications = api.users.getNotifications().json()
+    return render_template('user/dashboard.html', notifications=notifications)
 
 @user_pages.route("/groups")
 @login_required

@@ -46,7 +46,7 @@ class BaseModel(Document):
     def extract_list(self, objList):
         data = []
         for item in objList:
-            if isinstance(item, (User, Group, Assignment, Announcement, Testsuite, Testcase, SuggestedTestcase, Notification)):
+            if isinstance(item, (User, Group, Assignment, Announcement, Testsuite, Testcase, SuggestedTestcase)):
                 item_data = self.extract_object(item)
                 data.append(item_data)
             elif isinstance(item, list):
@@ -66,7 +66,7 @@ class BaseModel(Document):
             instance = obj[item]
             if isinstance(instance, list):
                 output[item] = self.extract_list(instance)
-            elif isinstance(instance, (User, Group, Assignment, Announcement, Testsuite, Testcase, SuggestedTestcase, Notification)):
+            elif isinstance(instance, (User, Group, Assignment, Announcement, Testsuite, Testcase, SuggestedTestcase)):
                 output[item] = self.extract_object(instance)
             else:
                 output[item] = instance
@@ -213,24 +213,3 @@ class GroupJoinRequest(BaseModel):
     created_at = fields.IntField(required=True)
     # db collection
     meta = {"collection":"join_requests"}
-
-
-events = [
-    'add_to_group', 
-    'accept_join_request', 
-    'accept_testcase'
-]
-
-entity_types = ['group', 'assignment', 'testsuite']
-
-class Notification(BaseModel):
-    _id = fields.StringField(required=True, primary_key=True)
-    event = fields.StringField(choice=events, required=True)
-    entity_type = fields.StringField(choice=entity_types, required=True)
-    entity = fields.GenericReferenceField()
-    from_user = fields.ReferenceField(User, required=True, reverse_delete_rule=2)
-    to_user = fields.ReferenceField(User, required=True, reverse_delete_rule=2) 
-    created_at = fields.IntField(required=True)
-    read = fields.BooleanField(default=False)
-    # db collection
-    meta = {"collection":"notifications"}

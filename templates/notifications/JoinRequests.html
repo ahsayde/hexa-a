@@ -1,0 +1,21 @@
+<li class="list-group-item list-group-item-action item-list" name="item" search-key="{{notification.user.username}}">
+    <div class="row">
+        <div class="col-4 text-truncate">
+            <img class="rounded-circle mr-3 " width="32px" src="{{notification.user.profile_photo}}">
+            <a href="/users/{{notification.user.username}}">
+                {{notification.user.username}}
+            </a>
+            sent request to join group <a href="/groups/{{notification.group._id}}">{{notification.group.name}}</a> 
+        </div>
+
+        <div class="col ml-auto">
+            <small class="text-muted">{{timestamp_to_age(notification.created_at)}}</small>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-auto">
+            <button name="acceptJoinRequest" class="btn btn-sm btn-default" data-group="{{notification.group._id}}" data-request="{{notification._id}}">Accept</button>
+            <button name="rejectJoinRequest" class="btn btn-sm btn-default" data-group="{{notification.group._id}}" data-request="{{notification._id}}">Reject</button>                                                
+        </div>
+    </div>
+</li>

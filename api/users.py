@@ -123,19 +123,6 @@ def ListUserSubmmissions(** kwargs):
     return http.Ok(json.dumps(data))
 
 
-@users_api.route("/user/notifications")
-@auth_required
-def ListUserNotifications(** kwargs):
-    username = kwargs.get('username')        
-    notifications = Notification.objects.filter(
-        to_user=username
-    )
-
-    data = []
-    for notification in notifications:
-        data.append(notification.to_dict())
-    
-    return http.Ok(json.dumps(data))
 
 @users_api.route("/users/search")
 def SearchForUser(** kwargs):
@@ -152,3 +139,23 @@ def GetUserInfo(** kwargs):
         return http.NotFound()
     
     return http.Ok(json.dumps(user.to_dict()))
+
+
+@users_api.route("/user/notifications")
+@auth_required
+def GetUserGroupsNotifications(** kwargs):
+    username = kwargs.get('username')
+
+    notifications = {
+        'group_notifications':{
+            'JoinRequests':[],
+            'SugguestedTestcases':[],
+        },
+        'user_notifications':[],
+    }
+    memberships = GroupMembership.objects(user=username, role='admin')
+    for membership in memberships:
+        groupId = membership.group._id
+        notifications['group_notifications']['JoinRequests'] = [x.to_dict() for x in GroupJoinRequest.objects(group=groupId, user__ne=username)]
+
+    return http.Ok(json.dumps(notifications))

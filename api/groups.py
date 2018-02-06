@@ -4,6 +4,7 @@ from tools.tools import *
 from flask import Blueprint, request
 from tools.http import HttpResponse
 from authentication.authenticator import auth_required, group_access_level
+# from notifications.notification import notify
 
 http = HttpResponse()
 groups_api = Blueprint('groups_api', __name__)
@@ -310,6 +311,7 @@ def RejectJoinRequest(**kwargs):
 
 @groups_api.route("/groups/<groupId>/join", methods=['POST'])
 @auth_required
+# @notify('NewJoinRequest')
 def SendJoinRequest(**kwargs):
     username = kwargs.get('username')
     groupId = kwargs.get('groupId')
