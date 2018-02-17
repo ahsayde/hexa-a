@@ -9,7 +9,7 @@ $(document).ready(function () {
         .then((response)=>{
             var html = '';
             for(var user of response){
-                html += '<option>' + user._id + '</option>'
+                html += '<option>' + user.uid + '</option>'
             }
             $('#users-search-list').html(html);
         }).catch((error)=>{
@@ -78,7 +78,7 @@ $(document).ready(function () {
         var data = $(this).getFormData();
         hexaa.groups.create(data.name, data.description)
         .then((response)=>{
-            let url = '/groups/' + response._id;
+            let url = '/groups/' + response.uid;
             window.location.href = url;
         }).catch((error)=>{
             alert(error.responseText);
@@ -265,7 +265,7 @@ $(document).ready(function () {
         var data = $(this).getFormData();
         hexaa.groups.assignments.create(data.groupId, data.name, data.description, data.deadline)
         .then((response)=>{
-            let url = '/groups/' + data.groupId + '/assignments/' + response._id;
+            let url = '/groups/' + data.groupId + '/assignments/' + response.uid;
             window.location.href = url;
         }).catch((error)=>{
             alert(error.responseText);
@@ -339,7 +339,7 @@ $(document).ready(function () {
         var data = new FormData(this);
         hexaa.groups.testsuites.create(groupId, data)
         .then((response)=>{
-            let url = '/groups/' + groupId + '/testsuites/' + response._id;
+            let url = '/groups/' + groupId + '/testsuites/' + response.uid;
             window.location.href = url;
         }).catch((error)=>{
             alert(error.responseText);
@@ -424,7 +424,7 @@ $(document).ready(function () {
         var formData = new FormData(this);
         hexaa.groups.assignments.submit(data.group, data.assignment, formData)
         .then((response)=>{
-            window.location.href = '/submissions/' + response._id;
+            window.location.href = '/submissions/' + response.uid;
         }).catch((error)=>{
             alert(error.responseText);
         });

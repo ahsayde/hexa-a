@@ -27,7 +27,7 @@
             <div class="row">
                 <div class="col">
                     {% if not group.join_request %}
-                        <button id="join-group-button" type="button" class="btn btn-success" data-group="{{group._id}}">Join group</button>
+                        <button id="join-group-button" type="button" class="btn btn-success" data-group="{{group.uid}}">Join group</button>
                     {% else %}
                         <button type="button" class="btn btn-primary">Join request sent</button>
                     {% endif %}

@@ -1,16 +1,15 @@
-import json, shutil, os
+import json, shutil, os, requests
 from flask import Blueprint, request
 from db.models import *
 from tools.tools import *
 from tools.http import HttpResponse
-from tools.checker import Judger
 from werkzeug.utils import secure_filename
 from authentication.authenticator import auth_required, group_access_level
 
 http = HttpResponse()
 assignments_api = Blueprint('assignments_api', __name__)
 
-USERS_TMP_CODE_DIR = read_config()['dirs']['USERS_TMP_CODE_DIR']
+config = read_config('config.yaml')
 
 @assignments_api.route("/assignments")
 @auth_required
@@ -25,8 +24,12 @@ def ListAssignments(** kwargs):
         assignments = Assignment.objects(group=groupId)
     else:
         assignments = Assignment.objects(group=groupId, published=True)
-        
-    return http.Ok(assignments.to_json())
+    
+    data = []
+    for assignment in assignments:
+        data.append(assignment.to_dict())
+    
+    return http.Ok(json.dumps(data))
     
 @assignments_api.route("/assignments/<assignmentId>")
 @auth_required
@@ -37,7 +40,7 @@ def GetAssignmentInfo(** kwargs):
     assignmentId = kwargs.get('assignmentId')
     
     is_admin = GroupMembership.get(group=groupId, user=username, role='admin')
-    assignment = Assignment.get(_id=assignmentId)
+    assignment = Assignment.get(uid=assignmentId)
 
     if not is_admin and not assignment.published:
         return http.Forbidden()
@@ -72,7 +75,7 @@ def CreateAssignment(** kwargs):
             return http.BadRequest("Deadline must be after current time")
 
     assignment = Assignment(
-        _id=generate_uuid(),
+        uid=generate_uuid(),
         name=name,
         description=description,
         deadline=deadline,
@@ -87,7 +90,7 @@ def CreateAssignment(** kwargs):
 
     assignment.save()
 
-    data = {'_id':assignment._id}
+    data = {'uid':assignment.uid}
     return http.Created(json.dumps(data))
 
 @assignments_api.route("/assignments/<assignmentId>/publish", methods=['POST'])
@@ -97,7 +100,7 @@ def PublishAssignment(** kwargs):
     username = kwargs.get('username')
     assignmentId = kwargs.get('assignmentId')
 
-    assignment = Assignment.get(_id=assignmentId)
+    assignment = Assignment.get(uid=assignmentId)
     if not assignment:
         return http.NotFound('Assignment is not found')
     
@@ -113,7 +116,7 @@ def PublishAssignment(** kwargs):
         
     try:
         user = User.get(username=username)
-        Assignment.objects(_id=assignmentId).update(
+        Assignment.objects(uid=assignmentId).update(
             published=True,
             published_at=generate_timestamp(),
             published_by=user
@@ -130,7 +133,7 @@ def UpdateAssignment(** kwargs):
     username = kwargs.get('username')
     assignmentId = kwargs.get('assignmentId')
 
-    assignment = Assignment.get(_id=assignmentId)
+    assignment = Assignment.get(uid=assignmentId)
     if not assignment:
         return http.NotFound('Assignment is not found')
 
@@ -149,7 +152,7 @@ def UpdateAssignment(** kwargs):
             
     try:
         user = User.get(username=username)
-        Assignment.objects(_id=assignmentId).update(
+        Assignment.objects(uid=assignmentId).update(
             name=name, 
             description=description,
             settings=settings,
@@ -170,11 +173,11 @@ def DeleteAssignment(** kwargs):
     
     assignmentId = kwargs.get('assignmentId')
 
-    if not Assignment.get(_id=assignmentId):
+    if not Assignment.get(uid=assignmentId):
         return http.NotFound('Assignment is not found')
 
     try:
-        Assignment.delete(_id=assignmentId)
+        Assignment.delete(uid=assignmentId)
     except Exception as e:
         return http.InternalServerError(json.dumps(e.args))
 
@@ -187,12 +190,12 @@ def linkTestsuite(** kwargs):
     username = kwargs.get('username')
     assignmentId = kwargs.get('assignmentId')
 
-    assignment = Assignment.get(_id=assignmentId)
+    assignment = Assignment.get(uid=assignmentId)
     if not assignment:
         return http.NotFound('Assignment is not found')
 
     testsuiteId = request.json.get('testsuiteId')
-    testsuite = Testsuite.get(_id=testsuiteId)
+    testsuite = Testsuite.get(uid=testsuiteId)
 
     if not testsuite:
         return http.BadRequest("invalid testsuite id")
@@ -202,7 +205,7 @@ def linkTestsuite(** kwargs):
 
     try:
         user = User.get(username=username)
-        Assignment.objects(_id=assignmentId).update(
+        Assignment.objects(uid=assignmentId).update(
             push__testsuites=testsuite,
             updated_at=generate_timestamp(),
             updated_by=user
@@ -220,11 +223,11 @@ def unlinkTestsuite(** kwargs):
     assignmentId = kwargs.get('assignmentId')
     testsuiteId = kwargs.get('testsuiteId')
 
-    assignment = Assignment.get(_id=assignmentId)
+    assignment = Assignment.get(uid=assignmentId)
     if not assignment:
         return http.NotFound('Assignment is not found')
 
-    if testsuiteId not in [x._id for x in assignment.testsuites]:
+    if testsuiteId not in [x.uid for x in assignment.testsuites]:
         return http.NotFound('Testsuite is not found')
 
     if assignment.published and len(assignment.testsuites) < 2:
@@ -232,8 +235,8 @@ def unlinkTestsuite(** kwargs):
 
     try:
         user = User.get(username=username)
-        testsuite = Testsuite.get(_id=testsuiteId)
-        Assignment.objects(_id=assignmentId).update_one(
+        testsuite = Testsuite.get(uid=testsuiteId)
+        Assignment.objects(uid=assignmentId).update_one(
             pull__testsuites=testsuite,
             updated_at=generate_timestamp(),
             updated_by=user
@@ -252,11 +255,11 @@ def submit(**kwargs):
     assignmentId = kwargs.get('assignmentId')
     testsuiteId = request.form.get('testsuite')
     language = request.form.get('language')
-    file = request.files.get('source_file')
+    source_file = request.files.get('source_file')
 
-    group = Group.get(_id=groupId)
-    assignment = Assignment.get(_id=assignmentId)
-    testsuite = Testsuite.get(_id=testsuiteId)
+    group = Group.get(uid=groupId)
+    assignment = Assignment.get(uid=assignmentId)
+    testsuite = Testsuite.get(uid=testsuiteId)
 
     if testsuite.attempts > 0:
         user_submissions =  Submission.objects(
@@ -278,35 +281,44 @@ def submit(**kwargs):
         if assignment.deadline <= int(time.time()):
             return http.Forbidden('Can\'t submit to closed assignment')
 
-    config = read_config('judger_config.yaml')
+    # if language not in judger_config['languages']:
+    #     return http.BadRequest('Unsupported language')
 
-    if language not in config['languages'].keys():
-        return http.BadRequest('Unsupported language')
-
-    if not file:
+    if not source_file:
         return http.BadRequest('no selected file')
 
     reference_id = generate_uuid(20)
-    tmp_directory = USERS_TMP_CODE_DIR + reference_id
 
-    os.mkdir(tmp_directory)
-    source_file = secure_filename(file.filename)
-    file.save(os.path.join(tmp_directory, source_file))
-    language_config = config['languages'][language]
-    judger = Judger(language_config)
+    user_temp_dir = '{0}/{1}'.format(
+        config['dirs']['USERS_TMP_CODE_DIR'],
+        reference_id
+    )
+    # create temporary directory for current user
+    os.mkdir(user_temp_dir)
 
-    try:
-        judger.judge(tmp_directory, source_file, testsuite)
-    except Exception as e:
-        return http.InternalServerError(json.dumps(e.args))
+    source_file_path =  '{0}/{1}/{2}'.format(
+        config['dirs']['USERS_TMP_CODE_DIR'],
+        reference_id,
+        source_file.filename
+    )
+    source_file.save(source_file_path)
 
+    request_data = {
+        'language': language,
+        'source_file': source_file.filename,
+        'testsuite': testsuite.to_dict(),
+        'user_path': reference_id
+    }
+
+    judger_result = requests.post('http://127.0.0.1:3000/check', json=request_data).json()
+        
     status = 'unknown'
-    compiler_result = judger.result['compiler']
+    compiler_result = judger_result['compiler']
     if compiler_result:
         if compiler_result['returncode']:
             status = 'Compiler Error'
         else:
-            test_summary = judger.result['summary']
+            test_summary = judger_result['summary']
             if test_summary['errored']:
                 status = 'Error'
             elif test_summary['failed']:
@@ -315,14 +327,14 @@ def submit(**kwargs):
                 status = 'Passed'
 
     submission = Submission(
-        _id=reference_id,
+        uid=reference_id,
         group=groupId,
         assignment=assignmentId,
         testsuite=testsuiteId,
         submitted_at=generate_timestamp(),
         username=username,
         language=language,
-        result=judger.result,
+        result=judger_result,
         status=status
     )
     err = submission.check()
@@ -331,7 +343,7 @@ def submit(**kwargs):
 
     submission.save()
 
-    return http.Created(json.dumps({'_id':reference_id}))
+    return http.Created(json.dumps({'uid':reference_id}))
 
 @assignments_api.route("/assignments/<assignmentId>/submissions")
 @auth_required

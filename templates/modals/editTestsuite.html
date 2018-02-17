@@ -6,8 +6,8 @@
             </div>
             <div class="modal-body">
                 <form id="edit-testsuite-form">
-                    <input type="hidden" name="groupId" value="{{group._id}}">
-                    <input type="hidden" name="testsuiteId" value="{{testsuite._id}}">
+                    <input type="hidden" name="groupId" value="{{group.uid}}">
+                    <input type="hidden" name="testsuiteId" value="{{testsuite.uid}}">
                     <div class="form-group">
                         <label for="name">Name</label>
                         <input type="text" class="form-control" name="name" value="{{testsuite.name}}">

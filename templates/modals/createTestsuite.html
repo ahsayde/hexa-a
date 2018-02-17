@@ -5,7 +5,7 @@
                 <h4 class="modal-title">Create new testsuite</h4>
             </div>
             <div class="modal-body">
-                <form id="create-testsuite-form" group="{{group._id}}">
+                <form id="create-testsuite-form" group="{{group.uid}}">
                     <div class="form-group">
                         <label for="name">Name</label>
                         <input type="text" class="form-control" name="name">
@@ -21,7 +21,7 @@
                         <input type="checkbox" name="public"> Public
                     </div> 
                     <div class="form-group">
-                        <input name="attempts" type="number" class="form-control" placeholder="Attempts">
+                        <input name="attempts" type="number" class="form-control" placeholder="attempts">
                     </div>
                     <div class="form-group">
                         <input type="file" name="file" id="custom-file-handler-new-testsuite" style="display:none"/>

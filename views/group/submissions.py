@@ -25,7 +25,7 @@ def SubmissionsPage(**kwargs):
     username = kwargs.get('username')
     groupId = kwargs.get('groupId', None)
     
-    group = Group.get(_id=groupId)
+    group = Group.get(uid=groupId)
     if not group:
         return http.NotFound()
 

@@ -11,7 +11,7 @@
     </div>
     <div class="row mt-2 align-items-center">
         <div class="col-auto">
-            <small><code>{{testcase._id}}</code></small>
+            <small><code>{{testcase.uid}}</code></small>
         </div>
         <div class="col-auto">
             <small class="text-muted">
@@ -20,7 +20,7 @@
         </div>
         {% if group.is_admin %}
             <div class="col-auto ml-auto">
-                <button name="deleteTestcase" class="btn btn-sm btn-default" data-group="{{group._id}}" data-testsuite="{{testsuite._id}}"data-testcase="{{testcase._id}}">Delete</button>
+                <button name="deleteTestcase" class="btn btn-sm btn-default" data-group="{{group.uid}}" data-testsuite="{{testsuite.uid}}"data-testcase="{{testcase.uid}}">Delete</button>
             </div>
         {% endif %}
     </div>

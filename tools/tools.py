@@ -68,7 +68,7 @@ def parse_testcases_file(file, username, timestamp):
     testcases = []
     for i in range(int(len(lines)/2)):
         testcase = {
-            '_id': generate_uuid(5),
+            'uid': generate_uuid(5),
             'stdin': lines.pop(0),
             'expected_stdout': lines.pop(0),
             'added_by': username,

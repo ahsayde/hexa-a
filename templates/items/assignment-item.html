@@ -1,10 +1,10 @@
 <li class="list-group-item list-group-item-action item-list" name="item" search-key="{{assignment.name}}">
     <div class="row">
         <div class="col-4 text-truncate">
-            <a href="/groups/{{group._id}}/assignments/{{assignment._id}}">{{assignment.name}}</a>
+            <a href="/groups/{{group.uid}}/assignments/{{assignment.uid}}">{{assignment.name}}</a>
         </div>
         <div class="col-auto ml-auto">
-            <small class="text-muted">Created by <a href="/users/{{assignment.created_by}}">{{assignment.created_by}}</a></small>
+            <small class="text-muted">Created by <a href="/users/{{assignment.created_by.username}}">{{assignment.created_by.username}}</a></small>
         </div>
     </div>
 </li>

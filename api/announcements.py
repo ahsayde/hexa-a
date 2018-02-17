@@ -28,7 +28,7 @@ def CreateAnnouncement(** kwargs):
     content = request.json.get('content')
 
     announcement = Announcement(
-        _id=generate_uuid(),
+        uid=generate_uuid(),
         content=content,
         group=groupId,
         created_at=generate_timestamp(),
@@ -41,7 +41,7 @@ def CreateAnnouncement(** kwargs):
 
     announcement.save()
 
-    data = {'_id':announcement._id}
+    data = {'uid':announcement.uid}
     return http.Created(json.dumps(data))
 
 
@@ -52,7 +52,7 @@ def UpdateAnnouncement(** kwargs):
     username = kwargs.get('username')
     announcementId = kwargs.get('announcementId')
 
-    announcement = Announcement.get(_id=announcementId)
+    announcement = Announcement.get(uid=announcementId)
 
     if not announcement:
         return http.NotFound('Announcement is not found')
@@ -63,7 +63,7 @@ def UpdateAnnouncement(** kwargs):
     content = request.json.get('content')
             
     try:
-        Announcement.get(_id=announcementId).update(
+        Announcement.get(uid=announcementId).update(
             content=content,
             updated_at=generate_timestamp()
         )
@@ -78,11 +78,11 @@ def UpdateAnnouncement(** kwargs):
 def DeleteAnnouncement(** kwargs):
     announcementId = kwargs.get('announcementId')
 
-    if not Announcement.get(_id=announcementId):
+    if not Announcement.get(uid=announcementId):
         return http.NotFound('Announcement is not found')
 
     try:
-        Announcement.delete(_id=announcementId)
+        Announcement.delete(uid=announcementId)
     except Exception as e:
         return http.InternalServerError(json.dumps(e.args))
 

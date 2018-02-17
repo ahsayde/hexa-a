@@ -2,8 +2,8 @@
     <div class="row">
         <div class="col-1 text-truncate"><small>{{rank}}</small></div>
         <div class="col-2 text-truncate">
-            <small><a href="/users/{{record._id}}">{{record._id}}</a> 
-                {% if record._id == userInfo.username %}
+            <small><a href="/users/{{record.uid}}">{{record.uid}}</a> 
+                {% if record.uid == userInfo.username %}
                     <span class="text-muted">(you)</span>
                 {% endif %}
             </small>
@@ -11,7 +11,7 @@
 
         {% for testsuite in assignment.testsuites %}
 
-            {% set testsuite_obj = search_for_object(record.testsuites, 'testsuite', testsuite._id) %}
+            {% set testsuite_obj = search_for_object(record.testsuites, 'testsuite', testsuite.uid) %}
 
             {% if testsuite_obj %}
 

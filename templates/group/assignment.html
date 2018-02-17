@@ -22,7 +22,7 @@
         </div>
         {% if group.is_admin %}
             <div class="col-auto ml-auto" style="text-align:right">
-                <a href="/groups/{{group._id}}/assignments/{{assignment._id}}/edit" class="btn btn-default btn-sm">Edit</a>                    
+                <a href="/groups/{{group.uid}}/assignments/{{assignment.uid}}/edit" class="btn btn-default btn-sm">Edit</a>                    
                 <button type="button" data-toggle="modal" data-target="#delete-assignment" class="btn btn-danger btn-sm">
                     Delete
                 </button>
@@ -66,11 +66,11 @@
                         </div>
                         <div class="card-body pb-0">
 
-                            <form class="form" id="submit-code-form" data-group="{{group._id}}" data-assignment="{{assignment._id}}">
+                            <form class="form" id="submit-code-form" data-group="{{group.uid}}" data-assignment="{{assignment.uid}}">
                                 <div class="form-group">
                                     <select class="form-control form-control-sm" name="testsuite">
                                         {% for testsuite in assignment.testsuites %}
-                                            <option value="{{testsuite._id}}">{{testsuite.name}} ({{testsuite.level|capitalize}})</option>
+                                            <option value="{{testsuite.uid}}">{{testsuite.name}} ({{testsuite.level|capitalize}})</option>
                                         {% endfor %}
                                     </select>
                                 </div>
@@ -112,7 +112,7 @@
                                         <ul class="list-group list-group-flush">
                                             {% for testsuite in testsuites %}
                                                 <li class="list-group-item">
-                                                    <input type="checkbox" name="link-unlink-testsuite-checkbox" data-group="{{group._id}}" data-assignment="{{assignment._id}}" data-testsuite="{{testsuite._id}}" {{'checked' if testsuite._id in get_object_attr(assignment.testsuites, '_id') }}> {{testsuite.name}}   
+                                                    <input type="checkbox" name="link-unlink-testsuite-checkbox" data-group="{{group.uid}}" data-assignment="{{assignment.uid}}" data-testsuite="{{testsuite.uid}}" {{'checked' if testsuite.uid in get_object_attr(assignment.testsuites, 'uid') }}> {{testsuite.name}}   
                                                 </li>
                                             {% endfor %}
                                         </ul>
@@ -127,7 +127,7 @@
                             {% endif %}
                             {% for testsuite in assignment.testsuites %}
                                 <li  class="list-group-item pt-2 pb-2">
-                                    <a class="text-sm" href="/groups/{{group._id}}/testsuites/{{testsuite._id}}"> {{testsuite.name}}</a>
+                                    <a class="text-sm" href="/groups/{{group.uid}}/testsuites/{{testsuite.uid}}"> {{testsuite.name}}</a>
                                 </li>
                             {% endfor %}
                         </ul>
@@ -135,7 +135,7 @@
                 {% endif %}
                 
                 {% if not assignment.published %}
-                    <button id="publish-assignment-button" type="button" class="btn btn-success btn-md btn-block" data-group="{{group._id}}" data-assignment="{{assignment._id}}">Publish</button>        
+                    <button id="publish-assignment-button" type="button" class="btn btn-success btn-md btn-block" data-group="{{group.uid}}" data-assignment="{{assignment.uid}}">Publish</button>        
                 {% endif %}
             </div>
 

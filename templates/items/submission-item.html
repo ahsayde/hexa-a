@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col text-truncate">
             <small>
-                <a href="/submissions/{{submission._id}}"><code>{{submission._id[:10]}}</code></a>
+                <a href="/submissions/{{submission.uid}}"><code>{{submission.uid[:10]}}</code></a>
             </small>
         </div>
         {% if group.is_admin %}

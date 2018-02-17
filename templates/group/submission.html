@@ -51,13 +51,16 @@
                                                     <div class="col-auto"><code class="testcase">Input : {{testcase.stdin}}</code></div>
                                                     <div class="col-auto"><code class="testcase">Generated output: {{testcase.stdout}}</code></div>
                                                     <div class="col-auto"><code class="testcase">Expected output : {{testcase.expected_stdout}}</code></div>
+                                                    {% if testcase.status == 'Errored' %}
+                                                        <div class="col-auto"><code class="testcase">Error : {{testcase.stderr}}</code></div>
+                                                    {% endif %}
                                                 </div>
                                                 <div class="col-auto ml-auto d-flex align-items-center">
-                                                    {% if testcase.status == 'Error' %}
+                                                    {% if testcase.status == 'Errored' %}
                                                         <span class="badge badge-dark">Error</span>
-                                                    {% elif submission.status == 'Passed' %}
+                                                    {% elif testcase.status == 'Passed' %}
                                                         <span class="badge badge-success">Passed</span>     
-                                                    {% elif submission.status == 'Failed' %}                       
+                                                    {% elif testcase.status == 'Failed' %}                       
                                                         <span class="badge badge-danger">Failed</span> 
                                                     {% endif %}
                                                 </div>
