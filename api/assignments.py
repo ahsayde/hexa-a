@@ -290,7 +290,7 @@ def submit(**kwargs):
         config['dirs']['USERS_TMP_CODE_DIR'],
         reference_id
     )
-    
+
     # create temporary directory for current user
     os.mkdir(user_temp_dir)
 
@@ -322,6 +322,8 @@ def submit(**kwargs):
         judger_result = response.json()
     except Exception as e:
         return http.InternalServerError()
+    finally:
+        shutil.rmtree(user_temp_dir)
     
     status = 'unknown'
     compiler_result = judger_result['compiler']

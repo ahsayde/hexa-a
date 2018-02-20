@@ -3,7 +3,9 @@
 {% block container %}
 
     <div class="container" style="width:400px; margin-top:50px">
-        <h3>Sign Up</h3>
+        <h3 class="text-center">HEXA-A</h3>
+
+        <h4>Sign up</h4>
         <hr class="half-rule">
 
         {% if error %}
@@ -17,7 +19,7 @@
         <form action="/signup" method="post">
             <div class="form-group">
                  <label for="username">Username</label>
-                <input type="text" class="form-control" name="username" placeholder="Username" required>
+                <input type="text" class="form-control" name="username" required>
             </div>
             <div class="form-group">
                  <label for="email">Email</label>
