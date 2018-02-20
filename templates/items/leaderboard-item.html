@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-1 text-truncate"><small>{{rank}}</small></div>
         <div class="col-2 text-truncate">
-            <small><a href="/users/{{record.uid}}">{{record.uid}}</a> 
+            <small><a href="/users/{{record.uid}}">{{record._id}}</a> 
                 {% if record.uid == userInfo.username %}
                     <span class="text-muted">(you)</span>
                 {% endif %}

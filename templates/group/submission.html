@@ -6,7 +6,7 @@
     <div class="container-fluid" style="margin-top:56px"><br>
         <div class="row">
             <div class="col-auto">
-                <h4>Submissions / <code></span>{{submission._id}}</code></h4>
+                <h4>Submissions / <code></span>{{submission.uid}}</code></h4>
                 <small class="text-muted ml-1">
                     Submitted by <a href="/users/{{submission.username}}">{{submission.username}}</a> at {{datatimeFromTimestamp(submission.submitted_at)}}
                 </small>
@@ -26,7 +26,7 @@
                                     {% if not submission.result.compiler.returncode %}
                                         <small class="text-muted">Completed successfully</small>
                                     {% else %}
-                                        <code>{{submission.result.compiler.stdout}}</code>
+                                        <code>{{submission.result.compiler.stderr}}</code>
                                     {% endif %}
                                 </div>
                             </div>
@@ -47,15 +47,16 @@
                                     {% for testcase in submission.result.testcases %}
                                         <li class="list-group-item">
                                             <div class="row">
-                                                <div class="col-auto d-flex flex-column">
-                                                    <div class="col-auto"><code class="testcase">Input : {{testcase.stdin}}</code></div>
-                                                    <div class="col-auto"><code class="testcase">Generated output: {{testcase.stdout}}</code></div>
-                                                    <div class="col-auto"><code class="testcase">Expected output : {{testcase.expected_stdout}}</code></div>
+                                                <div class="col-10 d-flex flex-column">
+                                                    <code class="testcase">Id : {{testcase.uid}}</code>
+                                                    <code class="testcase">Input : {{testcase.stdin}}</code>
+                                                    <code class="testcase">Generated output: {{testcase.stdout}}</code>
+                                                    <code class="testcase">Expected output : {{testcase.expected_stdout}}</code>
                                                     {% if testcase.status == 'Errored' %}
-                                                        <div class="col-auto"><code class="testcase">Error : {{testcase.stderr}}</code></div>
+                                                       <code class="testcase">Error : {{testcase.stderr}}</code>
                                                     {% endif %}
                                                 </div>
-                                                <div class="col-auto ml-auto d-flex align-items-center">
+                                                <div class="col-1 ml-auto d-flex align-items-center">
                                                     {% if testcase.status == 'Errored' %}
                                                         <span class="badge badge-dark">Error</span>
                                                     {% elif testcase.status == 'Passed' %}

@@ -6,8 +6,8 @@ from client.authentication import Authentication
 
 class Client:
     
-    def __init__(self, host='localhost', port='5000'):
-        self.base_url = "http://{}:{}".format(host, port)
+    def __init__(self, url='http://localhost'):
+        self.base_url = url
         self.api_url = self.base_url + '/api'
         self.session = requests.session()
         self.groups = Groups(self)
@@ -15,7 +15,7 @@ class Client:
         self.authentication = Authentication(self)
 
     def set_auth_header(self, value):
-        self.session.headers['Authorization'] = value
+        self.session.headers['AUTH-TOKEN'] = value
 
     def api_handler(self, url, method, content_type='application/json', params=None, data=None, headers=None):
         

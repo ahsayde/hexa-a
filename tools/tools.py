@@ -1,4 +1,4 @@
-from os import path, mkdir
+from os import path, mkdir, getcwd
 from datetime import datetime
 from flask import Markup
 import uuid, time, hashlib, json, yaml, mistune
@@ -14,8 +14,8 @@ def get_file_extension(filename):
     return filename[filename.rfind('.'):]
 
 def read_config(file='config.yaml'):
-    config_path = path.dirname(path.dirname(path.abspath(__file__)))
-    with open(file, 'r') as f:
+    config_path = getcwd() + '/' + file
+    with open(config_path, 'r') as f:
         config =  yaml.load(f)
     return config
 

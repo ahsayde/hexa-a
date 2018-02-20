@@ -44,4 +44,6 @@ def GetAvatar(** kwargs):
         return http.NotFound()
     return send_file(local_picture_path, mimetype='image/gif')
 
-hexaa.run_server()
+if __name__ == '__main__':
+    app.run('127.0.0.1', port=8080)
+

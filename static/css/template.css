@@ -1,3 +1,7 @@
+body{
+    word-wrap: break-word; 
+}
+
 .container-fluid{
     width:90% !important;
 }
@@ -146,6 +150,7 @@ hr{
 .testcase{
     background: none;
     color: #424949;
+    word-break: break-all;
 }
 
 .nav-link.active {    
@@ -209,3 +214,7 @@ p, textarea[readonly]
     /* border:none !important; */
     background:none !important;
 }
+
+.text-wrap {
+    word-break: break-all;
+  }

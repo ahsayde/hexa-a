@@ -41,8 +41,4 @@ class HEXAA:
         self._app.register_blueprint(testsuites_pages)
         self._app.register_blueprint(submissions_pages) 
         self._app.register_blueprint(members_page) 
-        self._app.register_blueprint(settings_page)        
-        
-    def run_server(self):
-        config = self._config['server']
-        self._app.run(** config)
+        self._app.register_blueprint(settings_page)

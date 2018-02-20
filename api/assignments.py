@@ -303,14 +303,28 @@ def submit(**kwargs):
     )
     source_file.save(source_file_path)
 
+
+    testsuite_file_path =  '{0}/{1}/testsuite.json'.format(
+        config['dirs']['USERS_TMP_CODE_DIR'],source_file,
+        reference_id,
+    )
+    with open(testsuite_file_path, 'w') as f:
+        json.dump(testsuite.to_dict()['testcases'], f)
+
     request_data = {
         'language': language,
         'source_file': source_file.filename,
-        'testsuite': testsuite.to_dict(),
-        'user_path': reference_id
+        'testsuite': 'testsuite.json',
+        'reference_id': reference_id
     }
 
-    judger_result = requests.post('http://127.0.0.1:3000/check', json=request_data).json()
+    try:
+        response = requests.post('http://127.0.0.1:3000/check', json=request_data)
+        response.raise_for_status()
+        judger_result = response.json()
+    except Exception as e:
+        return http.InternalServerError()
+    
         
     status = 'unknown'
     compiler_result = judger_result['compiler']
