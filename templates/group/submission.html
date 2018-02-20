@@ -82,15 +82,17 @@
                     <div class="card-body d-flex flex-column">
                         <small>
                             <span class="text-muted mr-2">Group</span>
-                            <a href="">{{submission.group.name}}</a>
+                            <a href="/groups/{{submission.group.uid}}">{{submission.group.name}}</a>
                         </small>
                         <small>
                             <span class="text-muted mr-2">Assignment</span>
-                            <a href="">{{submission.assignment.name}}</a>
+                            <a href="/groups/{{submission.group.uid}}/assignments//groups/{{submission.assignment.uid}}">
+                                {{submission.assignment.name}}
+                            </a>
                         </small>
                         <small>
                             <span class="text-muted mr-2">Testsuite</span>
-                            <a href="">{{submission.testsuite.name}}</a>
+                            <a href="/groups/{{submission.group.uid}}/assignments//groups/{{submission.testsuite.uid}}">{{submission.testsuite.name}}</a>
                         </small>
                         <small>
                             <span class="text-muted mr-2">Language</span>

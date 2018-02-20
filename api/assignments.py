@@ -281,9 +281,6 @@ def submit(**kwargs):
         if assignment.deadline <= int(time.time()):
             return http.Forbidden('Can\'t submit to closed assignment')
 
-    # if language not in judger_config['languages']:
-    #     return http.BadRequest('Unsupported language')
-
     if not source_file:
         return http.BadRequest('no selected file')
 
@@ -293,6 +290,7 @@ def submit(**kwargs):
         config['dirs']['USERS_TMP_CODE_DIR'],
         reference_id
     )
+    
     # create temporary directory for current user
     os.mkdir(user_temp_dir)
 
@@ -305,7 +303,7 @@ def submit(**kwargs):
 
 
     testsuite_file_path =  '{0}/{1}/testsuite.json'.format(
-        config['dirs']['USERS_TMP_CODE_DIR'],source_file,
+        config['dirs']['USERS_TMP_CODE_DIR'],
         reference_id,
     )
     with open(testsuite_file_path, 'w') as f:
@@ -325,7 +323,6 @@ def submit(**kwargs):
     except Exception as e:
         return http.InternalServerError()
     
-        
     status = 'unknown'
     compiler_result = judger_result['compiler']
     if compiler_result:

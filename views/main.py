@@ -10,7 +10,7 @@ main_pages = Blueprint('main_pages', __name__)
 @main_pages.route("/")
 def Index(**kwargs):
     if is_authorized():
-        return render_template('user/dashboard.html')    
+        return redirect('/groups', code=302)   
     return render_template('main/index.html')
 
 @main_pages.route("/login", methods=["GET", "POST"])
@@ -25,7 +25,7 @@ def LoginPage():
 
         if is_valid_credentials(identifier, password):
             authorize_user(identifier=identifier)
-            return redirect('/dashboard', code=302)
+            return redirect('/groups', code=302)
         else:
             error = 'Invalid username or password'
             return render_template('main/login.html', error=error)
