@@ -180,6 +180,17 @@ $(document).ready(function () {
         return false
     });
 
+    $("button[name='leaveGroup']").click(function(){
+        var data = $(this).data();
+        hexaa.groups.memberships.delete(data.group, data.member)
+        .then((data)=>{
+            window.location.href = '/';
+        }).catch((error)=>{
+            alert(error.responseText);
+        });
+        return false
+    });
+
     
 
     // =========================== Announcements ============================ 

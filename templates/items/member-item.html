@@ -27,7 +27,7 @@
 
                     <div class="dropdown-menu" aria-labelledby="member-{{member.user.username}}">
                         {% if member.user.username == userInfo.username %}
-                            <button class="dropdown-item btn-sm" type="button" name="removeMember" data-group="{{group.uid}}" data-member="{{member.user.username}}">Leave group</button>
+                            <button class="dropdown-item btn-sm" type="button" name="leaveGroup" data-group="{{group.uid}}" data-member="{{member.user.username}}">Leave group</button>
                         {% elif  group.is_admin %}
                             {% set newrole = 'member' if member.role =='admin' else 'admin' %}
                             <button class="dropdown-item btn-sm" name="updateMemberRole" type="button" data-group="{{group.uid}}" data-member="{{member.user.username}}" data-newrole="{{newrole}}">Change role to {{newrole}}</button>
