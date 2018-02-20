@@ -99,7 +99,7 @@ class Credentials(BaseModel):
 
 class Group(BaseModel):
     uid = fields.StringField(required=True, primary_key=True)
-    name = fields.StringField(required=True, min_length=3)
+    name = fields.StringField(required=True, min_length=3, max_length=50)
     description = fields.StringField(required=True, max_length=100)
     created_by = fields.ReferenceField(User, required=True)
     created_at = fields.IntField(required=True)
@@ -129,7 +129,7 @@ class Testcase(EmbeddedDocument):
     
 class Testsuite(BaseModel):
     uid = fields.StringField(required=True, primary_key=True)
-    name = fields.StringField(required=True, min_length=3, max_length=15)
+    name = fields.StringField(required=True, min_length=3, max_length=50)
     level = fields.StringField(required=True, choice=['basic', 'extended', 'advanced'])
     public = fields.BooleanField(default=False)
     attempts = fields.IntField(default=0)
