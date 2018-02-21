@@ -9,7 +9,7 @@ $(document).ready(function () {
         .then((response)=>{
             var html = '';
             for(var user of response){
-                html += '<option>' + user.uid + '</option>'
+                html += '<option>' + user._id + '</option>'
             }
             $('#users-search-list').html(html);
         }).catch((error)=>{
