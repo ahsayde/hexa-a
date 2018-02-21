@@ -58,7 +58,8 @@ def Signup():
             return render_template('main/signup.html', error=error)
 
         if not username.strip():
-            return http.BadRequest('Invalid username')
+            error = {'username': 'Invalid username'}
+            return render_template('main/signup.html', error=error)
 
         user = User(
             username=username,
