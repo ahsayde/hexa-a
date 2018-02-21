@@ -57,6 +57,9 @@ def Signup():
             error = {'email':'email address is already used'}
             return render_template('main/signup.html', error=error)
 
+        if not username.strip():
+            return http.BadRequest('Invalid username')
+
         user = User(
             username=username,
             email=email,
