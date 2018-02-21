@@ -77,7 +77,7 @@ class BaseModel(Document):
         return cls.objects(**kwargs).delete()
 
 class User(BaseModel):
-    username = fields.StringField(primary_key=True, required=True, min_length=3, max_length=15)
+    username = fields.StringField(primary_key=True, required=True, min_length=3, max_length=15, regex='^[a-zA-Z0-9_]*$')
     email = fields.EmailField(unique=True, required=True)
     firstname = fields.StringField(min_length=3, max_length=15)
     lastname = fields.StringField(min_length=3, max_length=15)
@@ -88,7 +88,7 @@ class User(BaseModel):
     meta = {"collection":"users"}
 
 class Credentials(BaseModel):
-    username = fields.StringField(unique=True, required=True, min_length=3, max_length=15)
+    username = fields.StringField(unique=True, required=True, min_length=3, max_length=15, regex='^[a-zA-Z0-9_]*$')
     email = fields.EmailField(unique=True, required=True)
     salt = fields.StringField(required=True)
     secret = fields.StringField(required=True)

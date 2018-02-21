@@ -61,6 +61,8 @@ def Signup():
             error = {'username': 'Invalid username'}
             return render_template('main/signup.html', error=error)
 
+        username = username.lower()
+
         user = User(
             username=username,
             email=email,
