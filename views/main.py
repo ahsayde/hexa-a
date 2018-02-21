@@ -57,7 +57,7 @@ def Signup():
             error = {'email':'email address is already used'}
             return render_template('main/signup.html', error=error)
 
-        if not username.strip():
+        if not username.strip() or ' ' in username:
             error = {'username': 'Invalid username'}
             return render_template('main/signup.html', error=error)
 
