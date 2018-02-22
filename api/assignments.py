@@ -385,8 +385,8 @@ def ListSubmissions(**kwargs):
             if value:
                 query[filter] = value
 
-    submissions = Submission.objects(group=groupId, assignment=assignmentId, **query)
-    
+    submissions = Submission.objects(group=groupId, assignment=assignmentId, **query).order_by('-submitted_at')
+
     return http.Ok(submissions.to_json())
 
 @assignments_api.route("/assignments/<assignmentId>/leaderboard")
