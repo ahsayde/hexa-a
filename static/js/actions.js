@@ -433,17 +433,24 @@ $(document).ready(function () {
     $("#submit-code-form").submit(function(){
         var data = $(this).data();
         var formData = new FormData(this);
-        $('#submit-code').prop('disabled', true);
+
+        $('#submit-code').text('Submitting ...');
+        $('#submit-code').prop( "disabled", true);
         $('#submit-loading').show();
-        
+
         hexaa.groups.assignments.submit(data.group, data.assignment, formData)
+        .then((response) =>{
+            return response;
+        })
         .then((response)=>{
             window.location.href = '/submissions/' + response.uid;
         }).catch((error)=>{
             alert(error.responseText);
+        })
+        .then(()=>{
+            $('#submit-code').prop('disabled', false);  
+            $('#submit-loading').hide();  
         });
-        $('#submit-code').prop('disabled', false);  
-        $('#submit-loading').hide();      
         return false;
     });  
 });
