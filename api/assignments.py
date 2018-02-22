@@ -387,13 +387,7 @@ def ListSubmissions(**kwargs):
 
     submissions = Submission.objects(group=groupId, assignment=assignmentId, **query)
     
-    for submission in submissions:
-        temp = submission.to_dict()
-        temp['summary'] = temp['result']['summary']
-        del temp['result']
-        data.append(temp)
-
-    return http.Ok(json.dumps(data))
+    return http.Ok(submissions.to_json())
 
 @assignments_api.route("/assignments/<assignmentId>/leaderboard")
 @auth_required

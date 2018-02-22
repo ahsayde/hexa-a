@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col text-truncate">
             <small>
-                <a href="/submissions/{{submission.uid}}"><code>{{submission.uid[:10]}}</code></a>
+                <a href="/submissions/{{submission._id}}"><code>{{submission._id[:10]}}</code></a>
             </small>
         </div>
         {% if group.is_admin %}
@@ -18,11 +18,11 @@
         </div>
         <div class="col text-truncate">
             <small>
-                {% if submission.summary %}
+                {% if submission.result.summary %}
 
-                    <span class="text-success">{{submission.summary.passed}} / </span> 
-                    <span class="text-danger">{{submission.summary.failed}} / </span>
-                    <span class="text-dark">{{submission.summary.errored}}</span>
+                    <span class="text-success">{{submission.result.summary.passed}} / </span> 
+                    <span class="text-danger">{{submission.result.summary.failed}} / </span>
+                    <span class="text-dark">{{submission.result.summary.errored}}</span>
 
                 {% else %}
                     <span>- / - / -</span>
