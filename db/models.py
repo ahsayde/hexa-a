@@ -97,7 +97,6 @@ class Credentials(BaseModel):
     # db collection
     meta = {"collection":"credentials"}
 
-#29d046d83c1540429eaf6dbd77851f
 class ResetToken(BaseModel):
     user = fields.ReferenceField(User, required=True)
     email = fields.EmailField(unique=True, required=True)
