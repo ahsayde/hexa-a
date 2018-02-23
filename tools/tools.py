@@ -3,6 +3,8 @@ from datetime import datetime
 from flask import Markup
 import uuid, time, hashlib, json, yaml, mistune
 from subprocess import run, PIPE, TimeoutExpired
+from email.mime.text import MIMEText
+import smtplib
 
 def generate_uuid(length=10):
     return str(uuid.uuid4()).replace('-', '')[:length]
@@ -110,3 +112,17 @@ def search_for_object(objList, key, value):
         return obj[0]
     
     return None
+
+def send_email(fromaddr, toaddr, body, subject, password):
+    config = read_config()['smtp']
+    msg = MIMEText(body)
+    msg['From'] = fromaddr
+    msg['To'] = toaddr
+    msg['Subject'] = subject
+
+    server = smtplib.SMTP_SSL(config['host'], config['port'])
+    server.login(fromaddr, password)
+
+    text = msg.as_string()
+    server.sendmail(fromaddr, toaddr, text)
+    server.quit()

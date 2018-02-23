@@ -97,6 +97,15 @@ class Credentials(BaseModel):
     # db collection
     meta = {"collection":"credentials"}
 
+class ResetToken(BaseModel):
+    user = fields.ReferenceField(User, required=True)
+    email = fields.EmailField(unique=True, required=True)
+    salt = fields.StringField(required=True)
+    secret = fields.StringField(required=True)
+    created_at = fields.IntField(required=True)
+    # db collection
+    meta = {"collection":"reset_tokens"}
+
 class Group(BaseModel):
     uid = fields.StringField(required=True, primary_key=True)
     name = fields.StringField(required=True, min_length=3, max_length=50)
