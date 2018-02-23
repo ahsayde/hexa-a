@@ -93,8 +93,13 @@ def datatimeFromTimestamp(timestamp):
     if not timestamp:
         return None
 
-    return datetime.fromtimestamp(int(timestamp)).strftime('%Y-%m-%dT%H:%M')
+    return datetime.fromtimestamp(int(timestamp)).strftime('%Y-%m-%d %H:%M')
 
+def dataFromTimestamp(timestamp):
+    if not timestamp:
+        return None
+
+    return datetime.fromtimestamp(int(timestamp)).strftime('%Y-%m-%d')
 
 def get_object_attr(obj, attr):
     return [x[attr] for x in obj] 
