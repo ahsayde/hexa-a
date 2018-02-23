@@ -76,9 +76,9 @@ def SendRestPasswordPage(**kwargs):
         )
         resettoken.save()
 
-    subject = "[HEXA-A] Reset your account password"
+    subject = "[HEXA-A] Reset account password"
     reset_url = "https://hexa-tool.com/resetpassword?email={}&resettoken={}".format(email, token)
-    body = "Please click <a href='{}'>here</a> reset your password>".format(reset_url)
+    body = "Please click here {0} to reset your account's password".format(reset_url)
 
     send_email(
         toaddr=email,
@@ -113,10 +113,10 @@ def RestPasswordPage(**kwargs):
 
     reset_secret = hash_password(token, resettoken_obj.salt)[0]
     if reset_secret != resettoken_obj.secret:
-        return 'invlid token', 200
+        return render_template('main/reset_password.html', invalid_token=True)
 
     if (resettoken_obj.created_at + 3600) < time.time():
-        return 'invlid token', 200
+        return render_template('main/reset_password.html', invalid_token=True)
         
     if request.method == 'GET':
         return render_template('main/reset_password.html', resettoken=token, email=email)
@@ -138,8 +138,9 @@ def RestPasswordPage(**kwargs):
         timestamp = generate_timestamp()       
         credentials = Credentials.get(username=resettoken_obj.user.username)
         credentials.update(secret=secret, salt=salt, updated_at=timestamp)
-  
-    return render_template('main/reset_password.html', done=True)
+        resettoken_obj.delete()
+
+        return render_template('main/reset_password.html', done=True)
 
 @main_pages.route("/signup", methods=["GET", "POST"])
 @logout_required
