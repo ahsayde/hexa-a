@@ -30,7 +30,7 @@ def ListAssignments(** kwargs):
             group=groupId
         ).order_by('-created_at').limit(limit).skip(offset)
     else:
-        count = Assignment.objects(group=groupId, published=True)
+        count = Assignment.objects(group=groupId, published=True).count()
         requested_assignments = Assignment.objects(
             group=groupId, 
             published=True
