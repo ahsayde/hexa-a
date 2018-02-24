@@ -38,8 +38,8 @@
                                 <li class="nav-item">
                                     <a class="nav-link" data-toggle="tab" role="tab" href="#suggested-testcases">
                                         Suggestions
-                                        {% if suggested %}
-                                            <span class="badge badge-primary">{{suggested|length}}</span>
+                                        {% if suggested_testcases.result %}
+                                            <span class="badge badge-primary">{{suggested_testcases.result|length}}</span>
                                         {% endif %}
                                     </a>
                                 </li>
