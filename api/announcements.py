@@ -12,13 +12,27 @@ announcements_api = Blueprint('announcements_api', __name__)
 @auth_required
 @group_access_level('member')
 def ListAnnouncements(** kwargs):
+    limit = request.args.get('limit', 25, int)
+    page = request.args.get('page', 1, int) or 1
+    offset = (page - 1) * limit
+
     groupId = kwargs.get('groupId')
-    announcements = Announcement.objects(group=groupId).order_by('-created_at')
-    data = []
-    for announcement in announcements:
-        data.append(announcement.to_dict())
+    count = Announcement.objects(group=groupId).count()
+    requested_announcements = Announcement.objects(group=groupId).order_by('-created_at').limit(limit).skip(offset)
+
+    announcements = []
+    for announcement in requested_announcements:
+        announcements.append(announcement.to_dict())
+
+    pagenation = pagenate(limit, page, count, request.url)
+
+    data = {
+        'pagenation': pagenation,
+        'result': announcements
+    }
+
     return http.Ok(json.dumps(data))
-    
+
 @announcements_api.route("/announcements", methods=['POST'])
 @auth_required
 @group_access_level('admin')
@@ -43,7 +57,6 @@ def CreateAnnouncement(** kwargs):
 
     data = {'uid':announcement.uid}
     return http.Created(json.dumps(data))
-
 
 @announcements_api.route("/announcements/<announcementId>", methods=['PUT'])
 @auth_required

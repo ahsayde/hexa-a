@@ -12,17 +12,36 @@ testsuites_api = Blueprint('testsuites_api', __name__)
 @auth_required
 @group_access_level('members')
 def ListTestsuites(** kwargs):
+    limit = request.args.get('limit', 25, int)
+    page = request.args.get('page', 1, int) or 1
+    offset = (page - 1) * limit
+
     user_role = kwargs.get('user_role')
     groupId = kwargs.get('groupId')
 
     if user_role == 'member':
-        testsuites = Testsuite.objects(group=groupId, public=True).exclude('testcases')
-    elif user_role == 'admin':
-        testsuites = Testsuite.objects(group=groupId).exclude('testcases')
+        count = Testsuite.objects(group=groupId, public=True).count()
+        requested_testsuites = Testsuite.objects(
+            group=groupId, 
+            public=True
+        ).exclude('testcases').limit(limit).skip(offset)
 
-    data = []
-    for testsuite in testsuites:
-        data.append(testsuite.to_dict())
+    elif user_role == 'admin':
+        count = Testsuite.objects(group=groupId).count()
+        requested_testsuites = Testsuite.objects(
+            group=groupId
+        ).exclude('testcases').limit(limit).skip(offset)
+
+    testsuites = []
+    for testsuite in requested_testsuites:
+        testsuites.append(testsuite.to_dict())
+
+    pagenation = pagenate(limit, page, count, request.url)
+
+    data = {
+        'pagenation': pagenation,
+        'result': testsuites
+    }
 
     return http.Ok(json.dumps(data))
     
@@ -138,7 +157,6 @@ def DeleteTestsuite(** kwargs):
 
     return http.NoContent()
 
-
 @testsuites_api.route("/testsuites/<testsuiteId>/testcases/<testcasesId>", methods=['DELETE'])
 @auth_required
 @group_access_level('admin')
@@ -164,6 +182,10 @@ def DeleteTestcase(** kwargs):
 @auth_required
 @group_access_level('member')
 def ListSuggestTestcases(** kwargs):
+    limit = request.args.get('limit', 25, int)
+    page = request.args.get('page', 1, int) or 1
+    offset = (page - 1) * limit
+
     user_role = kwargs.get('user_role')
     username = kwargs.get('username')
     groupId = kwargs.get('groupId')
@@ -176,11 +198,22 @@ def ListSuggestTestcases(** kwargs):
     if not (user_role == 'admin' or testsuite.public):
         return http.Forbidden()
 
-    testcases = SuggestedTestcase.objects(group=groupId, testsuite=testsuiteId)
+    count = SuggestedTestcase.objects(group=groupId, testsuite=testsuiteId).count()
+    requested_testcases = SuggestedTestcase.objects(
+        group=groupId, 
+        testsuite=testsuiteId
+    ).order_by('-suggested_at').limit(limit).skip(offset)
 
-    data = []
-    for testcase in testcases:
-        data.append(testcase.to_dict())
+    testcases = []
+    for testcase in requested_testcases:
+        testcases.append(testcase.to_dict())
+
+    pagenation = pagenate(limit, page, count, request.url)
+
+    data = {
+        'pagenation': pagenation,
+        'result': testcases
+    }
 
     return http.Ok(json.dumps(data))
 
@@ -245,7 +278,6 @@ def AddTestcase(** kwargs):
 
     data = {'uid':uid}
     return http.Created(json.dumps(data))
-
 
 @testsuites_api.route("/testsuites/<testsuiteId>/testcases/<testcaseId>/accept", methods=['POST'])
 @auth_required

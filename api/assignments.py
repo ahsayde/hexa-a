@@ -15,20 +15,38 @@ config = read_config('config.yaml')
 @auth_required
 @group_access_level('member')
 def ListAssignments(** kwargs):
+    limit = request.args.get('limit', 25, int)
+    page = request.args.get('page', 1, int) or 1
+    offset = (page - 1) * limit
+
     username = kwargs.get('username')
     groupId = kwargs.get('groupId')
     
     is_admin = GroupMembership.get(group=groupId, user=username, role='admin')
 
     if is_admin:
-        assignments = Assignment.objects(group=groupId)
+        count = Assignment.objects(group=groupId).count()
+        requested_assignments = Assignment.objects(
+            group=groupId
+        ).order_by('-created_at').limit(limit).skip(offset)
     else:
-        assignments = Assignment.objects(group=groupId, published=True)
+        count = Assignment.objects(group=groupId, published=True)
+        requested_assignments = Assignment.objects(
+            group=groupId, 
+            published=True
+        ).order_by('-created_at').limit(limit).skip(offset)
     
-    data = []
-    for assignment in assignments:
-        data.append(assignment.to_dict())
-    
+    assignments = []
+    for assignment in requested_assignments:
+        assignments.append(assignment.to_dict())
+
+    pagenation = pagenate(limit, page, count, request.url)
+
+    data = {
+        'pagenation': pagenation,
+        'result': assignments
+    }
+
     return http.Ok(json.dumps(data))
     
 @assignments_api.route("/assignments/<assignmentId>")
@@ -362,6 +380,10 @@ def submit(**kwargs):
 @auth_required
 @group_access_level("member")
 def ListSubmissions(**kwargs):
+    limit = request.args.get('limit', 25, int)
+    page = request.args.get('page', 1, int) or 1
+    offset = (page - 1) * limit
+
     user_role = kwargs.get('user_role')
     username = kwargs.get('username')
     groupId = kwargs.get('groupId')
@@ -385,9 +407,19 @@ def ListSubmissions(**kwargs):
             if value:
                 query[filter] = value
 
-    submissions = Submission.objects(group=groupId, assignment=assignmentId, **query).order_by('-submitted_at')
+    count = Submission.objects(group=groupId, assignment=assignmentId, **query).count()
+    submissions = Submission.objects(
+        group=groupId, 
+        assignment=assignmentId,
+        **query).order_by('-submitted_at').limit(limit).skip(offset)
 
-    return http.Ok(submissions.to_json())
+    pagenation = pagenate(limit, page, count, request.url)
+
+    data = {
+        'pagenation': pagenation,
+        'result': json.loads(submissions.to_json())
+    }
+    return http.Ok(json.dumps(data))
 
 @assignments_api.route("/assignments/<assignmentId>/leaderboard")
 @auth_required
@@ -453,23 +485,3 @@ def Board(**kwargs):
 
     result = Submission.objects.aggregate(*pipeline)
     return json.dumps(list(result))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

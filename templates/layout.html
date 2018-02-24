@@ -6,16 +6,17 @@
         <link rel="stylesheet" href="/static/css/bootstrap.min.css">
         <link rel="stylesheet" href="/static/css/navbar-fixed-side.css">
         <link rel="stylesheet" href="/static/css/template.css">
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script> 
+        <script src="/static/js/nunjucks.js"></script>        
+        <script src="/static/js/script.js"></script>      
+        <script src="/static/js/api_client.js"></script>    
+        <script src="/static/js/actions.js?version=2"></script>  
         {% block header %}
             <title>{{page_title}}</title>
         {% endblock %}
     </head>
     <body>
-        {% block container %}{% endblock %}
-        <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>  
-        <script src="/static/js/script.js"></script>      
-        <script src="/static/js/api_client.js"></script>    
-        <script src="/static/js/actions.js?version=2"></script>        
+        {% block container %}{% endblock %}       
         <script src="/static/js/popper.min.js"></script>
         <script src="/static/js/bootstrap.min.js"></script>
     </body>

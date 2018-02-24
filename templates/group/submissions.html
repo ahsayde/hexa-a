@@ -58,7 +58,7 @@
     <div class="card">
 
         <div class="card-header card-header-sm">
-            <span class="text-muted">{{submissions|length}} Submissions</span>
+            <span class="text-muted">{{submissions.result|length}} Submissions</span>
         </div>
         
         <ul class="list-group list-group-flush">
@@ -76,13 +76,13 @@
                 </div>
             </li>
 
-            {% if not submissions %}
+            {% if not submissions.results %}
                 <li class="list-group-item pt-2 pb-2 text-muted">
                     <small>No submissions were found in this group</small> 
                 </li>
             {% endif %}
 
-            {% for submission in submissions %}{% include 'items/submission-item.html' %}{% endfor %}
+            {% for submission in submissions.result %}{% include 'items/submission-item.html' %}{% endfor %}
         </ul>
     </div>
      

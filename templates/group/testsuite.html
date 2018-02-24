@@ -71,12 +71,12 @@
 
                     <div class="tab-pane" id="suggested-testcases" role="tabpanel">
                         <ul class="list-group list-group-flush">
-                            {% if not suggested_testcases %}
+                            {% if not suggested_testcases.result %}
                                 <li class="list-group-item pt-2 pb-2 text-muted">
                                     <small>No suggested testcases were added to this testsuite</small> 
                                 </li>
                             {% endif %}
-                            {% for testcase in suggested_testcases %}{% include 'items/suggested-testcase-item.html'%}{% endfor %}
+                            {% for testcase in suggested_testcases.result %}{% include 'items/suggested-testcase-item.html'%}{% endfor %}
                         </ul>
                     </div>
 

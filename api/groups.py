@@ -11,10 +11,19 @@ groups_api = Blueprint('groups_api', __name__)
 @groups_api.route("/groups")
 @auth_required
 def ListGroups(** kwargs):
+    limit = request.args.get('limit', 25, int)
+    page = request.args.get('page', 1, int) or 1
+    offset = (page - 1) * limit
+
     username = kwargs.get('username')
     groups = []
-    memberships = GroupMembership.objects(user=username)
-    for membership in memberships:
+
+    count = GroupMembership.objects(user=username).count()
+    requested_memberships = GroupMembership.objects(
+        user=username
+    ).order_by('-created_at').limit(limit).skip(offset)
+
+    for membership in requested_memberships:
         group = membership.group.to_dict()
         group['is_admin'] = bool(membership.role == 'admin')
         group['is_member'] = bool(membership.role == 'member')
@@ -28,7 +37,14 @@ def ListGroups(** kwargs):
 
         groups.append(group)
 
-    return http.Ok(json.dumps(groups))
+    pagenation = pagenate(limit, page, count, request.url)
+
+    data = {
+        'pagenation': pagenation,
+        'result': groups
+    }
+
+    return http.Ok(json.dumps(data))
 
 @groups_api.route("/groups/<groupId>")
 @auth_required
@@ -145,12 +161,25 @@ def DeleteGroup(**kwargs):
 @auth_required
 @group_access_level('members')
 def ListGroupMembership(**kwargs):
+    limit = request.args.get('limit', 25, int)
+    page = request.args.get('page', 1, int) or 1
+    offset = (page - 1) * limit
+
     groupId = kwargs.get('groupId')
     fields = ['user', 'joined_at', 'added_by', 'role']
-    members = GroupMembership.objects(group=groupId).only(*fields)
-    data = []
-    for member in members:
-        data.append(member.to_dict())
+    count = GroupMembership.objects(group=groupId).count()
+    requested_members = GroupMembership.objects(group=groupId).only(*fields)
+
+    members = []
+    for member in requested_members:
+        members.append(member.to_dict())
+
+    pagenation = pagenate(limit, page, count, request.url)
+
+    data = {
+        'pagenation': pagenation,
+        'result': members
+    }
 
     return http.Ok(json.dumps(data))
 

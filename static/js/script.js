@@ -37,6 +37,10 @@ function setUrlParameter(key, value){
     window.location.href = url.href;
 };
 
+function pagenate(page){
+    setUrlParameter('page', page);
+}
+
 function deleteUrlParameter(key){
     var url_string = window.location.href;
     var url = new URL(url_string);

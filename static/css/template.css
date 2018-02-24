@@ -218,3 +218,13 @@ p, textarea[readonly]
 .text-wrap {
     word-break: break-all;
   }
+
+  .page-link{
+      cursor: pointer;
+      color:#1F618D;
+      background: linear-gradient(#fff, #f5f5f5);
+  }
+  .page-item.active .page-link{
+    border-color: #1F618D !important;
+    background:#1F618D !important;
+}

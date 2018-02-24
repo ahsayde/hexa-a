@@ -37,8 +37,12 @@ def AssignmentPage(** kwargs):
     assignment = api.groups.assignments.get(groupId, assignmentId).json()
 
     if tab == 'submissions':
+        limit = request.args.get('limit', 25, int)
+        _page = request.args.get('page', 1, int)
+        params = {'limit':limit, 'page':_page}
         members = api.groups.members.list(groupId).json()        
-        submissions = api.groups.assignments.submissions(groupId, assignmentId, filters).json()
+        submissions = api.groups.assignments.submissions(groupId, assignmentId, params=params).json()
+
         return render_template(
             'group/assignment.html', 
             page=page, 

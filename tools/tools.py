@@ -4,7 +4,7 @@ from flask import Markup
 import uuid, time, hashlib, json, yaml, mistune
 from subprocess import run, PIPE, TimeoutExpired
 from email.mime.text import MIMEText
-import smtplib
+import smtplib, math
 
 def generate_uuid(length=10):
     return str(uuid.uuid4()).replace('-', '')[:length]
@@ -126,3 +126,59 @@ def send_email(fromaddr, toaddr, body, subject, password):
     text = msg.as_string()
     server.sendmail(fromaddr, toaddr, text)
     server.quit()
+
+def pagenate(limit, page, count, request_url):
+    base_url = request_url[:request_url.find('?')]
+    pages = math.ceil(count/limit)
+    page = min(pages, page)
+        
+    if page < pages:
+        next_page = page + 1
+    else:
+        next_page = None
+
+    if page > 1:
+        prev_page = page - 1
+    else:
+        prev_page = None
+
+    pagenation = {
+        'count': count,
+        'limit': limit,
+        'current_page': page,
+        'pages': pages,
+        'next_page': next_page,
+        'prev_page': prev_page 
+    }
+
+    return pagenation
+
+# def pagenate(limit, offset, count, request_url):
+
+#     base_url = request_url[:request_url.find('?')]
+#     pages = math.ceil(count/limit)
+#     current_page = math.floor(offset / limit) + 1
+#     current_page = min(pages, current_page)
+
+#     if (offset + limit) < count:
+#         next_url = '{0}?limit={1}&offset={2}'.format(base_url, limit, offset + limit)
+#     else:
+#         next_url = None
+
+#     if (offset - limit) >= 0:
+#         prev_url = '{0}?limit={1}&offset={2}'.format(base_url, limit, offset - limit)
+#     else:
+#         prev_url = None
+
+#     pagenation = {
+#         'limit': limit,
+#         'offset': offset,
+#         'count': count,
+#         'pages': pages,
+#         'current_page': current_page,
+#         'self_url': request_url,
+#         'next_url': next_url,
+#         'prev_url': prev_url 
+#     }
+
+#     return pagenation

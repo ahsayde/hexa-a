@@ -161,16 +161,16 @@
                             </div>
                         </li>
                 
-                        {% if not submissions %}
+                        {% if not submissions.result %}
                             <li class="list-group-item pt-2 pb-2 text-muted">
                                 <small>No submissions were found in this group</small> 
                             </li>
                         {% endif %}
-                        {% for submission in submissions %}{% include 'items/submission-item.html' %}{% endfor %}
-
-                
+                        {% for submission in submissions.result %}{% include 'items/submission-item.html' %}{% endfor %}
                     </ul>
                 </div>
+                {% set pagenation = submissions.pagenation %}
+                {% include 'pagenation.html' %}
             </div>
 
         {% elif tab == 'leaderboard' %}
