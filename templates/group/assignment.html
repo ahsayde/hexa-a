@@ -105,13 +105,13 @@
                     
                                 <div class="dropdown-menu p-0" style="min-width:200px;">
                                     <div class="card-header card-header-sm text-muted" style="margin-bottom:-1px;">Link / unlink testsuites</div>
-                                        {% if not testsuites %}
+                                        {% if not testsuites.result %}
                                             <div class="card-body p-2">
                                                 <small class="text-muted">There is no testsuites in this group</small>
                                             </div>
                                         {% endif %}
                                         <ul class="list-group list-group-flush">
-                                            {% for testsuite in testsuites %}
+                                            {% for testsuite in testsuites.results %}
                                                 <li class="list-group-item">
                                                     <input type="checkbox" name="link-unlink-testsuite-checkbox" data-group="{{group.uid}}" data-assignment="{{assignment.uid}}" data-testsuite="{{testsuite.uid}}" {{'checked' if testsuite.uid in get_object_attr(assignment.testsuites, 'uid') }}> {{testsuite.name}}   
                                                 </li>
