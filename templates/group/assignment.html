@@ -14,9 +14,9 @@
                 <span class="badge badge-danger item-status-badge">Closed</span>
             {% endif %}
             <small class="text-muted ml-1">
-                Created {{timestamp_to_age(assignment.created_at)}} by {{assignment.created_by.username}}
+                Created {{timestamp_to_age(assignment.created_at)}} by <a href="/users/{{assignment.created_by.username}}">{{assignment.created_by.username}}</a>
                 {% if assignment.updated_at %}
-                    - Updated {{timestamp_to_age(assignment.updated_at)}} by {{assignment.updated_by.username}}
+                    - Updated {{timestamp_to_age(assignment.updated_at)}} by <a href="/users/{{assignment.updated_by.username}}">{{assignment.updated_by.username}}</a>
                 {% endif %}
             </small>
         </div>
