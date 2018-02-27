@@ -1,7 +1,7 @@
 from hexaa import HEXAA
 import json, os
 from flask import session, render_template, request, Markup, send_file
-from db.models import User, Notification
+from db.models import User
 from requests.exceptions import HTTPError
 from tools.tools import *
 from tools.http import HttpResponse
@@ -31,11 +31,11 @@ def errors(error):
 @app.context_processor
 def context_processor():
     userInfo = {}
-    notifications = []
+    # notifications = []
     if is_authorized():
         userInfo = User.get(username=session['user_id'])
-        notifications = Notification.objects(to_user=userInfo.username)
-    return dict(userInfo=userInfo, notifications=notifications)
+        # notifications = Notification.objects(to_user=userInfo.username)
+    return dict(userInfo=userInfo, notifications=[])
 
 @app.route("/avatars/<avatarId>")
 def GetAvatar(** kwargs):

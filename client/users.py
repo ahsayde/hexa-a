@@ -12,6 +12,11 @@ class Users:
         method = 'get'
         return self.client.api_handler(url=url, method=method)
 
+    def getNotifications(self):
+        url = self.client.api_url + '/user/notifications'
+        method = 'get'
+        return self.client.api_handler(url=url, method=method)
+
     def getUser(self, username):
         url = self.client.api_url + '/users/' + username
         method = 'get'
