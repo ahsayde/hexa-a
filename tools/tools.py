@@ -16,7 +16,7 @@ def get_file_extension(filename):
     return filename[filename.rfind('.'):]
 
 def read_config(file='config.yaml'):
-    config_path = getcwd() + '/' + file
+    config_path = path.join(path.dirname(__file__), '..', file)
     with open(config_path, 'r') as f:
         config =  yaml.load(f)
     return config
@@ -122,7 +122,6 @@ def send_email(fromaddr, toaddr, body, subject, password):
 
     server = smtplib.SMTP_SSL(config['host'], config['port'])
     server.login(fromaddr, password)
-
     text = msg.as_string()
     server.sendmail(fromaddr, toaddr, text)
     server.quit()
@@ -150,35 +149,4 @@ def pagenate(limit, page, count, request_url):
         'next_page': next_page,
         'prev_page': prev_page 
     }
-
     return pagenation
-
-# def pagenate(limit, offset, count, request_url):
-
-#     base_url = request_url[:request_url.find('?')]
-#     pages = math.ceil(count/limit)
-#     current_page = math.floor(offset / limit) + 1
-#     current_page = min(pages, current_page)
-
-#     if (offset + limit) < count:
-#         next_url = '{0}?limit={1}&offset={2}'.format(base_url, limit, offset + limit)
-#     else:
-#         next_url = None
-
-#     if (offset - limit) >= 0:
-#         prev_url = '{0}?limit={1}&offset={2}'.format(base_url, limit, offset - limit)
-#     else:
-#         prev_url = None
-
-#     pagenation = {
-#         'limit': limit,
-#         'offset': offset,
-#         'count': count,
-#         'pages': pages,
-#         'current_page': current_page,
-#         'self_url': request_url,
-#         'next_url': next_url,
-#         'prev_url': prev_url 
-#     }
-
-#     return pagenation
