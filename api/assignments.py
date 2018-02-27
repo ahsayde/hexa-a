@@ -5,6 +5,7 @@ from tools.tools import *
 from tools.http import HttpResponse
 from werkzeug.utils import secure_filename
 from authentication.authenticator import auth_required, group_access_level
+from tools.judger import Judger
 
 http = HttpResponse()
 assignments_api = Blueprint('assignments_api', __name__)
@@ -327,19 +328,18 @@ def submit(**kwargs):
     with open(testsuite_file_path, 'w') as f:
         json.dump(testsuite.to_dict()['testcases'], f)
 
-    request_data = {
-        'language': language,
-        'source_file': source_file.filename,
-        'testsuite': 'testsuite.json',
-        'reference_id': reference_id
+    judger_config = {
+        'USER_PATH':reference_id,
+        'LANGUAGE': language,
+        'SOURCE_FILE': source_file.filename,
+        'TESTSUITE': 'testsuite.json',
     }
-
+    
     try:
-        response = requests.post('http://127.0.0.1:3000/check', json=request_data)
-        response.raise_for_status()
-        judger_result = response.json()
-    except Exception as e:
-        return http.InternalServerError()
+        judger = Judger(reference_id=reference_id, config=judger_config)
+        judger_result = judger.judge()
+    except:
+        return http.InternalServerError('Unexpected error')
     finally:
         shutil.rmtree(user_temp_dir)
     
