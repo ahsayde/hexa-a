@@ -41,7 +41,7 @@
   <div class="tab-content mt-4 p-0">
       <div class="tab-pane show active" id="members" role="tabpanel">
           <div class="list-group">
-            {% for member in members %}{% include 'items/member-item.html' %}{% endfor %}
+            {% for member in members.result %}{% include 'items/member-item.html' %}{% endfor %}
           </div>
       </div>
 

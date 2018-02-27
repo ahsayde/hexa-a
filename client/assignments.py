@@ -2,10 +2,10 @@ class Assignments:
     def __init__(self, client):
         self.client = client
 
-    def list(self, groupId):
+    def list(self, groupId, params=None):
         url = self.client.api_url + '/groups/' + groupId + '/assignments'
         method = 'get'
-        return self.client.api_handler(url=url, method=method)
+        return self.client.api_handler(url=url, method=method, params=params)
 
     def get(self, groupId, assignmentId):
         url = self.client.api_url + '/groups/' + groupId + '/assignments/' + assignmentId

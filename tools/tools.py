@@ -4,7 +4,7 @@ from flask import Markup
 import uuid, time, hashlib, json, yaml, mistune
 from subprocess import run, PIPE, TimeoutExpired
 from email.mime.text import MIMEText
-import smtplib
+import smtplib, math
 
 def generate_uuid(length=10):
     return str(uuid.uuid4()).replace('-', '')[:length]
@@ -16,7 +16,7 @@ def get_file_extension(filename):
     return filename[filename.rfind('.'):]
 
 def read_config(file='config.yaml'):
-    config_path = getcwd() + '/' + file
+    config_path = path.join(path.dirname(__file__), '..', file)
     with open(config_path, 'r') as f:
         config =  yaml.load(f)
     return config
@@ -122,7 +122,31 @@ def send_email(fromaddr, toaddr, body, subject, password):
 
     server = smtplib.SMTP_SSL(config['host'], config['port'])
     server.login(fromaddr, password)
-
     text = msg.as_string()
     server.sendmail(fromaddr, toaddr, text)
     server.quit()
+
+def pagenate(limit, page, count, request_url):
+    base_url = request_url[:request_url.find('?')]
+    pages = math.ceil(count/limit)
+    page = min(pages, page)
+        
+    if page < pages:
+        next_page = page + 1
+    else:
+        next_page = None
+
+    if page > 1:
+        prev_page = page - 1
+    else:
+        prev_page = None
+
+    pagenation = {
+        'count': count,
+        'limit': limit,
+        'current_page': page,
+        'pages': pages,
+        'next_page': next_page,
+        'prev_page': prev_page 
+    }
+    return pagenation

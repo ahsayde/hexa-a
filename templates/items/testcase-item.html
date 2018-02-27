@@ -15,7 +15,7 @@
         </div>
         <div class="col-auto">
             <small class="text-muted">
-                {% if testcase.suggested_by%} Suggested by {{testcase.suggested_by}}, {% endif %} Added by {{testcase.added_by}} {{timestamp_to_age(testcase.added_at)}}
+                {% if testcase.suggested_by%} Suggested by <a href="/users/{{testcase.suggested_by}}">{{testcase.suggested_by}}</a>, {% endif %} Added by <a href="/users/{{testcase.added_by}}">{{testcase.added_by}}</a> {{timestamp_to_age(testcase.added_at)}}
             </small>
         </div>
         {% if group.is_admin %}

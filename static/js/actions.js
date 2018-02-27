@@ -448,9 +448,11 @@ $(document).ready(function () {
             alert(error.responseText);
         })
         .then(()=>{
+            $('#submit-code').text('Submit');
             $('#submit-code').prop('disabled', false);  
             $('#submit-loading').hide();  
         });
         return false;
     });  
+
 });

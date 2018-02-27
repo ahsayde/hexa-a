@@ -14,9 +14,9 @@
                 <span class="badge badge-danger item-status-badge">Closed</span>
             {% endif %}
             <small class="text-muted ml-1">
-                Created {{timestamp_to_age(assignment.created_at)}} by {{assignment.created_by.username}}
+                Created {{timestamp_to_age(assignment.created_at)}} by <a href="/users/{{assignment.created_by.username}}">{{assignment.created_by.username}}</a>
                 {% if assignment.updated_at %}
-                    - Updated {{timestamp_to_age(assignment.updated_at)}} by {{assignment.updated_by.username}}
+                    - Updated {{timestamp_to_age(assignment.updated_at)}} by <a href="/users/{{assignment.updated_by.username}}">{{assignment.updated_by.username}}</a>
                 {% endif %}
             </small>
         </div>
@@ -105,13 +105,13 @@
                     
                                 <div class="dropdown-menu p-0" style="min-width:200px;">
                                     <div class="card-header card-header-sm text-muted" style="margin-bottom:-1px;">Link / unlink testsuites</div>
-                                        {% if not testsuites %}
+                                        {% if not testsuites.result %}
                                             <div class="card-body p-2">
                                                 <small class="text-muted">There is no testsuites in this group</small>
                                             </div>
                                         {% endif %}
                                         <ul class="list-group list-group-flush">
-                                            {% for testsuite in testsuites %}
+                                            {% for testsuite in testsuites.result %}
                                                 <li class="list-group-item">
                                                     <input type="checkbox" name="link-unlink-testsuite-checkbox" data-group="{{group.uid}}" data-assignment="{{assignment.uid}}" data-testsuite="{{testsuite.uid}}" {{'checked' if testsuite.uid in get_object_attr(assignment.testsuites, 'uid') }}> {{testsuite.name}}   
                                                 </li>
@@ -145,7 +145,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header card-header-sm">
-                        <span class="text-muted">{{submissions|length}} Submissions</span>
+                        <span class="text-muted">{{submissions.pagenation.count}} Submissions</span>
                     </div>
                     
                     <ul class="list-group list-group-flush">
@@ -161,16 +161,16 @@
                             </div>
                         </li>
                 
-                        {% if not submissions %}
+                        {% if not submissions.result %}
                             <li class="list-group-item pt-2 pb-2 text-muted">
                                 <small>No submissions were found in this group</small> 
                             </li>
                         {% endif %}
-                        {% for submission in submissions %}{% include 'items/submission-item.html' %}{% endfor %}
-
-                
+                        {% for submission in submissions.result %}{% include 'items/submission-item.html' %}{% endfor %}
                     </ul>
                 </div>
+                {% set pagenation = submissions.pagenation %}
+                {% include 'pagenation.html' %}
             </div>
 
         {% elif tab == 'leaderboard' %}

@@ -9,9 +9,9 @@
             <small class="text-muted ml-1">{{testsuite.level|capitalize}}</small>
             <small class="text-muted ml-1">{{'Public' if testsuite.public else 'Private'}}</small>            
             <small class="text-muted ml-1">
-                Created {{timestamp_to_age(testsuite.created_at)}} by {{testsuite.created_by.username}}
+                Created {{timestamp_to_age(testsuite.created_at)}} by <a href="/users/{{testsuite.created_by.username}}">{{testsuite.created_by.username}}</a>
                 {% if testsuite.updated_at %}
-                    - Updated {{timestamp_to_age(testsuite.updated_at)}} by {{testsuite.updated_by.username}}
+                    - Updated {{timestamp_to_age(testsuite.updated_at)}} by <a href="/users/{{testsuite.updated_by.username}}">{{testsuite.updated_by.username}}</a>
                 {% endif %}
             </small>
         </div>
@@ -38,8 +38,8 @@
                                 <li class="nav-item">
                                     <a class="nav-link" data-toggle="tab" role="tab" href="#suggested-testcases">
                                         Suggestions
-                                        {% if suggested %}
-                                            <span class="badge badge-primary">{{suggested|length}}</span>
+                                        {% if suggested_testcases.result %}
+                                            <span class="badge badge-primary">{{suggested_testcases.result|length}}</span>
                                         {% endif %}
                                     </a>
                                 </li>
@@ -71,12 +71,12 @@
 
                     <div class="tab-pane" id="suggested-testcases" role="tabpanel">
                         <ul class="list-group list-group-flush">
-                            {% if not suggested_testcases %}
+                            {% if not suggested_testcases.result %}
                                 <li class="list-group-item pt-2 pb-2 text-muted">
                                     <small>No suggested testcases were added to this testsuite</small> 
                                 </li>
                             {% endif %}
-                            {% for testcase in suggested_testcases %}{% include 'items/suggested-testcase-item.html'%}{% endfor %}
+                            {% for testcase in suggested_testcases.result %}{% include 'items/suggested-testcase-item.html'%}{% endfor %}
                         </ul>
                     </div>
 

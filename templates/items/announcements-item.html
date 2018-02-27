@@ -5,7 +5,15 @@
             <div class="media-body">
                 <div class="row">
                     <div class="col-auto">
-                        <h6 class="m-0 mb-1">{{announcement.created_by.username}}</h6>
+                        <h6 class="m-0 mb-1">
+                            <a href="/users/{{announcement.created_by.username}}">
+                                {% if announcement.created_by.firstname and announcement.created_by.lastname %}
+                                    {{ announcement.created_by.firstname }} {{ announcement.created_by.lastname}}
+                                {% else %}
+                                    {{announcement.created_by.username}}
+                                {% endif %}
+                            </a>
+                        </h6>
                         <span class="text-muted mr-1" style="font-size:13px">{{timestamp_to_age(announcement.created_at)}} </span> 
                         {% if announcement.updated_at %}
                             <span class="text-muted" style="font-size:13px">edited</span> 

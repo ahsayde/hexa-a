@@ -29,7 +29,7 @@
       <span class="text-muted">No announcements were found in this group</span>
   {% else %}
     <div class="list-group">
-      {% for announcement in announcements %} {% include 'items/announcements-item.html' %} {% endfor %}
+      {% for announcement in announcements.result %} {% include 'items/announcements-item.html' %} {% endfor %}
     </div>
   {% endif %}
 
