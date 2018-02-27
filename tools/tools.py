@@ -1,8 +1,10 @@
-from os import path, mkdir
+from os import path, mkdir, getcwd
 from datetime import datetime
 from flask import Markup
 import uuid, time, hashlib, json, yaml, mistune
 from subprocess import run, PIPE, TimeoutExpired
+from email.mime.text import MIMEText
+import smtplib, math
 
 def generate_uuid(length=10):
     return str(uuid.uuid4()).replace('-', '')[:length]
@@ -14,8 +16,8 @@ def get_file_extension(filename):
     return filename[filename.rfind('.'):]
 
 def read_config(file='config.yaml'):
-    config_path = path.dirname(path.dirname(path.abspath(__file__)))
-    with open(file, 'r') as f:
+    config_path = path.join(path.dirname(__file__), '..', file)
+    with open(config_path, 'r') as f:
         config =  yaml.load(f)
     return config
 
@@ -68,7 +70,7 @@ def parse_testcases_file(file, username, timestamp):
     testcases = []
     for i in range(int(len(lines)/2)):
         testcase = {
-            '_id': generate_uuid(5),
+            'uid': generate_uuid(5),
             'stdin': lines.pop(0),
             'expected_stdout': lines.pop(0),
             'added_by': username,
@@ -93,8 +95,13 @@ def datatimeFromTimestamp(timestamp):
     if not timestamp:
         return None
 
-    return datetime.fromtimestamp(int(timestamp)).strftime('%Y-%m-%dT%H:%M')
+    return datetime.fromtimestamp(int(timestamp)).strftime('%Y-%m-%d %H:%M')
 
+def dataFromTimestamp(timestamp):
+    if not timestamp:
+        return None
+
+    return datetime.fromtimestamp(int(timestamp)).strftime('%Y-%m-%d')
 
 def get_object_attr(obj, attr):
     return [x[attr] for x in obj] 
@@ -105,3 +112,41 @@ def search_for_object(objList, key, value):
         return obj[0]
     
     return None
+
+def send_email(fromaddr, toaddr, body, subject, password):
+    config = read_config()['smtp']
+    msg = MIMEText(body)
+    msg['From'] = fromaddr
+    msg['To'] = toaddr
+    msg['Subject'] = subject
+
+    server = smtplib.SMTP_SSL(config['host'], config['port'])
+    server.login(fromaddr, password)
+    text = msg.as_string()
+    server.sendmail(fromaddr, toaddr, text)
+    server.quit()
+
+def pagenate(limit, page, count, request_url):
+    base_url = request_url[:request_url.find('?')]
+    pages = math.ceil(count/limit)
+    page = min(pages, page)
+        
+    if page < pages:
+        next_page = page + 1
+    else:
+        next_page = None
+
+    if page > 1:
+        prev_page = page - 1
+    else:
+        prev_page = None
+
+    pagenation = {
+        'count': count,
+        'limit': limit,
+        'current_page': page,
+        'pages': pages,
+        'next_page': next_page,
+        'prev_page': prev_page 
+    }
+    return pagenation

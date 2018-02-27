@@ -13,12 +13,12 @@ def getSubmission(**kwargs):
     username = kwargs.get('username')
     submissionId = kwargs.get('submissionId')
 
-    submission = Submission.get(_id=submissionId)
+    submission = Submission.get(uid=submissionId)
     if not submission:
         return http.NotFound()
 
     if submission.username != username:
-        groupId = submission.group._id
+        groupId = submission.group.uid
         group_membership = GroupMembership.get(group=groupId, user=username)
         if not group_membership:
             return http.Forbidden()

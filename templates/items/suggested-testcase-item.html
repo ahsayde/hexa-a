@@ -12,17 +12,17 @@
     </div>
     <div class="row mt-2 align-items-center">
         <div class="col-auto">
-            <small><code>{{testcase._id}}</code></small>
+            <small><code>{{testcase.uid}}</code></small>
         </div>
         <div class="col-auto">
-            <small class="text-muted">Suggested by {{testcase.user.username}} {{timestamp_to_age(testcase.suggested_at)}}</small>
+            <small class="text-muted">Suggested by <a href="/users/{{testcase.user.username}}">{{testcase.user.username}}</a> {{timestamp_to_age(testcase.suggested_at)}}</small>
         </div>
             <div class="col-auto ml-auto">
                 {% if group.is_admin %}
-                    <button name="acceptTestcase" class="btn btn-sm btn-default" data-group="{{group._id}}" data-testsuite="{{testsuite._id}}" data-testcase="{{testcase._id}}">Accept</button>
-                    <button name="rejectTestcase" class="btn btn-sm btn-default" data-group="{{group._id}}" data-testsuite="{{testsuite._id}}" data-testcase="{{testcase._id}}">Reject</button>                                                
+                    <button name="acceptTestcase" class="btn btn-sm btn-default" data-group="{{group.uid}}" data-testsuite="{{testsuite.uid}}" data-testcase="{{testcase.uid}}">Accept</button>
+                    <button name="rejectTestcase" class="btn btn-sm btn-default" data-group="{{group.uid}}" data-testsuite="{{testsuite.uid}}" data-testcase="{{testcase.uid}}">Reject</button>                                                
                 {% elif userInfo.username ==  testcase.user.username %}
-                    <button name="rejectTestcase" class="btn btn-sm btn-default" data-group="{{group._id}}" data-testsuite="{{testsuite._id}}" data-testcase="{{testcase._id}}">Delete</button>
+                    <button name="rejectTestcase" class="btn btn-sm btn-default" data-group="{{group.uid}}" data-testsuite="{{testsuite.uid}}" data-testcase="{{testcase.uid}}">Delete</button>
                 {% endif %}
 
             </div>

@@ -28,3 +28,10 @@ def SettingsPage(** kwargs):
     username = kwargs.get('username')
     user = api.users.getUser(username).json()
     return render_template('user/settings.html', user=user)
+
+@user_pages.route("/users/<user_id>")
+@login_required
+def UsersPage(** kwargs):
+    username = kwargs.get('user_id')
+    user = api.users.getUser(username).json()
+    return render_template('user/users.html', user=user)

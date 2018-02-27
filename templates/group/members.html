@@ -22,7 +22,7 @@
 
       <div class="col-auto ml-auto">
           <form class="form-row mb-0" id="add-member-form">
-              <input type="hidden" name="groupId" value="{{group._id}}">
+              <input type="hidden" name="groupId" value="{{group.uid}}">
               <div class="form-group mb-0 col-auto">
                 <input id="group-member-search" type="text" list="users-search-list" class="form-control form-control-sm" name="member" placeholder="Username" required>
                 <datalist id="users-search-list"></datalist>
@@ -41,7 +41,7 @@
   <div class="tab-content mt-4 p-0">
       <div class="tab-pane show active" id="members" role="tabpanel">
           <div class="list-group">
-            {% for member in members %}{% include 'items/member-item.html' %}{% endfor %}
+            {% for member in members.result %}{% include 'items/member-item.html' %}{% endfor %}
           </div>
       </div>
 

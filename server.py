@@ -16,6 +16,7 @@ http = HttpResponse()
 app.jinja_env.globals.update(timestamp_to_age=timestamp_to_age)
 app.jinja_env.globals.update(render_markdown=render_markdown)
 app.jinja_env.globals.update(datatimeFromTimestamp=datatimeFromTimestamp)
+app.jinja_env.globals.update(dataFromTimestamp=datatimeFromTimestamp)
 app.jinja_env.globals.update(get_object_attr=get_object_attr)
 app.jinja_env.globals.update(search_for_object=search_for_object)
 
@@ -44,4 +45,6 @@ def GetAvatar(** kwargs):
         return http.NotFound()
     return send_file(local_picture_path, mimetype='image/gif')
 
-hexaa.run_server()
+if __name__ == '__main__':
+    app.run('127.0.0.1', port=5000, threaded=True)
+

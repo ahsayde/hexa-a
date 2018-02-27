@@ -11,18 +11,15 @@
             </div>
         {% endif %}
         <div class="col text-truncate">
-            <small>{{submission.testsuite.name}} ({{submission.testsuite.level}})</small>
-        </div>
-        <div class="col text-truncate">
             <small>{{datatimeFromTimestamp(submission.submitted_at)}}</small>
         </div>
         <div class="col text-truncate">
             <small>
-                {% if submission.summary %}
+                {% if submission.result.summary %}
 
-                    <span class="text-success">{{submission.summary.passed}} / </span> 
-                    <span class="text-danger">{{submission.summary.failed}} / </span>
-                    <span class="text-dark">{{submission.summary.errored}}</span>
+                    <span class="text-success">{{submission.result.summary.passed}} / </span> 
+                    <span class="text-danger">{{submission.result.summary.failed}} / </span>
+                    <span class="text-dark">{{submission.result.summary.errored}}</span>
 
                 {% else %}
                     <span>- / - / -</span>

@@ -3,7 +3,9 @@
 {% block container %}
 
     <div class="container" style="width:400px; margin-top:50px">
-        <h3>Sign in</h3>
+        <h3 class="text-center">HEXA-A</h3>
+
+        <h4>Sign in</h4>
         <hr class="half-rule">
         
         {% if error %}
@@ -18,6 +20,9 @@
             <div class="form-group">
                  <label for="password">Password</label>
                 <input type="password" class="form-control" name="password">
+            </div>
+            <div class="form-group">
+                <a href="/sendresetpassword">Forget password?</a>
             </div>
             <button type="submit" class="btn btn-success">Login</button>
         </form>

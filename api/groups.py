@@ -12,24 +12,40 @@ groups_api = Blueprint('groups_api', __name__)
 @groups_api.route("/groups")
 @auth_required
 def ListGroups(** kwargs):
+    limit = request.args.get('limit', 25, int)
+    page = request.args.get('page', 1, int) or 1
+    offset = (page - 1) * limit
+
     username = kwargs.get('username')
     groups = []
-    memberships = GroupMembership.objects(user=username)
-    for membership in memberships:
+
+    count = GroupMembership.objects(user=username).count()
+    requested_memberships = GroupMembership.objects(
+        user=username
+    ).order_by('-created_at').limit(limit).skip(offset)
+
+    for membership in requested_memberships:
         group = membership.group.to_dict()
         group['is_admin'] = bool(membership.role == 'admin')
         group['is_member'] = bool(membership.role == 'member')
-        group['members_count'] = GroupMembership.objects(group=group['_id']).count()
+        group['members_count'] = GroupMembership.objects(group=group['uid']).count()
 
-        join_request =  GroupJoinRequest.get(user=username, group=group['_id'])
+        join_request =  GroupJoinRequest.get(user=username, group=group['uid'])
         if join_request:
-            group['join_request'] = join_request._id
+            group['join_request'] = join_request.uid
         else:
             group['join_request'] = None
 
         groups.append(group)
 
-    return http.Ok(json.dumps(groups))
+    pagenation = pagenate(limit, page, count, request.url)
+
+    data = {
+        'pagenation': pagenation,
+        'result': groups
+    }
+
+    return http.Ok(json.dumps(data))
 
 @groups_api.route("/groups/<groupId>")
 @auth_required
@@ -37,7 +53,7 @@ def GetGroupInfo(**kwargs):
     username = kwargs.get('username')
     groupId = kwargs.get('groupId')
     
-    group = Group.get(_id=groupId)
+    group = Group.get(uid=groupId)
     if not group:
         return http.NotFound('Group not found')
 
@@ -50,9 +66,9 @@ def GetGroupInfo(**kwargs):
         group['is_admin'] = False
         group['is_member'] = False
 
-    join_request =  GroupJoinRequest.get(user=username, group=group['_id'])
+    join_request =  GroupJoinRequest.get(user=username, group=group['uid'])
     if join_request:
-        group['join_request'] = join_request._id
+        group['join_request'] = join_request.uid
     else:
         group['join_request'] = None
 
@@ -65,14 +81,14 @@ def GetGroupInfo(**kwargs):
 @auth_required
 def CreateGroup(**kwargs):
     username = kwargs.get('username')
-    _id = generate_uuid()
+    uid = generate_uuid()
     name = request.json.get('name', '')
     description = request.json.get('description', '')
 
     timestamp = generate_timestamp()
 
     group = Group(
-        _id=_id,
+        uid=uid,
         name=name,
         description=description,
         created_at=timestamp,        
@@ -85,10 +101,10 @@ def CreateGroup(**kwargs):
     if err:
         return http.BadRequest(json.dumps(err))
 
-    _id = generate_uuid()
+    uid = generate_uuid()
     joined_at = generate_timestamp()
     membership = GroupMembership(
-        _id=_id,
+        uid=uid,
         group=group,
         user=username,
         role='admin',
@@ -105,7 +121,7 @@ def CreateGroup(**kwargs):
     group.save()
     membership.save()
 
-    return http.Created(json.dumps({'_id':group._id}))
+    return http.Created(json.dumps({'uid':group.uid}))
 
 @groups_api.route("/groups/<groupId>", methods=['PUT'])
 @auth_required
@@ -119,7 +135,7 @@ def UpdateGroup(**kwargs):
 
     try:
         user = User.get(username=username)
-        Group.get(_id=groupId).update(
+        Group.get(uid=groupId).update(
             name=name,
             description=description,
             updated_at=generate_timestamp(),
@@ -136,7 +152,7 @@ def UpdateGroup(**kwargs):
 def DeleteGroup(**kwargs):    
     groupId = kwargs.get('groupId')
     try:
-        Group.delete(_id=groupId)
+        Group.delete(uid=groupId)
     except Exception as e:
         return http.InternalServerError(e.args)
 
@@ -146,12 +162,25 @@ def DeleteGroup(**kwargs):
 @auth_required
 @group_access_level('members')
 def ListGroupMembership(**kwargs):
+    limit = request.args.get('limit', 25, int)
+    page = request.args.get('page', 1, int) or 1
+    offset = (page - 1) * limit
+
     groupId = kwargs.get('groupId')
     fields = ['user', 'joined_at', 'added_by', 'role']
-    members = GroupMembership.objects(group=groupId).only(*fields)
-    data = []
-    for member in members:
-        data.append(member.to_dict())
+    count = GroupMembership.objects(group=groupId).count()
+    requested_members = GroupMembership.objects(group=groupId).only(*fields)
+
+    members = []
+    for member in requested_members:
+        members.append(member.to_dict())
+
+    pagenation = pagenate(limit, page, count, request.url)
+
+    data = {
+        'pagenation': pagenation,
+        'result': members
+    }
 
     return http.Ok(json.dumps(data))
 
@@ -173,10 +202,10 @@ def addUserToGroup(**kwargs):
     if GroupMembership.objects(group=groupId, user=member):
         return http.Conflict('User is already a member group')
 
-    _id = generate_uuid()
+    uid = generate_uuid()
     joined_at = generate_timestamp()
     membership = GroupMembership(
-        _id=_id,
+        uid=uid,
         group=groupId,
         user=member,
         role=role,
@@ -267,15 +296,15 @@ def AcceptJoinRequest(**kwargs):
     groupId = kwargs.get('groupId')
     requestId = kwargs.get('requestId')
 
-    join_request = GroupJoinRequest.get(_id=requestId, group=groupId)
+    join_request = GroupJoinRequest.get(uid=requestId, group=groupId)
     if not join_request:
         return http.NotFound()
 
-    _id = generate_uuid()
+    uid = generate_uuid()
     timestamp = generate_timestamp()
 
     new_membership = GroupMembership(
-        _id=_id,
+        uid=uid,
         group=join_request.group,
         user=join_request.user,
         role='member',
@@ -288,7 +317,7 @@ def AcceptJoinRequest(**kwargs):
         return http.InternalServerError('Error when store membership data')
 
     new_membership.save()
-    GroupJoinRequest.delete(_id=requestId)
+    GroupJoinRequest.delete(uid=requestId)
 
     return http.NoContent()
 
@@ -300,11 +329,11 @@ def RejectJoinRequest(**kwargs):
     groupId = kwargs.get('groupId')
     requestId = kwargs.get('requestId')
 
-    join_request = GroupJoinRequest.get(_id=requestId, group=groupId)
+    join_request = GroupJoinRequest.get(uid=requestId, group=groupId)
     if not join_request:
         return http.NotFound()
 
-    GroupJoinRequest.delete(_id=requestId)
+    GroupJoinRequest.delete(uid=requestId)
 
     return http.NoContent()
 
@@ -316,7 +345,7 @@ def SendJoinRequest(**kwargs):
     username = kwargs.get('username')
     groupId = kwargs.get('groupId')
 
-    group = Group.get(_id=groupId)
+    group = Group.get(uid=groupId)
     if not group:
         return http.NotFound('Group not found')
 
@@ -327,11 +356,11 @@ def SendJoinRequest(**kwargs):
     if GroupJoinRequest.get(group=groupId, user=username):
         return http.Conflict('Join request already send')
 
-    _id = generate_uuid()
+    uid = generate_uuid()
     timestamp = generate_timestamp()
 
     join_request = GroupJoinRequest(
-        _id=_id,
+        uid=uid,
         user=username,
         group=groupId,
         created_at=timestamp
@@ -343,5 +372,5 @@ def SendJoinRequest(**kwargs):
 
     join_request.save()
 
-    data = {'_id':_id}
+    data = {'uid':uid}
     return http.Created(json.dumps(data))

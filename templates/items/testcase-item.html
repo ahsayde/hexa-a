@@ -11,16 +11,16 @@
     </div>
     <div class="row mt-2 align-items-center">
         <div class="col-auto">
-            <small><code>{{testcase._id}}</code></small>
+            <small><code>{{testcase.uid}}</code></small>
         </div>
         <div class="col-auto">
             <small class="text-muted">
-                {% if testcase.suggested_by%} Suggested by {{testcase.suggested_by}}, {% endif %} Added by {{testcase.added_by}} {{timestamp_to_age(testcase.added_at)}}
+                {% if testcase.suggested_by%} Suggested by <a href="/users/{{testcase.suggested_by}}">{{testcase.suggested_by}}</a>, {% endif %} Added by <a href="/users/{{testcase.added_by}}">{{testcase.added_by}}</a> {{timestamp_to_age(testcase.added_at)}}
             </small>
         </div>
         {% if group.is_admin %}
             <div class="col-auto ml-auto">
-                <button name="deleteTestcase" class="btn btn-sm btn-default" data-group="{{group._id}}" data-testsuite="{{testsuite._id}}"data-testcase="{{testcase._id}}">Delete</button>
+                <button name="deleteTestcase" class="btn btn-sm btn-default" data-group="{{group.uid}}" data-testsuite="{{testsuite.uid}}"data-testcase="{{testcase.uid}}">Delete</button>
             </div>
         {% endif %}
     </div>

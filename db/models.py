@@ -5,11 +5,11 @@ default_meta = {'allow_inheritance': True, "db_alias": 'hexa-a-db'}
 
 minimal_repr = {
     'User': ['username', 'profile_photo'],
-    'Group': ['_id', 'name'],
-    'Assignment': ['_id', 'name'],
-    'Testsuite': ['_id', 'name', 'level', 'attempts'],
-    'Testcase':['_id', 'stdin', 'expected_stdout', 'added_by', 'added_at', 'suggested_at', 'suggested_by'],
-    'Notification':['_id', 'entity_type', 'entity', 'from_user', 'to_user']
+    'Group': ['uid', 'name'],
+    'Assignment': ['uid', 'name'],
+    'Testsuite': ['uid', 'name', 'level', 'attempts'],
+    'Testcase':['uid', 'stdin', 'expected_stdout', 'added_by', 'added_at', 'suggested_at', 'suggested_by'],
+    'Notification':['uid', 'entity_type', 'entity', 'from_user', 'to_user']
 }
 
 class BaseModel(Document):
@@ -77,7 +77,7 @@ class BaseModel(Document):
         return cls.objects(**kwargs).delete()
 
 class User(BaseModel):
-    username = fields.StringField(primary_key=True, unique=True, required=True, min_length=3, max_length=15)
+    username = fields.StringField(primary_key=True, required=True, min_length=3, max_length=15, regex='^[a-zA-Z0-9_]*$')
     email = fields.EmailField(unique=True, required=True)
     firstname = fields.StringField(min_length=3, max_length=15)
     lastname = fields.StringField(min_length=3, max_length=15)
@@ -88,7 +88,7 @@ class User(BaseModel):
     meta = {"collection":"users"}
 
 class Credentials(BaseModel):
-    username = fields.StringField(unique=True, required=True, min_length=3, max_length=15)
+    username = fields.StringField(unique=True, required=True, min_length=3, max_length=15, regex='^[a-zA-Z0-9_]*$')
     email = fields.EmailField(unique=True, required=True)
     salt = fields.StringField(required=True)
     secret = fields.StringField(required=True)
@@ -97,9 +97,18 @@ class Credentials(BaseModel):
     # db collection
     meta = {"collection":"credentials"}
 
+class ResetToken(BaseModel):
+    user = fields.ReferenceField(User, required=True)
+    email = fields.EmailField(unique=True, required=True)
+    salt = fields.StringField(required=True)
+    secret = fields.StringField(required=True)
+    created_at = fields.IntField(required=True)
+    # db collection
+    meta = {"collection":"reset_tokens"}
+
 class Group(BaseModel):
-    _id = fields.StringField(required=True, primary_key=True)
-    name = fields.StringField(required=True, min_length=3)
+    uid = fields.StringField(required=True, primary_key=True)
+    name = fields.StringField(required=True, min_length=3, max_length=50)
     description = fields.StringField(required=True, max_length=100)
     created_by = fields.ReferenceField(User, required=True)
     created_at = fields.IntField(required=True)
@@ -109,7 +118,7 @@ class Group(BaseModel):
     meta = {"collection":"groups"}
 
 class GroupMembership(BaseModel):    
-    _id = fields.StringField(required=True, primary_key=True)
+    uid = fields.StringField(required=True, primary_key=True)
     group = fields.ReferenceField(Group, required=True, reverse_delete_rule=2)
     user = fields.ReferenceField(User, required=True, reverse_delete_rule=2)
     role = fields.StringField(required=True, choise=['admin', 'member'])
@@ -119,7 +128,7 @@ class GroupMembership(BaseModel):
     meta = {"collection":"group_membership"}
 
 class Testcase(EmbeddedDocument):
-    _id = fields.StringField(unique=True, required=True)
+    uid = fields.StringField(unique=True, required=True)
     stdin = fields.StringField(required=True)
     expected_stdout = fields.StringField(required=True)
     added_by = fields.StringField(required=True)
@@ -128,8 +137,8 @@ class Testcase(EmbeddedDocument):
     suggested_at = fields.IntField(default=None)
     
 class Testsuite(BaseModel):
-    _id = fields.StringField(required=True, primary_key=True)
-    name = fields.StringField(required=True, min_length=3, max_length=15)
+    uid = fields.StringField(required=True, primary_key=True)
+    name = fields.StringField(required=True, min_length=3, max_length=50)
     level = fields.StringField(required=True, choice=['basic', 'extended', 'advanced'])
     public = fields.BooleanField(default=False)
     attempts = fields.IntField(default=0)
@@ -143,7 +152,7 @@ class Testsuite(BaseModel):
     meta = {"collection":"testsuite"}
 
 class SuggestedTestcase(BaseModel):
-    _id = fields.StringField(required=True, primary_key=True)
+    uid = fields.StringField(required=True, primary_key=True)
     user = fields.ReferenceField(User, required=True, reverse_delete_rule=2)
     group = fields.ReferenceField(Group, required=True, reverse_delete_rule=2)
     testsuite = fields.ReferenceField(Testsuite, required=True, reverse_delete_rule=2)
@@ -155,7 +164,7 @@ class SuggestedTestcase(BaseModel):
     
 
 class Assignment(BaseModel):
-    _id = fields.StringField(required=True, primary_key=True)
+    uid = fields.StringField(required=True, primary_key=True)
     name = fields.StringField(required=True, min_length=3, max_length=100)
     description = fields.StringField(required=True)
     group = fields.ReferenceField(Group, required=True, reverse_delete_rule=2)
@@ -173,7 +182,7 @@ class Assignment(BaseModel):
     meta = {"collection":"assignemnts"}
 
 class Announcement(BaseModel):
-    _id = fields.StringField(required=True, primary_key=True)
+    uid = fields.StringField(required=True, primary_key=True)
     content = fields.StringField(required=True, min_length=1, max_length=10000)
     group = fields.ReferenceField(Group, required=True, reverse_delete_rule=2)
     created_at = fields.IntField(required=True)
@@ -193,7 +202,7 @@ class Session(BaseModel):
     
 
 class Submission(BaseModel):
-    _id = fields.StringField(required=True, primary_key=True)
+    uid = fields.StringField(required=True, primary_key=True)
     group = fields.ReferenceField(Group, required=True, reverse_delete_rule=2)
     assignment = fields.ReferenceField(Assignment, required=True, reverse_delete_rule=2)
     testsuite = fields.ReferenceField(Testsuite, required=True, reverse_delete_rule=2)
@@ -207,7 +216,7 @@ class Submission(BaseModel):
 
 
 class GroupJoinRequest(BaseModel):
-    _id = fields.StringField(required=True, primary_key=True)
+    uid = fields.StringField(required=True, primary_key=True)
     group = fields.ReferenceField(Group, required=True, reverse_delete_rule=2)
     user = fields.ReferenceField(User, required=True, reverse_delete_rule=2)
     created_at = fields.IntField(required=True)

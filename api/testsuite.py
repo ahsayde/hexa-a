@@ -12,15 +12,38 @@ testsuites_api = Blueprint('testsuites_api', __name__)
 @auth_required
 @group_access_level('members')
 def ListTestsuites(** kwargs):
+    limit = request.args.get('limit', 25, int)
+    page = request.args.get('page', 1, int) or 1
+    offset = (page - 1) * limit
+
     user_role = kwargs.get('user_role')
     groupId = kwargs.get('groupId')
 
     if user_role == 'member':
-        testsuites = Testsuite.objects(group=groupId, public=True).exclude('testcases')
-    elif user_role == 'admin':
-        testsuites = Testsuite.objects(group=groupId).exclude('testcases')
+        count = Testsuite.objects(group=groupId, public=True).count()
+        requested_testsuites = Testsuite.objects(
+            group=groupId, 
+            public=True
+        ).exclude('testcases').limit(limit).skip(offset)
 
-    return http.Ok(testsuites.to_json())
+    elif user_role == 'admin':
+        count = Testsuite.objects(group=groupId).count()
+        requested_testsuites = Testsuite.objects(
+            group=groupId
+        ).exclude('testcases').limit(limit).skip(offset)
+
+    testsuites = []
+    for testsuite in requested_testsuites:
+        testsuites.append(testsuite.to_dict())
+
+    pagenation = pagenate(limit, page, count, request.url)
+
+    data = {
+        'pagenation': pagenation,
+        'result': testsuites
+    }
+
+    return http.Ok(json.dumps(data))
     
 @testsuites_api.route("/testsuites/<testsuiteId>")
 @auth_required
@@ -29,7 +52,7 @@ def GetTestsuiteInfo(** kwargs):
     user_role = kwargs.get('user_role')
     testsuiteId = kwargs.get('testsuiteId')
 
-    testsuite = Testsuite.get(_id=testsuiteId)
+    testsuite = Testsuite.get(uid=testsuiteId)
 
     if not testsuite:
         return http.NotFound('Testsuite is not found')
@@ -49,9 +72,10 @@ def CreateTestsuite(** kwargs):
     name = request.form.get('name')
     level = request.form.get('level')
     public = bool(request.form.get('public'))
-    attempts = request.form.get('attempts')
+    attempts = request.form.get('attempts') or 0
     file = request.files.get('file', None)
 
+    print(attempts)
     timestamp = generate_timestamp()
 
     if file:
@@ -60,7 +84,7 @@ def CreateTestsuite(** kwargs):
         testcases = []
 
     testsuite = Testsuite(
-        _id=generate_uuid(),
+        uid=generate_uuid(),
         name=name,
         level=level,
         public=public,
@@ -77,7 +101,7 @@ def CreateTestsuite(** kwargs):
 
     testsuite.save()
 
-    data = {'_id':testsuite._id}
+    data = {'uid':testsuite.uid}
     return http.Created(json.dumps(data))
 
 @testsuites_api.route("/testsuites/<testsuiteId>", methods=['PUT'])
@@ -87,7 +111,7 @@ def UpdateTestsuite(** kwargs):
     username = kwargs.get('username')
     testsuiteId = kwargs.get('testsuiteId')
 
-    testsuite = Testsuite.get(_id=testsuiteId)
+    testsuite = Testsuite.get(uid=testsuiteId)
     if not testsuite:
         return http.NotFound('testsuite is not found')
 
@@ -101,7 +125,7 @@ def UpdateTestsuite(** kwargs):
 
     try:
         user = User.get(username=username)
-        Testsuite.get(_id=testsuiteId).update(
+        Testsuite.get(uid=testsuiteId).update(
             name=name, 
             level=level,
             public=public,
@@ -120,19 +144,18 @@ def UpdateTestsuite(** kwargs):
 def DeleteTestsuite(** kwargs):
     testsuiteId = kwargs.get('testsuiteId')
 
-    if not Testsuite.get(_id=testsuiteId):
+    if not Testsuite.get(uid=testsuiteId):
         return http.NotFound('testsuite is not found')
 
     if Assignment.objects.filter(testsuites=testsuiteId):
         return http.BadRequest("Can't delete testsuite linked to assignment")
 
     try:
-        Testsuite.delete(_id=testsuiteId)
+        Testsuite.delete(uid=testsuiteId)
     except Exception as e:
         return http.InternalServerError(json.dumps(e.args))
 
     return http.NoContent()
-
 
 @testsuites_api.route("/testsuites/<testsuiteId>/testcases/<testcasesId>", methods=['DELETE'])
 @auth_required
@@ -140,13 +163,13 @@ def DeleteTestsuite(** kwargs):
 def DeleteTestcase(** kwargs):
     testsuiteId = kwargs.get('testsuiteId')
     testcasesId = kwargs.get('testcasesId')
-    testsuite = Testsuite.get(_id=testsuiteId)
+    testsuite = Testsuite.get(uid=testsuiteId)
 
     if not testsuite:
         return http.NotFound('testsuite is not found')
 
     for i, testcase in enumerate(testsuite.testcases):
-        if str(testcase._id) == testcasesId:
+        if str(testcase.uid) == testcasesId:
             testsuite.testcases.pop(i)
             testsuite.save()
             break
@@ -159,20 +182,40 @@ def DeleteTestcase(** kwargs):
 @auth_required
 @group_access_level('member')
 def ListSuggestTestcases(** kwargs):
+    limit = request.args.get('limit', 25, int)
+    page = request.args.get('page', 1, int) or 1
+    offset = (page - 1) * limit
+
     user_role = kwargs.get('user_role')
     username = kwargs.get('username')
     groupId = kwargs.get('groupId')
     testsuiteId = kwargs.get('testsuiteId')
 
-    testsuite = Testsuite.get(_id=testsuiteId)
+    testsuite = Testsuite.get(uid=testsuiteId)
     if not testsuite:
         return http.NotFound()
 
     if not (user_role == 'admin' or testsuite.public):
         return http.Forbidden()
 
-    testcases = SuggestedTestcase.objects(group=groupId, testsuite=testsuiteId)
-    return http.Created(testcases.to_json())
+    count = SuggestedTestcase.objects(group=groupId, testsuite=testsuiteId).count()
+    requested_testcases = SuggestedTestcase.objects(
+        group=groupId, 
+        testsuite=testsuiteId
+    ).order_by('-suggested_at').limit(limit).skip(offset)
+
+    testcases = []
+    for testcase in requested_testcases:
+        testcases.append(testcase.to_dict())
+
+    pagenation = pagenate(limit, page, count, request.url)
+
+    data = {
+        'pagenation': pagenation,
+        'result': testcases
+    }
+
+    return http.Ok(json.dumps(data))
 
 @testsuites_api.route("/testsuites/<testsuiteId>/testcases", methods=['POST'])
 @auth_required
@@ -185,17 +228,17 @@ def AddTestcase(** kwargs):
     stdin = request.json.get('stdin')
     expected_stdout = request.json.get('expected_stdout')
 
-    testsuite = Testsuite.get(_id=testsuiteId)
+    testsuite = Testsuite.get(uid=testsuiteId)
 
     if not testsuite:
         return http.NotFound('testsuite is not found')
 
-    _id = generate_uuid(5)
+    uid = generate_uuid(5)
     timestamp = generate_timestamp()
 
     if user_role == 'admin':
         testcase = Testcase(
-            _id=_id,
+            uid=uid,
             stdin=stdin,
             expected_stdout=expected_stdout,
             added_by=username,
@@ -218,7 +261,7 @@ def AddTestcase(** kwargs):
             return http.Forbidden()
 
         testcase = SuggestedTestcase(
-            _id=_id,
+            uid=uid,
             user=username,
             group=groupId,
             testsuite=testsuiteId,
@@ -233,9 +276,8 @@ def AddTestcase(** kwargs):
 
         testcase.save()
 
-    data = {'_id':_id}
+    data = {'uid':uid}
     return http.Created(json.dumps(data))
-
 
 @testsuites_api.route("/testsuites/<testsuiteId>/testcases/<testcaseId>/accept", methods=['POST'])
 @auth_required
@@ -246,18 +288,18 @@ def AcceptSuggestedTestcase(** kwargs):
     testsuiteId = kwargs.get('testsuiteId')
     testcaseId = kwargs.get('testcaseId')
 
-    testsuite = Testsuite.get(_id=testsuiteId)
+    testsuite = Testsuite.get(uid=testsuiteId)
     if not testsuite:
         return http.NotFound('testsuite is not found')
 
-    suggested_testcase = SuggestedTestcase.get(_id=testcaseId)
+    suggested_testcase = SuggestedTestcase.get(uid=testcaseId)
     if not suggested_testcase:
         return http.NotFound('testcase is not found')
 
     timestamp = generate_timestamp()
 
     testcase = Testcase(
-        _id=suggested_testcase._id,
+        uid=suggested_testcase.uid,
         stdin=suggested_testcase.stdin,
         expected_stdout=suggested_testcase.expected_stdout,
         added_by=username,
@@ -269,7 +311,7 @@ def AcceptSuggestedTestcase(** kwargs):
     testsuite.testcases.append(testcase)
     testsuite.save()
 
-    SuggestedTestcase.delete(_id=testcaseId)
+    SuggestedTestcase.delete(uid=testcaseId)
 
     return http.NoContent()
 
@@ -283,18 +325,18 @@ def RejectSuggestedTestcase(** kwargs):
     testsuiteId = kwargs.get('testsuiteId')
     testcaseId = kwargs.get('testcaseId')
 
-    testsuite = Testsuite.get(_id=testsuiteId)
+    testsuite = Testsuite.get(uid=testsuiteId)
     if not testsuite:
         return http.NotFound('testsuite is not found')
 
-    suggested_testcase = SuggestedTestcase.get(_id=testcaseId)
+    suggested_testcase = SuggestedTestcase.get(uid=testcaseId)
     if not suggested_testcase:
         return http.NotFound('testcase is not found')
 
     if not (user_role == 'admin' or testsuite.public) and (suggested_testcase.user.username == username):
         return http.Forbidden()
     
-    SuggestedTestcase.delete(_id=testcaseId)
+    SuggestedTestcase.delete(uid=testcaseId)
 
     return http.NoContent()
 

@@ -1,0 +1,40 @@
+{% extends 'layout.html' %}
+
+{% block container %}
+
+    {% include 'navbar.html' %}
+
+    <div class="container w-50" style="margin-top:120px; height:100%">
+        <div class="bg-white p-3 border">
+            <div class="row">
+                <div class="col">
+                    <img class="float-left mr-3 rounded-circle" src="{{user.profile_photo}}" width="60px">
+                    {% if user.firstname and user.lastname %}
+                        <h4>{{user.firstname}} {{user.lastname}}</h4>
+                        <p class="text-muted m-0">{{user.username}}</p>
+                    {% else %}
+                        <h5>{{user.username}}</h5>
+                    {% endif %}
+                </div>
+                {% if userInfo.username == user.username %}
+                    <div class="col-auto ml-auto">
+                        <a href="/settings">
+                            <button type="button" class="btn btn-default btn-sm">Edit profile</button>
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+
+            <hr class="half-rule"/>
+
+            <div class="row mt-2">
+                <div class="col-auto">
+                    <small class="text-muted">Joined at {{dataFromTimestamp(user.created_at)}}</small>   
+                </div>
+            </div>
+        
+        </div>
+    </div>
+
+{% endblock %}
+

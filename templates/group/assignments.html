@@ -9,7 +9,7 @@
     </div>
     {% if group.is_admin %}
       <div class="col-auto ml-auto">
-          <a class="btn btn-success btn-sm" href="/groups/{{group._id}}/assignments/new">Create New</a>
+          <a class="btn btn-success btn-sm" href="/groups/{{group.uid}}/assignments/new">Create New</a>
       </div>
     {% endif %}
   </div>
@@ -20,7 +20,7 @@
       <span class="text-muted">No assignments were found in this group</span>
   {% else %}
     <div class="list-group">
-      {% for assignment in assignments %} {% include 'items/assignment-item.html' %} {% endfor %}
+      {% for assignment in assignments.result %} {% include 'items/assignment-item.html' %} {% endfor %}
     </div>
   {% endif %}
 

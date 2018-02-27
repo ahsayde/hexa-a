@@ -78,7 +78,7 @@ $(document).ready(function () {
         var data = $(this).getFormData();
         hexaa.groups.create(data.name, data.description)
         .then((response)=>{
-            let url = '/groups/' + response._id;
+            let url = '/groups/' + response.uid;
             window.location.href = url;
         }).catch((error)=>{
             alert(error.responseText);
@@ -180,6 +180,17 @@ $(document).ready(function () {
         return false
     });
 
+    $("button[name='leaveGroup']").click(function(){
+        var data = $(this).data();
+        hexaa.groups.memberships.delete(data.group, data.member)
+        .then((data)=>{
+            window.location.href = '/';
+        }).catch((error)=>{
+            alert(error.responseText);
+        });
+        return false
+    });
+
     
 
     // =========================== Announcements ============================ 
@@ -265,7 +276,7 @@ $(document).ready(function () {
         var data = $(this).getFormData();
         hexaa.groups.assignments.create(data.groupId, data.name, data.description, data.deadline)
         .then((response)=>{
-            let url = '/groups/' + data.groupId + '/assignments/' + response._id;
+            let url = '/groups/' + data.groupId + '/assignments/' + response.uid;
             window.location.href = url;
         }).catch((error)=>{
             alert(error.responseText);
@@ -339,7 +350,7 @@ $(document).ready(function () {
         var data = new FormData(this);
         hexaa.groups.testsuites.create(groupId, data)
         .then((response)=>{
-            let url = '/groups/' + groupId + '/testsuites/' + response._id;
+            let url = '/groups/' + groupId + '/testsuites/' + response.uid;
             window.location.href = url;
         }).catch((error)=>{
             alert(error.responseText);
@@ -422,12 +433,26 @@ $(document).ready(function () {
     $("#submit-code-form").submit(function(){
         var data = $(this).data();
         var formData = new FormData(this);
+
+        $('#submit-code').text('Submitting ...');
+        $('#submit-code').prop( "disabled", true);
+        $('#submit-loading').show();
+
         hexaa.groups.assignments.submit(data.group, data.assignment, formData)
+        .then((response) =>{
+            return response;
+        })
         .then((response)=>{
-            window.location.href = '/submissions/' + response._id;
+            window.location.href = '/submissions/' + response.uid;
         }).catch((error)=>{
             alert(error.responseText);
+        })
+        .then(()=>{
+            $('#submit-code').text('Submit');
+            $('#submit-code').prop('disabled', false);  
+            $('#submit-loading').hide();  
         });
         return false;
     });  
+
 });

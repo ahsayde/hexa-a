@@ -12,13 +12,27 @@ announcements_api = Blueprint('announcements_api', __name__)
 @auth_required
 @group_access_level('member')
 def ListAnnouncements(** kwargs):
+    limit = request.args.get('limit', 25, int)
+    page = request.args.get('page', 1, int) or 1
+    offset = (page - 1) * limit
+
     groupId = kwargs.get('groupId')
-    announcements = Announcement.objects(group=groupId).order_by('-created_at')
-    data = []
-    for announcement in announcements:
-        data.append(announcement.to_dict())
+    count = Announcement.objects(group=groupId).count()
+    requested_announcements = Announcement.objects(group=groupId).order_by('-created_at').limit(limit).skip(offset)
+
+    announcements = []
+    for announcement in requested_announcements:
+        announcements.append(announcement.to_dict())
+
+    pagenation = pagenate(limit, page, count, request.url)
+
+    data = {
+        'pagenation': pagenation,
+        'result': announcements
+    }
+
     return http.Ok(json.dumps(data))
-    
+
 @announcements_api.route("/announcements", methods=['POST'])
 @auth_required
 @group_access_level('admin')
@@ -28,7 +42,7 @@ def CreateAnnouncement(** kwargs):
     content = request.json.get('content')
 
     announcement = Announcement(
-        _id=generate_uuid(),
+        uid=generate_uuid(),
         content=content,
         group=groupId,
         created_at=generate_timestamp(),
@@ -41,9 +55,8 @@ def CreateAnnouncement(** kwargs):
 
     announcement.save()
 
-    data = {'_id':announcement._id}
+    data = {'uid':announcement.uid}
     return http.Created(json.dumps(data))
-
 
 @announcements_api.route("/announcements/<announcementId>", methods=['PUT'])
 @auth_required
@@ -52,7 +65,7 @@ def UpdateAnnouncement(** kwargs):
     username = kwargs.get('username')
     announcementId = kwargs.get('announcementId')
 
-    announcement = Announcement.get(_id=announcementId)
+    announcement = Announcement.get(uid=announcementId)
 
     if not announcement:
         return http.NotFound('Announcement is not found')
@@ -63,7 +76,7 @@ def UpdateAnnouncement(** kwargs):
     content = request.json.get('content')
             
     try:
-        Announcement.get(_id=announcementId).update(
+        Announcement.get(uid=announcementId).update(
             content=content,
             updated_at=generate_timestamp()
         )
@@ -78,11 +91,11 @@ def UpdateAnnouncement(** kwargs):
 def DeleteAnnouncement(** kwargs):
     announcementId = kwargs.get('announcementId')
 
-    if not Announcement.get(_id=announcementId):
+    if not Announcement.get(uid=announcementId):
         return http.NotFound('Announcement is not found')
 
     try:
-        Announcement.delete(_id=announcementId)
+        Announcement.delete(uid=announcementId)
     except Exception as e:
         return http.InternalServerError(json.dumps(e.args))
 

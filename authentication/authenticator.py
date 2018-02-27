@@ -53,7 +53,7 @@ def is_authorized():
                 return False
 
     else:
-        auth_header = request.headers.get('Authorization')
+        auth_header = request.headers.get('AUTH-TOKEN')
         if not auth_header:
             return False
 
@@ -133,7 +133,7 @@ def group_access_level(role):
             username = kwargs['username']
             groupId = kwargs['groupId']
 
-            if not Group.get(_id=groupId):
+            if not Group.get(uid=groupId):
                 return http.NotFound('Group not found')
 
             membership = GroupMembership.get(

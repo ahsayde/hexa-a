@@ -20,11 +20,11 @@
                             <form id="edit-user-info">
                                 <div class="form-group">
                                     <label for="email">First name</label>
-                                    <input type="text" class="form-control" name="firstname" value="{{user.firstname}}">
+                                    <input type="text" class="form-control" name="firstname" value="{{user.firstname or ''}}">
                                 </div>
                                 <div class="form-group">
                                     <label for="email">Last name</label>
-                                    <input type="text" class="form-control" name="lastname" value="{{user.lastname}}">
+                                    <input type="text" class="form-control" name="lastname" value="{{user.lastname or ''}}">
                                 </div> 
                                 <div class="form-group">
                                     <button type="submit" class="btn btn-sm btn-success">Update profile</button>
