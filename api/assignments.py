@@ -1,10 +1,11 @@
-import json, shutil, os, requests
+import json, shutil, os, requests, zipfile
 from flask import Blueprint, request
 from db.models import *
 from tools.tools import *
 from tools.http import HttpResponse
 from werkzeug.utils import secure_filename
 from authentication.authenticator import auth_required, group_access_level
+from tools.judger import Judger
 
 http = HttpResponse()
 assignments_api = Blueprint('assignments_api', __name__)
@@ -309,7 +310,6 @@ def submit(**kwargs):
         reference_id
     )
 
-    # create temporary directory for current user
     os.mkdir(user_temp_dir)
 
     source_file_path =  '{0}/{1}/{2}'.format(
@@ -319,27 +319,17 @@ def submit(**kwargs):
     )
     source_file.save(source_file_path)
 
-
-    testsuite_file_path =  '{0}/{1}/testsuite.json'.format(
-        config['dirs']['USERS_TMP_CODE_DIR'],
-        reference_id,
-    )
-    with open(testsuite_file_path, 'w') as f:
-        json.dump(testsuite.to_dict()['testcases'], f)
-
-    request_data = {
-        'language': language,
-        'source_file': source_file.filename,
-        'testsuite': 'testsuite.json',
-        'reference_id': reference_id
-    }
+    ext = source_file.filename[source_file.filename.rfind('.')+1:]
+    if ext in ['zip', 'rar', 'tar']:
+        file = zipfile.ZipFile(source_file_path)
+        file.extractall(path=user_temp_dir)
+        file.close()
 
     try:
-        response = requests.post('http://127.0.0.1:3000/check', json=request_data)
-        response.raise_for_status()
-        judger_result = response.json()
-    except Exception as e:
-        return http.InternalServerError()
+        judger = Judger(reference_id=reference_id)
+        judger_result = judger.judge(testsuite.to_dict()['testcases'])
+    except:
+        return http.InternalServerError('Unexpected error')
     finally:
         shutil.rmtree(user_temp_dir)
     

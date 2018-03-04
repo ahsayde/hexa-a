@@ -1,28 +1,33 @@
 server:
-  host:
+  host: 
   port:
-  debug: true
-  threaded: true
 
 database:
-  db:
-  host:
+  db: 
+  host: 
   port: 
   username: null
   password: null
 
 dirs:
-  USERS_TMP_CODE_DIR:
+  USERS_TMP_CODE_DIR: 
   USERS_PROFILE_PHOTOS_DIR:
 
-jwt-secret:
+jwt-secret: 
 session-secret:
 
 smtp:
-  host:
-  port:
+  host: 
+  port: 
   
 emails:
   noreply:
     addr:
-    password:
+    password: 
+
+sandbox:
+  user: 
+  image: 
+  workdir: 
+  mounts:
+  mem_limit:
