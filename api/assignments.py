@@ -1,4 +1,4 @@
-import json, shutil, os, requests
+import json, shutil, os, requests, zipfile
 from flask import Blueprint, request
 from db.models import *
 from tools.tools import *
@@ -310,7 +310,6 @@ def submit(**kwargs):
         reference_id
     )
 
-    # create temporary directory for current user
     os.mkdir(user_temp_dir)
 
     source_file_path =  '{0}/{1}/{2}'.format(
@@ -320,24 +319,15 @@ def submit(**kwargs):
     )
     source_file.save(source_file_path)
 
+    ext = source_file.filename[source_file.filename.rfind('.')+1:]
+    if ext in ['zip', 'rar', 'tar']:
+        file = zipfile.ZipFile(source_file_path)
+        file.extractall(path=user_temp_dir)
+        file.close()
 
-    testsuite_file_path =  '{0}/{1}/testsuite.json'.format(
-        config['dirs']['USERS_TMP_CODE_DIR'],
-        reference_id,
-    )
-    with open(testsuite_file_path, 'w') as f:
-        json.dump(testsuite.to_dict()['testcases'], f)
-
-    judger_config = {
-        'USER_PATH':reference_id,
-        'LANGUAGE': language,
-        'SOURCE_FILE': source_file.filename,
-        'TESTSUITE': 'testsuite.json',
-    }
-    
     try:
-        judger = Judger(reference_id=reference_id, config=judger_config)
-        judger_result = judger.judge()
+        judger = Judger(reference_id=reference_id)
+        judger_result = judger.judge(testsuite.to_dict()['testcases'])
     except:
         return http.InternalServerError('Unexpected error')
     finally:

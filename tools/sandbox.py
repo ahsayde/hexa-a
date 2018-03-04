@@ -1,21 +1,32 @@
 import docker
+import os
 from tools.tools import read_config
 
 class Sandbox:
     def __init__(self):
         self._docker = docker.from_env()
         self._config = read_config()['sandbox']
+        self.image = self._config['image']
+        self.user = self._config['user']
+        self.working_dir = self._config['workdir']
+        self.mem_limit = self._config['mem_limit']
+        self.mounts = self._config['mounts']
 
-    def create(self, user_path, environment):
-        self._config['mounts'][0]['Source'] += '/' + user_path 
+    def create(self, user_path):
+        mounts = [{
+            'Source': os.path.join(self.mounts, user_path),
+            'Target': self.working_dir,
+            'Type': 'bind',
+            'ReadOnly': False
+        }]
         container = self._docker.containers.create(
-            image=self._config['image'],
-            user=self._config['user'],
-            working_dir=self._config['workdir'],
-            mounts=self._config['mounts'],
+            image=self.image,
+            user=self.user,
+            working_dir=self.working_dir, 
+            mounts=mounts,
+            mem_limit=self.mem_limit,
             network_disabled=True,
-            tty=True,
-            environment=environment
+            tty=True
         )
         return container
 
@@ -29,27 +40,24 @@ class Sandbox:
         result = {}
         response = self._docker.api.exec_create(cid, cmd, tty=True)
         exec_id = response['Id']
-        
+
         try:
             output = self._docker.api.exec_start(exec_id)
-
         except MemoryError:
-            result['stdout'] = ''
-            result['stderr'] = 'Memory error'
+            result['output'] = 'Memory Error'
             result['status'] = 'ERROR'
-            
-            
-        inspect =  self._docker.api.exec_inspect(exec_id)
-        
-        if inspect['ExitCode']:
-            result['stdout'] = ''
-            result['stderr'] = output
+        except IOError:
+            result['output'] = 'I/O Error'
             result['status'] = 'ERROR'
-        else:
-            result['status'] = 'SUCCESS'
-            result['stdout'] = output
-            result['stderr'] = ''
+        finally:
+            inspect =  self._docker.api.exec_inspect(exec_id)
+            if inspect['ExitCode']:
+                result['output'] = output.decode('utf-8')
+                result['status'] = 'ERROR'
+            else:
+                result['output'] = output.decode('utf-8')             
+                result['status'] = 'SUCCESS'
 
-        result['returncode'] = inspect['ExitCode']
-
+            result['returncode'] = inspect['ExitCode']
+            
         return result

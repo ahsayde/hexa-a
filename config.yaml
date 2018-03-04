@@ -14,7 +14,7 @@ dirs:
   USERS_PROFILE_PHOTOS_DIR:
 
 jwt-secret: 
-session-secret: 
+session-secret:
 
 smtp:
   host: 
@@ -30,7 +30,4 @@ sandbox:
   image: 
   workdir: 
   mounts:
-      - Source: 
-        Target:
-        Type: 
-        ReadOnly:
+  mem_limit:

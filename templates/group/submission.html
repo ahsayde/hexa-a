@@ -60,10 +60,10 @@
                                                 <div class="col-10 d-flex flex-column">
                                                     <code class="testcase">Id : {{testcase.uid}}</code>
                                                     <code class="testcase">Input : {{testcase.stdin}}</code>
-                                                    <code class="testcase">Generated output: {{testcase.stdout}}</code>
+                                                    <code class="testcase">Generated output: {{testcase.stdout or '' }}</code>
                                                     <code class="testcase">Expected output : {{testcase.expected_stdout}}</code>
-                                                    {% if testcase.status == 'Errored' %}
-                                                       <code class="testcase">Error : {{testcase.stderr}}</code>
+                                                    {% if testcase.returncode %}
+                                                       <code class="testcase">Error ({{testcase.returncode}}) : {{testcase.stderr}}</code>
                                                     {% endif %}
                                                 </div>
                                                 <div class="col-1 ml-auto d-flex align-items-center">
