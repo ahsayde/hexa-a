@@ -148,6 +148,7 @@ class Testsuite(BaseModel):
     created_by = fields.ReferenceField(User, required=True)
     updated_at = fields.IntField()
     updated_by = fields.ReferenceField(User)
+    attachment = fields.StringField()
     # db collection
     meta = {"collection":"testsuite"}
 

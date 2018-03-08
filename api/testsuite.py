@@ -1,12 +1,15 @@
-import json
+import json, os
 from flask import Blueprint, request
 from db.models import *
 from tools.tools import *
 from tools.http import HttpResponse
 from authentication.authenticator import auth_required, group_access_level
 
+config = read_config()
 http = HttpResponse()
 testsuites_api = Blueprint('testsuites_api', __name__)
+
+TESTSUITES_ATTACHMENTS = config['dirs']['TESTSUITES_ATTACHMENTS']
 
 @testsuites_api.route("/testsuites")
 @auth_required
@@ -74,8 +77,8 @@ def CreateTestsuite(** kwargs):
     public = bool(request.form.get('public'))
     attempts = request.form.get('attempts') or 0
     file = request.files.get('file', None)
+    attachment = request.files.get('attachment', None)
 
-    print(attempts)
     timestamp = generate_timestamp()
 
     if file:
@@ -83,8 +86,17 @@ def CreateTestsuite(** kwargs):
     else:
         testcases = []
 
+    uid = generate_uuid()
+
+    if attachment:
+        attachment_name = attachment.filename        
+        attachment_uid = '%s_%s' % (uid, attachment_name)
+        attachment.save(os.path.join(TESTSUITES_ATTACHMENTS, attachment_uid))
+    else:
+        attachment_name = None
+
     testsuite = Testsuite(
-        uid=generate_uuid(),
+        uid=uid,
         name=name,
         level=level,
         public=public,
@@ -92,7 +104,8 @@ def CreateTestsuite(** kwargs):
         group=groupId,
         testcases=testcases,
         created_at=timestamp,
-        created_by=username
+        created_by=username,
+        attachment=attachment_name
     )
 
     err = testsuite.check()
@@ -115,13 +128,21 @@ def UpdateTestsuite(** kwargs):
     if not testsuite:
         return http.NotFound('testsuite is not found')
 
-    name = request.json.get('name')
-    level = request.json.get('level')
-    public = bool(request.json.get('public'))
-    attempts = request.json.get('attempts', 0)
+    name = request.form.get('name')
+    level = request.form.get('level')
+    public = bool(request.form.get('public'))
+    attempts = request.form.get('attempts', 0)
+    attachment = request.files.get('attachment', None)
 
     if int(attempts) and int(attempts) < testsuite.attempts:
         return http.BadRequest('new attempts value must be higher than the old value')
+
+    if attachment:
+        attachment_name = attachment.filename        
+        attachment_uid = '%s_%s' % (testsuite.uid, attachment_name)
+        attachment.save(os.path.join(TESTSUITES_ATTACHMENTS, attachment_uid))
+    else:
+        attachment_name = None
 
     try:
         user = User.get(username=username)
@@ -131,8 +152,9 @@ def UpdateTestsuite(** kwargs):
             public=public,
             attempts=attempts,
             updated_at=generate_timestamp(),
-            updated_by=user
-            )
+            updated_by=user,
+            attachment=attachment_name
+        )
     except Exception as e:
         return http.InternalServerError(json.dumps(e.args))
 
@@ -340,4 +362,23 @@ def RejectSuggestedTestcase(** kwargs):
 
     return http.NoContent()
 
+@testsuites_api.route("/testsuites/<testsuiteId>/attachment", methods=['DELETE'])
+@auth_required
+@group_access_level('admin')
+def DeleteAttachment(** kwargs):
+    username = kwargs.get('username')
+    groupId = kwargs.get('groupId')
+    testsuiteId = kwargs.get('testsuiteId')
+
+    testsuite = Testsuite.get(uid=testsuiteId)
+    if not testsuite:
+        return http.NotFound('testsuite is not found')
+
+    if testsuite.attachment:
+        attachment_uid = '%s_%s' % (testsuite.uid, testsuite.attachment)
+        attachment_path = os.path.join(TESTSUITES_ATTACHMENTS, attachment_uid)
+        os.remove(attachment_path)
+        testsuite.update(attachment=None)
+    
+    return http.NoContent()
 

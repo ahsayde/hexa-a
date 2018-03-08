@@ -43,6 +43,11 @@
                                         {% endif %}
                                     </a>
                                 </li>
+                                {% if group.is_admin %}
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" role="tab" href="#attachment">Attachment </a>
+                                    </li>
+                                {% endif %}
                             </ul>
                         </div>
                         <div class="col-auto ml-auto"> 
@@ -80,6 +85,28 @@
                         </ul>
                     </div>
 
+                    <!-- =================================== Attachment tabpanel ========================================= -->
+
+                    {% if group.is_admin %}
+                        <div class="tab-pane" id="attachment" role="tabpanel">
+                            <ul class="list-group list-group-flush">
+                                {% if testsuite.attachment %}
+                                    <li class="list-group-item pt-2 pb-2 text-muted">
+                                        <p>
+                                            {{testsuite.attachment}}
+                                            <button type="button" class="close mr-auto" aria-label="Close" name="delete-testsuite-attachment" data-group="{{group.uid}}" data-testsuite="{{testsuite.uid}}">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </p>
+                                    </li>
+                                {% else %}
+                                    <li class="list-group-item pt-2 pb-2 text-muted">
+                                        <small>No attachment was found in this testsuite</small> 
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
