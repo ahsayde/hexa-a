@@ -8,8 +8,9 @@
         <div class="sidebar">
             <a href="/groups/{{group.uid}}"><h5>{{group.name}}</h5></a>
             {% if group.description %}
-                <p class="text-muted"><small>{{group.description}}<br></small></p>
+                <p class="text-muted m-1"><small>{{group.description}}<br></small></p>
             {% endif %}
+            <a href="/groups/{{group.uid}}/members"><small>{{group.members_count}} members</small></a>
             
             <hr class="half-rule"/> 
 
