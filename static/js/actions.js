@@ -359,10 +359,12 @@ $(document).ready(function () {
     });
 
     $("#edit-testsuite-form").submit(function(){
-        var data = $(this).getFormData();
-        hexaa.groups.testsuites.update(data.groupId, data.testsuiteId, data.name, data.level, data.public, data.attempts)
+        var groupId = $(this).attr('group');
+        var testsuiteId = $(this).attr('testsuite');
+        var data = new FormData(this);
+        hexaa.groups.testsuites.update(groupId, testsuiteId, data)
         .then((response)=>{
-            let url = '/groups/' + data.groupId + '/testsuites/' + data.testsuiteId;
+            let url = '/groups/' + groupId + '/testsuites/' + testsuiteId;
             window.location.href = url;
         }).catch((error)=>{
             alert(error.responseText);
@@ -427,6 +429,17 @@ $(document).ready(function () {
         });
         return false
     });  
+
+    $("button[name='delete-testsuite-attachment']").click(function(){
+        var data = $(this).data();
+        hexaa.groups.testsuites.deleteAttachment(data.group, data.testsuite, data.attachment)
+        .then((data)=>{
+            window.location.reload();
+        }).catch((error)=>{
+            alert(error.responseText);
+        });
+        return false
+    });
     
     // =========================== Submit code ==========================
 

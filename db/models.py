@@ -148,6 +148,7 @@ class Testsuite(BaseModel):
     created_by = fields.ReferenceField(User, required=True)
     updated_at = fields.IntField()
     updated_by = fields.ReferenceField(User)
+    attachment = fields.ListField(fields.StringField())
     # db collection
     meta = {"collection":"testsuite"}
 
@@ -162,7 +163,6 @@ class SuggestedTestcase(BaseModel):
     # db collection
     meta = {"collection":"suggested_testcase"}
     
-
 class Assignment(BaseModel):
     uid = fields.StringField(required=True, primary_key=True)
     name = fields.StringField(required=True, min_length=3, max_length=100)
@@ -200,7 +200,6 @@ class Session(BaseModel):
     # db collection
     meta = {"collection":"session"}
     
-
 class Submission(BaseModel):
     uid = fields.StringField(required=True, primary_key=True)
     group = fields.ReferenceField(Group, required=True, reverse_delete_rule=2)
@@ -213,7 +212,6 @@ class Submission(BaseModel):
     status = fields.StringField(required=True)
     # db collection
     meta = {"collection":"submissions"}
-
 
 class GroupJoinRequest(BaseModel):
     uid = fields.StringField(required=True, primary_key=True)

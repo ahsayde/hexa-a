@@ -5,7 +5,7 @@
                 <h4 class="modal-title">Edit testsuite</h4>
             </div>
             <div class="modal-body">
-                <form id="edit-testsuite-form">
+                <form id="edit-testsuite-form" group="{{group.uid}}" testsuite="{{testsuite.uid}}">
                     <input type="hidden" name="groupId" value="{{group.uid}}">
                     <input type="hidden" name="testsuiteId" value="{{testsuite.uid}}">
                     <div class="form-group">
@@ -26,6 +26,10 @@
                     <div class="form-group">
                         <input name="attempts" type="number" class="form-control" value="{{testsuite.attempts}}">
                     </div>
+                    <div class="form-group">
+                        <input type="file" name="attachments" id="custom-file-handler-update-attachment" style="display:none" multiple/>
+                        <button class="btn btn-info" id="custom-file-button-update-attachment" type="button">Attach file</button>
+                    </div>                       
                 </form>
             </div>
         <div class="modal-footer">

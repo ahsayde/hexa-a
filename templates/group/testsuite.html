@@ -42,7 +42,17 @@
                                             <span class="badge badge-primary">{{suggested_testcases.result|length}}</span>
                                         {% endif %}
                                     </a>
+                                     
                                 </li>
+                                {% if group.is_admin %}
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" role="tab" href="#attachment">Attachments 
+                                            {% if testsuite.attachment %}
+                                                <span class="badge badge-primary">{{testsuite.attachment|length}}</span>
+                                            {% endif %}
+                                        </a>
+                                    </li>
+                                {% endif %}
                             </ul>
                         </div>
                         <div class="col-auto ml-auto"> 
@@ -80,6 +90,30 @@
                         </ul>
                     </div>
 
+                    <!-- =================================== Attachment tabpanel ========================================= -->
+
+                    {% if group.is_admin %}
+                        <div class="tab-pane" id="attachment" role="tabpanel">
+                            <ul class="list-group list-group-flush">
+                                {% if testsuite.attachment %}
+                                    {% for attachment in testsuite.attachment %}
+                                        <li class="list-group-item pt-2 pb-2 text-muted">
+                                            <p>
+                                                {{attachment}}
+                                                <button type="button" class="close mr-auto" aria-label="Close" name="delete-testsuite-attachment" data-group="{{group.uid}}" data-testsuite="{{testsuite.uid}}" data-attachment="{{attachment}}">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </p>
+                                        </li>
+                                    {% endfor %}
+                                {% else %}
+                                    <li class="list-group-item pt-2 pb-2 text-muted">
+                                        <small>No attachment was found in this testsuite</small> 
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

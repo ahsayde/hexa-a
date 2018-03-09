@@ -1,7 +1,7 @@
 server:
   host: 
   port:
-
+  
 database:
   db: 
   host: 
@@ -11,10 +11,11 @@ database:
 
 dirs:
   USERS_TMP_CODE_DIR: 
+  TESTSUITES_ATTACHMENTS:
   USERS_PROFILE_PHOTOS_DIR:
 
 jwt-secret: 
-session-secret:
+session-secret: 
 
 smtp:
   host: 

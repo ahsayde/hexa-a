@@ -12,6 +12,8 @@ assignments_api = Blueprint('assignments_api', __name__)
 
 config = read_config('config.yaml')
 
+TESTSUITES_ATTACHMENTS = config['dirs']['TESTSUITES_ATTACHMENTS']
+
 @assignments_api.route("/assignments")
 @auth_required
 @group_access_level('member')
@@ -319,6 +321,12 @@ def submit(**kwargs):
     )
     source_file.save(source_file_path)
 
+    if testsuite.attachment:
+        for attachment in testsuite.attachment:
+            attachment_uid = '%s_%s' % (testsuite.uid, attachment)
+            attachment_path = os.path.join(TESTSUITES_ATTACHMENTS, attachment_uid)
+            shutil.copyfile(attachment_path, os.path.join(user_temp_dir, attachment))
+            
     ext = source_file.filename[source_file.filename.rfind('.')+1:]
     if ext in ['zip', 'rar', 'tar']:
         file = zipfile.ZipFile(source_file_path)

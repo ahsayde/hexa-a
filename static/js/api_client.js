@@ -267,12 +267,10 @@ function Testsuite(client) {
         return this.client.call_api(url, 'post', data, null, dataType);
     }
     // method for PUT /groups/<groupId>/testsuites/<testsuiteId>    
-    this.update = function(groupId, testsuiteId, name, level, public, attempts){
+    this.update = function(groupId, testsuiteId, data){
         let url = '/api/groups/' + groupId + '/testsuites/' + testsuiteId;
-        let contentType = 'application/json'; 
-        let data = {'name':name, 'level':level, 'public':public, 'attempts':attempts};
-        let body = JSON.stringify(data);
-        return this.client.call_api(url, 'put', body, contentType);
+        let dataType = 'json';
+        return this.client.call_api(url, 'put', data, null, dataType);
     }
     // method for DELETE /groups/<groupId>/testsuites/<testsuiteId>    
     this.delete = function(groupId, testsuiteId){
@@ -301,6 +299,11 @@ function Testsuite(client) {
     // method for DELETE /groups/<groupId>/testsuites/<testsuiteId>/testcases/<testcaseId>/reject
     this.rejectTestcase = function(groupId, testsuiteId, testcaseId){
         let url = '/api/groups/' + groupId + '/testsuites/' + testsuiteId + '/testcases/' + testcaseId + '/reject';
+        return this.client.call_api(url, 'delete');
+    }
+    // method from DELETE /groups/<groupId>/testsuites/<testsuiteId>/attachment
+    this.deleteAttachment = function(groupId, testsuiteId, attachmentId){
+        let url = '/api/groups/' + groupId + '/testsuites/' + testsuiteId + '/attachments/' + attachmentId;
         return this.client.call_api(url, 'delete');
     }
 }
