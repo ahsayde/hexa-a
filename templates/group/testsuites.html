@@ -16,7 +16,7 @@
 
   <hr class="half-rule"/> 
 
-    {% if not testsuites %}
+    {% if not testsuites.result %}
         <span class="text-muted">No {% if not group.is_admin %} public {% endif %} testsuites in this group</span>
     {% else %}  
       <div class="list-group">
