@@ -26,12 +26,10 @@
                     <div class="form-group">
                         <input name="attempts" type="number" class="form-control" value="{{testsuite.attempts}}">
                     </div>
-                    {% if not testsuite.attachment %}
-                        <div class="form-group">
-                            <input type="file" name="attachment" id="custom-file-handler-update-attachment" style="display:none"/>
-                            <button class="btn btn-info" id="custom-file-button-update-attachment" type="button">Attach file</button>
-                        </div>                       
-                    {% endif %}
+                    <div class="form-group">
+                        <input type="file" name="attachments" id="custom-file-handler-update-attachment" style="display:none" multiple/>
+                        <button class="btn btn-info" id="custom-file-button-update-attachment" type="button">Attach file</button>
+                    </div>                       
                 </form>
             </div>
         <div class="modal-footer">

@@ -322,9 +322,10 @@ def submit(**kwargs):
     source_file.save(source_file_path)
 
     if testsuite.attachment:
-        attachment_uid = '%s_%s' % (testsuite.uid, testsuite.attachment)
-        attachment_path = os.path.join(TESTSUITES_ATTACHMENTS, attachment_uid)
-        shutil.copyfile(attachment_path, os.path.join(user_temp_dir, testsuite.attachment))
+        for attachment in testsuite.attachment:
+            attachment_uid = '%s_%s' % (testsuite.uid, attachment)
+            attachment_path = os.path.join(TESTSUITES_ATTACHMENTS, attachment_uid)
+            shutil.copyfile(attachment_path, os.path.join(user_temp_dir, attachment))
 
     ext = source_file.filename[source_file.filename.rfind('.')+1:]
     if ext in ['zip', 'rar', 'tar']:

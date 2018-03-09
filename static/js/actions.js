@@ -432,7 +432,7 @@ $(document).ready(function () {
 
     $("button[name='delete-testsuite-attachment']").click(function(){
         var data = $(this).data();
-        hexaa.groups.testsuites.deleteAttachment(data.group, data.testsuite)
+        hexaa.groups.testsuites.deleteAttachment(data.group, data.testsuite, data.attachment)
         .then((data)=>{
             window.location.reload();
         }).catch((error)=>{

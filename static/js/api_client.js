@@ -302,8 +302,8 @@ function Testsuite(client) {
         return this.client.call_api(url, 'delete');
     }
     // method from DELETE /groups/<groupId>/testsuites/<testsuiteId>/attachment
-    this.deleteAttachment = function(groupId, testsuiteId){
-        let url = '/api/groups/' + groupId + '/testsuites/' + testsuiteId + '/attachment';
+    this.deleteAttachment = function(groupId, testsuiteId, attachmentId){
+        let url = '/api/groups/' + groupId + '/testsuites/' + testsuiteId + '/attachments/' + attachmentId;
         return this.client.call_api(url, 'delete');
     }
 }
