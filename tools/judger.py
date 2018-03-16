@@ -24,6 +24,7 @@ class Judger:
 
         for testcase in testcases:
             try:
+                testcase['expected_stdout'] = bytes(testcase['expected_stdout'], encoding='ascii').decode('unicode-escape')
                 cmd = './output.out {}'.format(testcase['stdin'])    
                 output = self._sandbox.execute(self.container.id, cmd)
 
