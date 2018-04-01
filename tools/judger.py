@@ -15,7 +15,7 @@ class Judger:
         self._sandbox.remove(self.container.id)
 
     def compile(self):
-        cmd = "bash -c 'g++ -w -fmessage-length=10000 -fno-diagnostics-show-caret -std=c++98 *.cpp -o output.out'"
+        cmd = "bash -c 'g++ -w -fmessage-length=10000 -fno-diagnostics-show-caret -fdiagnostics-color=never -std=c++98 *.cpp -o output.out'"
         compiler_result = self._sandbox.execute(self.container.id, cmd)
         self.result['compiler'] = compiler_result
         
