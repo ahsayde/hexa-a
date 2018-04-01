@@ -155,7 +155,7 @@ def GetUserGroupsNotifications(** kwargs):
     }
     memberships = GroupMembership.objects(user=username, role='admin')
     for membership in memberships:
-        groupId = membership.group._id
+        groupId = membership.group
         notifications['group_notifications']['JoinRequests'] = [x.to_dict() for x in GroupJoinRequest.objects(group=groupId, user__ne=username)]
 
     return http.Ok(json.dumps(notifications))
