@@ -49,7 +49,7 @@ class Judger:
                     else:
                         testcase['stderr'] = 'Unknown error'                                          
                 else:
-                    if testcase['expected_stdout'].strip() == output['output'].strip():
+                    if expected_stdout.strip() == output['output'].strip():
                         status = 'Passed'
                         passed_tests += 1
                     else:
