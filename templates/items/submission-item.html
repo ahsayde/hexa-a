@@ -29,7 +29,7 @@
         </div>
         <div class="col text-truncate">
             {% if submission.status in  ['Error', 'Compiler Error'] %}
-                <span class="badge badge-dark">Compiler Error</span>
+                <span class="badge badge-dark">{{submission.status}}</span>
             {% elif submission.status == 'Passed' %}
                 <span class="badge badge-success">Passed</span>     
             {% elif submission.status == 'Failed' %}                       

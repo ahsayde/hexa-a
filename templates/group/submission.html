@@ -51,6 +51,9 @@
                                         <div class="progress-bar bg-danger" role="progressbar" style="width:  {{ submission.result.summary.failed / submission.result.summary.all * 100 }}%" aria-valuenow="{{submission.result.summary.failed}}" aria-valuemin="0" aria-valuemax="{{submission.result.summary.all}}">
                                             {{submission.result.summary.failed}} Failed      
                                         </div>
+                                        <div class="progress-bar bg-dark" role="progressbar" style="width:  {{ submission.result.summary.errored / submission.result.summary.all * 100 }}%" aria-valuenow="{{submission.result.summary.errored}}" aria-valuemin="0" aria-valuemax="{{submission.result.summary.all}}">
+                                            {{submission.result.summary.errored}} Errored      
+                                        </div>
                                     </div>
                                 </div>
                                 <ul class="list-group list-group-flush">
