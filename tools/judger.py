@@ -20,7 +20,7 @@ class Judger:
         compiler_result = self._sandbox.execute(self.container.id, cmd)
         self.result['compiler'] = compiler_result
 
-    def __run_test(self, stdin, timeout=3):
+    def __run_test(self, stdin, timeout=2):
         cmd = 'timeout {}s ./output.out {}'.format(timeout, stdin)    
         return self._sandbox.execute(self.container.id, cmd)
         
