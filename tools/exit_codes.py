@@ -1,5 +1,5 @@
 exit_codes_table = {
-    1: {
+	1: {
 		"name": "SIGHUP",
 		"descr": "Hangup"
 	},
@@ -13,11 +13,11 @@ exit_codes_table = {
 	},
 	4: {
 		"name": "SIGILL",
-		"descr": "Illegal"
+		"descr": "Illegal Instruction"
 	},
 	5: {
 		"name": "SIGTRAP",
-		"descr": "Trace/Breakpoint"
+		"descr": "Trace Breakpoint Trap"
 	},
 	6: {
 		"name": "SIGABRT",
@@ -25,11 +25,11 @@ exit_codes_table = {
 	},
 	7: {
 		"name": "SIGEMT",
-		"descr": "Emulation"
+		"descr": "EmulationTrap"
 	},
 	8: {
 		"name": "SIGFPE",
-		"descr": "Arithmetic"
+		"descr": "Arithmetic Exception"
 	},
 	9: {
 		"name": "SIGKILL",
@@ -37,23 +37,23 @@ exit_codes_table = {
 	},
 	10: {
 		"name": "SIGBUS",
-		"descr": "Bus"
+		"descr": "Bus Error"
 	},
 	11: {
 		"name": "SIGSEGV",
-		"descr": "Segmentation"
+		"descr": "Segmentation Fault"
 	},
 	12: {
 		"name": "SIGSYS",
-		"descr": "Bad"
+		"descr": "Bad SystemCall"
 	},
 	13: {
 		"name": "SIGPIPE",
-		"descr": "Broken"
+		"descr": "Broken Pipe"
 	},
 	14: {
 		"name": "SIGALRM",
-		"descr": "Alarm"
+		"descr": "Alarm Clock"
 	},
 	15: {
 		"name": "SIGTERM",
@@ -61,39 +61,39 @@ exit_codes_table = {
 	},
 	16: {
 		"name": "SIGUSR1",
-		"descr": "User"
+		"descr": "User Signal1"
 	},
 	17: {
 		"name": "SIGUSR2",
-		"descr": "User"
+		"descr": "User Signal2"
 	},
 	18: {
 		"name": "SIGCHLD",
-		"descr": "Child"
+		"descr": "Child Status"
 	},
 	19: {
 		"name": "SIGPWR",
-		"descr": "Power"
+		"descr": "Power Fail/Restart"
 	},
 	20: {
 		"name": "SIGWINCH",
-		"descr": "Window"
+		"descr": "Window Size Change"
 	},
 	21: {
 		"name": "SIGURG",
-		"descr": "Urgent"
+		"descr": "Urgent Socket Condition"
 	},
 	22: {
 		"name": "SIGPOLL",
-		"descr": "Socket"
+		"descr": "Socket I/O Possible"
 	},
 	23: {
 		"name": "SIGSTOP",
-		"descr": "Stopped"
+		"descr": "Stopped (signal)"
 	},
 	24: {
 		"name": "SIGTSTP",
-		"descr": "Stopped"
+		"descr": "Stopped (user)"
 	},
 	25: {
 		"name": "SIGCONT",
@@ -101,42 +101,42 @@ exit_codes_table = {
 	},
 	26: {
 		"name": "SIGTTIN",
-		"descr": "Stopped"
+		"descr": "Stopped (ttyinput)"
 	},
 	27: {
 		"name": "SIGTTOU",
-		"descr": "Stopped"
+		"descr": "Stopped (ttyoutput)"
 	},
 	28: {
 		"name": "SIGVTALRM",
-		"descr": "Virtual"
+		"descr": "Virtual Timer Expired"
 	},
 	29: {
 		"name": "SIGPROF",
-		"descr": "Profiling"
+		"descr": "Profiling Timer Expired"
 	},
 	30: {
 		"name": "SIGXCPU",
-		"descr": "CPU"
+		"descr": "CPU time limit exceeded"
 	},
 	31: {
 		"name": "SIGXFSZ",
-		"descr": "File"
+		"descr": "File size limit exceeded"
 	},
 	32: {
 		"name": "SIGWAITING",
-		"descr": "All"
+		"descr": "All LWPsb locked"
 	},
 	33: {
 		"name": "SIGLWP",
-		"descr": "Virtual"
+		"descr": "Virtual Interprocessor Interrupt for Threads Library"
 	},
 	34: {
 		"name": "SIGAIO",
-		"descr": "Asynchronous"
+		"descr": "Asynchronous I/O"
 	},
 	124: {
 		"name": "TIMEOUT",
-		"descr": "timeout"
+		"descr": "Timeout"
 	}
 }
