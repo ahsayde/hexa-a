@@ -61,12 +61,12 @@
                                         <li class="list-group-item">
                                             <div class="row">
                                                 <div class="col-10 d-flex flex-column">
-                                                    <code class="testcase">Id : {{testcase.uid}}</code>
-                                                    <code class="testcase">Input : {{testcase.stdin}}</code>
-                                                    <code class="testcase">Generated output: {{testcase.stdout or '' }}</code>
-                                                    <code class="testcase">Expected output : {{testcase.expected_stdout}}</code>
+                                                    <pre>Id : {{testcase.uid}}</pre>
+                                                    <pre>Input : {{testcase.stdin}}</pre>
+                                                    <pre>Generated output: {{testcase.stdout or '' }}</pre>
+                                                    <pre>Expected output : {{testcase.expected_stdout}}</pre>
                                                     {% if testcase.returncode %}
-                                                       <code class="testcase">Error ({{testcase.returncode}}) : {{testcase.stderr}}</code>
+                                                       <pre>Error ({{testcase.returncode}}) : {{testcase.stderr}}</pre>
                                                     {% endif %}
                                                 </div>
                                                 <div class="col-1 ml-auto d-flex align-items-center">

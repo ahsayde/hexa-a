@@ -228,3 +228,14 @@ p, textarea[readonly]
     border-color: #1F618D !important;
     background:#1F618D !important;
 }
+
+pre {
+    background: none !important;
+    color: #424949;
+    word-break: break-all;
+    white-space: pre-wrap;       /* Since CSS 2.1 */
+    white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+    white-space: -pre-wrap;      /* Opera 4-6 */
+    white-space: -o-pre-wrap;    /* Opera 7 */
+    word-wrap: break-word;       /* Internet Explorer 5.5+ */
+}

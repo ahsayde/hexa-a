@@ -328,10 +328,17 @@ def submit(**kwargs):
             shutil.copyfile(attachment_path, os.path.join(user_temp_dir, attachment))
             
     ext = source_file.filename[source_file.filename.rfind('.')+1:]
-    if ext in ['zip', 'rar', 'tar']:
-        file = zipfile.ZipFile(source_file_path)
-        file.extractall(path=user_temp_dir)
-        file.close()
+
+    if ext not in ['zip', 'cpp']:
+        return http.BadRequest('Unsupported file format (.%s), supports only (.zip & .cpp)' % (ext))
+
+    if ext in 'zip':
+        try:
+            file = zipfile.ZipFile(source_file_path)
+            file.extractall(path=user_temp_dir)
+            file.close()
+        except:
+            return http.BadRequest('Cannot uncommpress your file, file maybe is corrupted')
 
     try:
         judger = Judger(reference_id=reference_id)
