@@ -330,6 +330,7 @@ def submit(**kwargs):
     ext = source_file.filename[source_file.filename.rfind('.')+1:]
 
     if ext not in ['zip', 'cpp']:
+        shutil.rmtree(user_temp_dir)
         return http.BadRequest('Unsupported file format (.%s), supports only (.zip & .cpp)' % (ext))
 
     if ext in 'zip':
@@ -338,6 +339,7 @@ def submit(**kwargs):
             file.extractall(path=user_temp_dir)
             file.close()
         except:
+            shutil.rmtree(user_temp_dir)
             return http.BadRequest('Cannot uncommpress your file, file maybe is corrupted')
 
     try:
