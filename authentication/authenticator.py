@@ -120,7 +120,7 @@ def auth_required(func):
     def decorator(*args, **kwargs):
         username = is_authorized()
         if not username:
-            return http.Unauthorized('sd')
+            return http.Unauthorized('Session is expired, please login')
 
         kwargs['username'] = username
         return func(*args, **kwargs)
