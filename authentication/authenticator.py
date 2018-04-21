@@ -101,7 +101,7 @@ def login_required(func):
     def decorator(*args, **kwargs):
         username = is_authorized()
         if not username:
-            return redirect('/login', code=302)
+            return redirect('/login?r=' + request.url, code=302)
         
         kwargs['username'] = username
         return func(*args, **kwargs)

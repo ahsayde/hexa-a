@@ -19,15 +19,20 @@ def Index(**kwargs):
 @logout_required
 def LoginPage():
     if request.method == "GET":
-        return render_template('main/login.html')
+        current_url = request.args.get('r')
+        return render_template('main/login.html', current_url=current_url)
 
     elif request.method == "POST":
         identifier = request.form['identifier']
         password = request.form['password']
+        redirect_url = request.form['current_url']
 
         if is_valid_credentials(identifier, password):
             authorize_user(identifier=identifier)
-            return redirect('/groups', code=302)
+            if redirect_url:
+                return redirect(redirect_url, code=302)
+            else:
+                return redirect('/groups', code=302)
         else:
             error = 'Invalid username or password'
             return render_template('main/login.html', error=error)

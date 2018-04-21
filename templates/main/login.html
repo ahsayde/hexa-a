@@ -13,6 +13,8 @@
         {% endif %}
 
         <form action="/login" method="post">
+            <input type="hidden" name="current_url" value="{{current_url}}"/>
+
             <div class="form-group">
                  <label for="username">Username or email</label>
                 <input type="text" class="form-control" name="identifier">
