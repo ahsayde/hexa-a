@@ -19,7 +19,7 @@ def Index(**kwargs):
 @logout_required
 def LoginPage():
     if request.method == "GET":
-        current_url = request.args.get('r')
+        current_url = request.args.get('r', None)
         return render_template('main/login.html', current_url=current_url)
 
     elif request.method == "POST":
