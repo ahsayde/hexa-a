@@ -6,6 +6,7 @@ from tools.http import HttpResponse
 from werkzeug.utils import secure_filename
 from authentication.authenticator import auth_required, group_access_level
 from tools.judger import Judger
+from pymongo.errors import DocumentTooLarge
 
 http = HttpResponse()
 assignments_api = Blueprint('assignments_api', __name__)
@@ -379,7 +380,12 @@ def submit(**kwargs):
     if err:
         return http.InternalServerError(json.dumps(err))
 
-    submission.save()
+    try:
+        submission.save()
+    except DocumentTooLarge:
+        return "Can't return your result because it is too large, please make sure your code doesn't print huge amount of data in stdout", 422
+    except:
+        return http.InternalServerError()
 
     return http.Created(json.dumps({'uid':reference_id}))
 
