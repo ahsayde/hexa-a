@@ -1,43 +1,30 @@
-{% extends 'layout.html' %}
+{% include 'layout.html' %}
 
 {% block container %}
 
-    {% include 'navbar.html' %}
-    <div class="container-fluid"> 
-    <div class="wrapper">
-        <div class="sidebar">
-            <a href="/groups/{{group.uid}}"><h5>{{group.name}}</h5></a>
-            {% if group.description %}
-                <p class="text-muted m-1"><small>{{group.description}}<br></small></p>
-            {% endif %}
-            <a href="/groups/{{group.uid}}/members"><small>{{group.members_count}} members</small></a>
-            
-            <hr class="half-rule"/> 
+    <div class="ui container" style="margin-top:30px;">
+        <div class="ui stackable grid">
 
-            <ul class="list-group sidebar-nav">
-                <a href="/groups/{{group.uid}}/announcements" class="list-group-item d-flex justify-content-between align-items-center {{'active' if page =='announcements'}}">
-                    Announcements
-                </a>
-                <a href="/groups/{{group.uid}}/assignments" class="list-group-item d-flex justify-content-between align-items-center {{'active' if page =='assignments'}}">
-                    Assignments
-                </a>
-                <a href="/groups/{{group.uid}}/testsuites" class="list-group-item d-flex justify-content-between align-items-center {{'active' if page =='testsuites'}}">
-                    Testsuites
-                </a>
-                <a href="/groups/{{group.uid}}/members" class="list-group-item d-flex justify-content-between align-items-center {{'active' if page =='members'}}">
-                    Members
-                </a>
-                {% if group.is_admin %}
-                    <a href="/groups/{{group.uid}}/settings" class="list-group-item d-flex justify-content-between align-items-center {{'active' if page =='settings'}}">
-                        Settings
-                    </a>
+            <div class="three wide column">
+                <h3>{{group.name}}</h3>
+                <p>{{group.description}}</p>
+                <div class="ui divider"></div> 
+                <div class="ui secondary vertical small menu">
+                    <a href="/groups/{{group.uid}}/announcements" class="item {{'active' if tab == 'announcements'}}">Announcements</a>                    
+                    <a href="/groups/{{group.uid}}/assignments" class="item {{'active' if tab == 'assignments'}}">Assignments</a>
+                    <a href="/groups/{{group.uid}}/testsuites" class="item {{'active' if tab == 'testsuites'}}">Testsuites</a>                
+                    <a href="/groups/{{group.uid}}/members" class="item {{'active' if tab == 'members'}}">Members</a>                
+                    {% if group.is_admin %}
+                        <a href="/groups/{{group.uid}}/settings" class="item {{'active' if tab == 'settings'}}">Settings</a>
                 {% endif %}
-            </ul>
+                </div>
+            </div>
+
+            <div class="thirteen wide stretched column">
+                {% block group_content %}{% endblock %}
+            </div>
+            
         </div>
-        <div class="content">
-            {% block content %}{% endblock %}
-        </div>
-    </div>
     </div>
 
 {% endblock %}

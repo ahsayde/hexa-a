@@ -1,10 +1,11 @@
 window.onload = function(){
-    var ratio = window.outerWidth / window.innerWidth;
+    $('.ui.dropdown').dropdown();
+    // var ratio = window.outerWidth / window.innerWidth;
     
-    $('html').css({
-        'width':(ratio) * ($(window).width()),
-        'height':(ratio) * ($(window).height())
-    });
+    // $('html').css({
+    //     'width':(ratio) * ($(window).width()),
+    //     'height':(ratio) * ($(window).height())
+    // });
 };
 
 (function($){
@@ -78,4 +79,28 @@ $('input[id^="custom-file-handler-"]').change(function(){
     if(filename.length > 0){
         $(target_button_id).text(filename);
     }
+});
+
+
+function showModal(modalId){
+	$(modalId).modal({
+		duration:100,
+		transition:'fade'
+	}).modal('show');
+}
+
+$(document).ready(function(){
+
+    $('.menu .item').tab();
+
+    $('.ui .dropdown').dropdown();
+
+	$("#create-testsuite-button").click(function(){
+		showModal('#create-testsuite-modal');
+    });
+    
+    $("#create-assignment-button").click(function(){
+		showModal('#create-assignment-modal');
+	});
+    
 });

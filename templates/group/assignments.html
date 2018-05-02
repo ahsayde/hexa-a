@@ -1,27 +1,33 @@
-{% set page_title = 'HEXA-A - Assignments' %}
+{% set page_title = 'HEXA-A - Testsuites' %}
+{% set tab = 'assignments'%}
 {% extends 'group/group_page.html' %}
 
-{% block content %}
+{% block group_content %}
 
-  <div class="row">
-    <div class="col-4">
-        <input type="text" class="form-control form-control-sm" id="search-filter" placeholder="Search">
-    </div>
-    {% if group.is_admin %}
-      <div class="col-auto ml-auto">
-          <a class="btn btn-success btn-sm" href="/groups/{{group.uid}}/assignments/new">Create New</a>
+  <div class="ui segment">
+
+      <div class="ui grid">
+          <div class="four column row">
+              <div class="column">
+                <h3>Assignments</h3>
+              </div>
+              <div class="right floated column">
+                  <button id="create-assignment-button" class="ui mini green right floated button">
+                      New
+                  </button>
+              </div>
+          </div>
       </div>
-    {% endif %}
+
+      <div class="ui divider"></div> 
+
+      <div class="ui divided items">
+        {% for assignment in assignments.result %}
+          {% include 'items/assignment-item.html'%}
+        {% endfor%}
+      </div>
   </div>
 
-  <hr class="half-rule"/> 
+  {% include 'modals/createAssignment.html'%}
   
-  {% if not assignments.result %}
-      <span class="text-muted">No assignments were found in this group</span>
-  {% else %}
-    <div class="list-group">
-      {% for assignment in assignments.result %} {% include 'items/assignment-item.html' %} {% endfor %}
-    </div>
-  {% endif %}
-
 {% endblock %}

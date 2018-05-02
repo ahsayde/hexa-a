@@ -1,0 +1,52 @@
+body{
+  background: #F8F9F9
+}
+
+
+/* utils */
+
+.no-padding{
+  padding: 0.1em !important;
+}
+
+.container{
+  width:90% !important;
+}
+.wrapper {
+    min-height: calc(100% - 40px);
+    padding: 20px
+  }
+  .wrapper .middle {
+    height: calc(100% - 40px);
+  }
+
+  .segment{
+    border:none !important;
+    padding: 2em !important;
+  }
+
+.bg-white{
+  background: #fff !important;
+}
+.bg-blue{
+  background: #1B4F72 !important;
+}
+
+
+.method-get-text{color: #2471A3;}
+.method-post-text{color:#229954;}
+.method-put-text{color:#F39C12;}
+.method-delete-text{color:#CB4335}
+
+.method-get{
+  border-top: 2px solid #2471A3 !important
+}
+.method-post{
+  border-top: 2px solid#229954 !important
+}
+.method-put{
+  border-top: 2px solid#F39C12 !important
+}
+.method-delete{
+  border-top: 2px solid #CB4335 !important
+}

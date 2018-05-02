@@ -3,37 +3,41 @@
 
 {% block container %}
 
-    {% include 'navbar.html' %}
+    <div class="ui container" style="margin-top:30px;">
 
-    <div class="container-fluid"> 
-        <div class="wrapper">
-            
-            <div class="content2">
-                
-                <div class="row">
-                    <div class="col-4">
-                        <input type="text" class="form-control form-control-sm" id="search-filter" placeholder="Search">
-                    </div>
-
-                    <div class="col-auto ml-auto">
-                        <button class="btn btn-success btn-sm" type="button"  data-toggle="modal" data-target="#create-group">Create group</button>
-                    </div>
+        <div class="ui grid">
+            <div class="six wide column">
+                <div class="ui icon input">
+                    <input type="text" placeholder="Search...">
                 </div>
-
-                <hr class="half-rule"/>
-
-                <div class="list-group">
-                    {% if not groups.result %}
-                        <p class="text-muted text-center mt-3">You don't have any group yet, <a href="#creategroup" data-toggle="modal" data-target="#create-group">Create</a> your first now</p>
-                    {% endif %}
-
-                    {% for group in groups.result %}
-                        {% include 'items/group-item.html'%}
-                    {% endfor %}
-                </div>
+            </div>
+            <div class="six wide column right floated">
+                <button class="ui green mini button">Create group</button>
+            </div>
         </div>
-    </div>    
 
-    {% include 'modals/createGroup.html' %}        
+      <div class="ui divider"></div> 
+        
+
+        <div class="ui four column stackable grid">
+
+            {% for group in groups.result %}
+                <div class="column">
+                    <a class="ui card" href="/groups/{{group.uid}}">
+                        <div class="content">
+                            <div class="header center aligned">{{group.name}}</div>
+                            <div class="description">
+                                <p>{{group.description}}</p>
+                            </div>
+                        </div>
+                        <div class="extra content">
+                            {{group.members_count}} member(s)
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+
 {% endblock %}
-

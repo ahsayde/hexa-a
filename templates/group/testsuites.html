@@ -1,28 +1,33 @@
 {% set page_title = 'HEXA-A - Testsuites' %}
+{% set tab = 'testsuites'%}
 {% extends 'group/group_page.html' %}
 
-{% block content %}
+{% block group_content %}
 
-  <div class="row">
-      <div class="col-4">
-        <input type="text" class="form-control form-control-sm" id="search-filter" placeholder="Search">
+  <div class="ui segment">
+
+      <div class="ui grid">
+          <div class="four column row">
+              <div class="column">
+                <h3>Testsuites</h3>
+              </div>
+              <div class="right floated column">
+                  <button id="create-testsuite-button" class="ui mini green right floated button">
+                      New
+                  </button>
+              </div>
+          </div>
       </div>
-      {% if group.is_admin %}
-        <div class="col-auto ml-auto">
-            <button data-toggle="modal" data-target="#create-testsuite" class="btn btn-success btn-sm">Create New</button>
-        </div>
-      {% endif %}
-    </div>
 
-  <hr class="half-rule"/> 
+      <div class="ui divider"></div> 
 
-    {% if not testsuites.result %}
-        <span class="text-muted">No {% if not group.is_admin %} public {% endif %} testsuites in this group</span>
-    {% else %}  
-      <div class="list-group">
-        {% for testsuite in testsuites.result %}{% include 'items/testsuite-item.html' %}{% endfor %}
+      <div class="ui divided items">
+        {% for testsuite in testsuites.result %}
+          {% include 'items/testsuite-item.html'%}
+        {% endfor%}
       </div>
-    {% endif %}
+  </div>
 
-  {% include 'modals/createTestsuite.html' %}
+  {% include 'modals/createTestsuite.html'%}
+  
 {% endblock %}

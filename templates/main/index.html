@@ -1,61 +1,61 @@
 {% set page_title = 'HEXA-A' %}
 {% extends 'layout.html' %}
-{% block container %}
-    {% include 'navbar.html' %}
 
-    <div class="container" style="margin-top:100px;">
-        <div class="row">
-            <div class="col-7">    
-                    <h2>HEXA-A is a platform that allows educators to create online groups where they can create, test, and manage assignments in one place.</h2>             
+{% block container %}
+
+    <div class="ui container">
+        <div class="ui stackable grid">
+
+            <div class="ten wide column">
             </div>
-            <div class="col-4 ml-auto">
-                <ul class="nav nav-tabs" role="tablist">
-                    <li class="nav-item">
-                        <a class="nav-link active" id="signin-tab" data-toggle="tab" href="#signin" role="tab" aria-selected="true">Sign in</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="signup-tab" data-toggle="tab" href="#signup" role="tab" aria-selected="true">Sign up</a>
-                    </li>
-                </ul><br>
-                <div class="tab-content">
-                    <!-- ==================================== signin form =======================================-->
-                    <div class="tab-pane show active" id="signin" role="tabpanel">
-                        <form action="/login" method="post">
+
+            <div class="six wide column">
+                <div class="ui segment left aligned">
+
+                    <div class="ui tabular menu" id="endpoint-options">
+                        <a class="active item" data-tab="signin">Sign in</a>  
+                        <a class="item" data-tab="signup">Sign up</a>        
+                    </div><br>
+                    
+                    <div class="ui tab active" data-tab="signin">
+                        <form class="ui form" action="/login" method="post">
                             <input type="hidden" name="current_url" value="{{current_url or ''}}"/>
-                            <div class="form-group">
+                            <div class="field">
                                 <label for="username">Username or email</label>
-                                <input type="text" class="form-control form-control-sm" name="identifier">
+                                <input type="text" name="identifier">
                             </div>
-                            <div class="form-group">
-                                    <label for="password">Password</label>
-                                <input type="password" class="form-control form-control-sm" name="password">
+                            <div class="field">
+                                <label for="password">Password</label>
+                                <input type="password" name="password">
                             </div>
-                            <div class="form-group">
+                            <div class="field">
                                 <a href="/sendresetpassword">Forget password?</a>
                             </div>
-                            <button type="submit" class="btn btn-success">Login</button>
+                            <button type="submit" class="ui blue fluid button">Sign in</button>
                         </form>
                     </div>
-                    <!-- ==================================== signup form =======================================-->
-                    <div class="tab-pane" id="signup" role="tabpanel">
-                        <form action="/signup" method="post">
-                            <div class="form-group">
+
+                    <div class="ui tab" data-tab="signup">
+                        <form class="ui form" action="/signup" method="post">
+                            <div class="field">
                                 <label for="username">Username</label>
-                                <input type="text" class="form-control form-control-sm" name="username" placeholder="Pick a username" required>
+                                <input type="text" name="username" required>
                             </div>
-                            <div class="form-group">
-                                <label for="username">Email</label>
-                                <input type="email" class="form-control form-control-sm" name="email" placeholder="you@example.com" required>
+                            <div class="field">
+                                <label for="email">Email</label>
+                                <input type="email" name="email" required>
                             </div>
-                            <div class="form-group">
-                                <label for="username">Password</label>
-                                <input type="password" class="form-control form-control-sm" name="password" placeholder="Create password" required>
+                            <div class="field">
+                                <label for="password">Password</label>
+                                <input type="password" name="password" required>
                             </div>
-                            <button type="submit" class="btn btn-success btn-block">Sign up</button>
+                            <button type="submit" class="ui green fluid button">Sign up</button>
                         </form>
-                    </div>
+                    </div>        
                 </div>
             </div>
+
         </div>
     </div>
+
 {% endblock %}
