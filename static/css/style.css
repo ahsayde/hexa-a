@@ -2,23 +2,10 @@ body{
   background: #F8F9F9
 }
 
-
-/* utils */
-
-.no-padding{
-  padding: 0.1em !important;
-}
-
-.container{
-  width:90% !important;
-}
-.wrapper {
+/* .wrapper {
     min-height: calc(100% - 40px);
     padding: 20px
-  }
-  .wrapper .middle {
-    height: calc(100% - 40px);
-  }
+  } */
 
   .segment{
     border:none !important;
@@ -61,7 +48,4 @@ body{
 
 .post-field, .post-field:focus{
   resize: none !important;
-  /* border: 0 none #FFF !important;
-  overflow: hidden !important;
-  outline:none !important;   */
 }

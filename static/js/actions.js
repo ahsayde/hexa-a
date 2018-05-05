@@ -87,9 +87,8 @@ $(document).ready(function () {
     });
 
     $("#edit-group-form").submit(function(){
-        var groupId = $(this).data('group');
         var data = $(this).getFormData();
-        hexaa.groups.update(groupId, data.name, data.description)
+        hexaa.groups.update(data.group, data.name, data.description)
         .then((response)=>{
             window.location.reload();
         }).catch((error)=>{

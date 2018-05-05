@@ -2,9 +2,9 @@ body{
     word-wrap: break-word; 
 }
 
-.container-fluid{
+/* .container-fluid{
     width:90% !important;
-}
+} */
 
 .wrapper {
     display: flex;

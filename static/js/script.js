@@ -92,8 +92,12 @@ function showModal(modalId){
 $(document).ready(function(){
 
 	$('.menu .item').tab();
-
     $('.ui .dropdown').dropdown();
+
+    $('#menu').click(function(){
+        $('.ui.sidebar').sidebar('toggle');
+    });
+
 
 	$("#create-testsuite-button").click(function(){
 		showModal('#create-testsuite-modal');

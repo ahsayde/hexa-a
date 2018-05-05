@@ -5,11 +5,7 @@
     <div class="content">
         <div class="summary">
             <a href="/users/{{announcement.created_by.username}}">
-                {% if announcement.created_by.firstname and announcement.created_by.lastname %}
-                    {{ announcement.created_by.firstname }} {{ announcement.created_by.lastname}}
-                {% else %}
-                    {{announcement.created_by.username}}
-                {% endif %}
+                {{announcement.created_by.username}}
             </a>
             <div class="date">{{timestamp_to_age(announcement.created_at)}}</div>
             {% if group.is_admin %}
