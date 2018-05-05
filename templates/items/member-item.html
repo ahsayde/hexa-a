@@ -1,27 +1,29 @@
-<div class="ui list">
-    <div class="item">
-        <div class="right floated content">
-            <div class="ui top right mini pointing dropdown button">...
-                <div class="menu">
-                {% if member.user.username == userInfo.username %}
-                    <button class="fluid ui basic button item" name="leaveGroup" data-group="{{group.uid}}" data-member="{{member.user.username}}">Leave group</button>
-                {% elif  group.is_admin %}
-                    {% set newrole = 'member' if member.role =='admin' else 'admin' %}
-                    <button class="fluid ui basic button item" name="updateMemberRole" data-group="{{group.uid}}" data-member="{{member.user.username}}" data-newrole="{{newrole}}">Change role to {{newrole}}</button>
-                    <button class="fluid ui basic button item" name="removeMember" data-group="{{group.uid}}" data-member="{{member.user.username}}">Remove</button>
-                {% endif %}
-                </div>
+<div class="item">
+    {% if group.is_admin or userInfo.username == member.user.username %}
+    <div class="right floated content">
+        <div class="ui top right mini pointing dropdown basic button">...
+            <div class="menu">
+            {% if member.user.username == userInfo.username %}
+                <button class="fluid ui basic button item" name="leaveGroup" data-group="{{group.uid}}" data-member="{{member.user.username}}">Leave group</button>
+            {% elif  group.is_admin %}
+                {% set newrole = 'member' if member.role =='admin' else 'admin' %}
+                <button class="fluid ui basic button item" name="updateMemberRole" data-group="{{group.uid}}" data-member="{{member.user.username}}" data-newrole="{{newrole}}">Change role to {{newrole}}</button>
+                <button class="fluid ui basic button item" name="removeMember" data-group="{{group.uid}}" data-member="{{member.user.username}}">Remove</button>
+            {% endif %}
             </div>
         </div>
+    </div>
+    {% endif %}
+    
 
-        <img class="ui avatar image" src="{{member.user.profile_photo}}">
-        <div class="content">
-        <a class="header">{{member.user.username}}
-        </a>
+    <img class="ui avatar image" src="{{member.user.profile_photo}}">
+    <div class="content">
+        <a class="header" href="/users/{{member.user.username}}">{{member.user.username}}</a>
         <div class="description">
-            {% if member.role == 'admin' %}
-                <div class="ui blue mini horizontal label">Admin</div>
-            {% endif %}
+
+            <div class="ui secondary mini horizontal label">
+                {{member.role|capitalize}}
+            </div>
 
             {% if member.added_by == member.user %} 
                 Created the group {{timestamp_to_age(group.created_at)}}
@@ -29,7 +31,6 @@
                 Added by <a href="/users/{{member.added_by.username}}">{{member.added_by.username}}</a> {{timestamp_to_age(member.joined_at)}}
             {% endif %}
             
-        </div>
         </div>
     </div>
 </div>

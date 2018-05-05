@@ -1,47 +1,27 @@
-<div class="card mb-2">
-    <div class="card-body">
-        <div class="media">
-            <img class="rounded-circle mr-3" src="{{announcement.created_by.profile_photo}}" width="30px" alt="{{announcement.created_by.username}}">
-            <div class="media-body">
-                <div class="row">
-                    <div class="col-auto">
-                        <h6 class="m-0 mb-1">
-                            <a href="/users/{{announcement.created_by.username}}">
-                                {% if announcement.created_by.firstname and announcement.created_by.lastname %}
-                                    {{ announcement.created_by.firstname }} {{ announcement.created_by.lastname}}
-                                {% else %}
-                                    {{announcement.created_by.username}}
-                                {% endif %}
-                            </a>
-                        </h6>
-                        <span class="text-muted mr-1" style="font-size:13px">{{timestamp_to_age(announcement.created_at)}} </span> 
-                        {% if announcement.updated_at %}
-                            <span class="text-muted" style="font-size:13px">edited</span> 
-                        {% endif %}
-                    </div>
-
-                    {% if group.is_admin or userInfo.username == announcement.created_by.username %}
-                        <div class="col ml-auto text-right">
-                            <button type="button" class="btn btn-default btn-sm" id="saveChangesOf_{{announcement.uid}}" style="display:none;" data-group="{{group.uid}}" data-announcement="{{announcement.uid}}">Save</button>
-                            <button type="button" class="btn btn-default btn-sm" id="cancelChangesOf_{{announcement.uid}}" style="display:none;" data-group="{{group.uid}}" data-announcement="{{announcement.uid}}">Cancel</button>
-                        </div>
-                        <div class="col-auto ml-auto text-right">
-                            <div class="dropdown">
-                                <button class="btn btn-default btn-sm pt-0 pb-0" id="announcementOptionsOf_{{announcement.uid}}" data-toggle="dropdown">...</button>
-                                <div class="dropdown-menu" aria-labelledby="announcementOptionsOf_{{announcement.uid}}">
-                                    <button class="dropdown-item btn-sm" name="removeAnnouncement" type="button" data-group="{{group.uid}}" data-announcement="{{announcement.uid}}">Delete</button>
-                                </div>
-                            </div>
-                        </div>
-                    {% endif %} 
-
-                </div>
-                <div class="row mt-3">
-                    <div class="col">
-                        <p id="announcementContentOf_{{announcement.uid}}">{{announcement.content}}</p>
+<div class="event">
+    <div class="label">
+        <img src="{{announcement.created_by.profile_photo}}">
+    </div>
+    <div class="content">
+        <div class="summary">
+            <a href="/users/{{announcement.created_by.username}}">
+                {% if announcement.created_by.firstname and announcement.created_by.lastname %}
+                    {{ announcement.created_by.firstname }} {{ announcement.created_by.lastname}}
+                {% else %}
+                    {{announcement.created_by.username}}
+                {% endif %}
+            </a>
+            <div class="date">{{timestamp_to_age(announcement.created_at)}}</div>
+            {% if group.is_admin %}
+                <div class="ui top right mini pointing dropdown right floated basic button">...
+                    <div class="menu">
+                        <button class="fluid ui basic button item" name="removeAnnouncement" type="button" data-group="{{group.uid}}" data-announcement="{{announcement.uid}}">Delete</button>
                     </div>
                 </div>
-            </div>
+        {% endif %} 
+        </div>
+        <div class="extra text" id="announcementContentOf_{{announcement.uid}}">
+            {{announcement.content}}
         </div>
     </div>
 </div>

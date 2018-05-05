@@ -6,7 +6,7 @@ from client.authentication import Authentication
 
 class Client:
     
-    def __init__(self, url='http://127.0.0.1:5000'):
+    def __init__(self, url='http://127.0.0.1:8080'):
         self.base_url = url
         self.api_url = self.base_url + '/api'
         self.session = requests.session()

@@ -147,9 +147,9 @@ $(document).ready(function () {
     
     // =========================== Memberships ============================
 
-    $("#add-member-form").submit(function(){
+    $("#add-members-form").submit(function(){
         var data = $(this).getFormData();
-        hexaa.groups.memberships.create(data.groupId, data.member)
+        hexaa.groups.memberships.create(data.groupId, data.member, data.role)
         .then((data)=>{
             window.location.reload();
         }).catch((error)=>{

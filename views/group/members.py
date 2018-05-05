@@ -1,5 +1,5 @@
 from client.client import Client
-from flask import Blueprint, render_template, session
+from flask import Blueprint, render_template, session, request
 from authentication.authenticator import login_required, group_access_level
 
 api = Client()
@@ -16,6 +16,7 @@ def client_auth(**kwargs):
 @login_required
 @group_access_level('member')
 def MembersPage(** kwargs):
+    subtab = request.args.get('subtab', 'members')
     user_role = kwargs.get('user_role')
     username = kwargs.get('username', None)
     groupId = kwargs.get('groupId', None)
@@ -25,5 +26,8 @@ def MembersPage(** kwargs):
     requests = []
     if user_role == 'admin':
         requests = api.groups.requests.list(groupId=groupId).json()
+
+    if subtab not in ['members', 'requests']:
+        subtab = 'members'
         
-    return render_template('group/members.html', page=page, group=group, members=members, requests=requests)
+    return render_template('group/members.html', page=page, subtab=subtab, group=group, members=members, requests=requests)

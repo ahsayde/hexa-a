@@ -91,7 +91,7 @@ function showModal(modalId){
 
 $(document).ready(function(){
 
-    $('.menu .item').tab();
+	$('.menu .item').tab();
 
     $('.ui .dropdown').dropdown();
 
@@ -101,6 +101,14 @@ $(document).ready(function(){
     
     $("#create-assignment-button").click(function(){
 		showModal('#create-assignment-modal');
-	});
+    });
+    
+    $("#create-announcement-button").click(function(){
+		showModal('#create-announcement-modal');
+    });
+
+    $("#add-members-button").click(function(){
+		showModal('#add-members-modal');
+    });
     
 });

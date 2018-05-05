@@ -29,7 +29,7 @@ body{
   background: #fff !important;
 }
 .bg-blue{
-  background: #1B4F72 !important;
+  background: #17202A !important;
 }
 
 
@@ -49,4 +49,19 @@ body{
 }
 .method-delete{
   border-top: 2px solid #CB4335 !important
+}
+
+.description{
+  margin-top:3px;
+}
+
+.no-padding{
+  padding:7px !important;
+}
+
+.post-field, .post-field:focus{
+  resize: none !important;
+  /* border: 0 none #FFF !important;
+  overflow: hidden !important;
+  outline:none !important;   */
 }
