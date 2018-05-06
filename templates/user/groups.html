@@ -1,43 +1,34 @@
 {% set page_title = 'HEXA-A - Groups' %}
-{% extends 'layout.html' %}
+{% set tab = 'groups' %}
+{% extends 'user/user_page.html' %}
 
-{% block container %}
+{% block user_page_content %}
 
-    <div class="ui container" style="margin-top:30px;">
+    <button class="ui green icon labeled button" id="create-group-button">
+        Create Group
+        <i class="add icon"></i>
+    </button><br><br>
 
-        <div class="ui grid">
-            <div class="six wide column">
-                <div class="ui icon input">
-                    <input type="text" placeholder="Search...">
-                </div>
-            </div>
-            <div class="six wide column right floated">
-                <button class="ui green mini button">Create group</button>
-            </div>
-        </div>
+    <div class="ui three column stackable grid">
 
-      <div class="ui divider"></div> 
-        
-
-        <div class="ui four column stackable grid">
-
-            {% for group in groups.result %}
-                <div class="column">
-                    <a class="ui card" href="/groups/{{group.uid}}">
-                        <div class="content">
-                            <div class="header center aligned">{{group.name}}</div>
-                            <div class="description">
-                                <p>{{group.description}}</p>
-                            </div>
+        {% for group in groups.result %}
+            <div class="column">
+                <a class="ui card" href="/groups/{{group.uid}}">
+                    <div class="content">
+                        <div class="header center aligned">{{group.name}}</div>
+                        <div class="description">
+                            <p>{{group.description}}</p>
                         </div>
-                        <div class="extra content">
-                            {{group.members_count}} member(s)
-                        </div>
-                    </a>
-                </div>
-            {% endfor %}
+                    </div>
+                    <div class="extra content">
+                        {{group.members_count}} member(s)
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
 
-        </div>
     </div>
+
+    {% include 'modals/createGroup.html' %}
 
 {% endblock %}

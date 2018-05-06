@@ -1,5 +1,5 @@
 from client.client import Client
-from flask import Blueprint, render_template, session
+from flask import Blueprint, render_template, session, request
 from authentication.authenticator import login_required, group_access_level
 
 api = Client()
@@ -26,12 +26,27 @@ def TestsuitesPage(** kwargs):
 @login_required
 @group_access_level('member')
 def TestsuitePage(** kwargs):
+    subtab = request.args.get('subtab')
     username = kwargs.get('username')
     groupId = kwargs.get('groupId')
     testsuiteId = kwargs.get('testsuiteId')
     group = api.groups.get(groupId=groupId).json()
     testsuite = api.groups.testsuites.get(groupId, testsuiteId).json()
-    suggested_testcases = api.groups.testsuites.getSuggestedTestcases(groupId, testsuiteId).json()
-    return render_template('group/testsuite.html', page=page, group=group, testsuite=testsuite, suggested_testcases=suggested_testcases)
+
+    if subtab not in ['testcases', 'suggestions', 'settings']:
+        subtab = 'testcases'
+
+    suggested_testcases = []
+    if subtab == 'suggestions':
+        suggested_testcases = api.groups.testsuites.getSuggestedTestcases(groupId, testsuiteId).json()
+
+    return render_template(
+        'group/testsuite.html', 
+        page=page, 
+        subtab=subtab,
+        group=group, 
+        testsuite=testsuite, 
+        suggested_testcases=suggested_testcases
+    )
 
 

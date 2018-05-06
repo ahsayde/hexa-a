@@ -6,27 +6,46 @@
     <div class="ui container">
         <div class="ui segment">
 
-            <h3>Submissions / <code></span>{{submission.uid}}</code></h3>
+            <h3>
+                <a href="/groups/{{submission.group.uid}}/assignments/{{submission.assignment.uid}}?subtab=submissions">Submissions</a> / 
+                <code></span>{{submission.uid}}</code>
+            </h3>
             
             <div class="description sub-text">
                 Submitted by <a href="/users/{{submission.username}}">{{submission.username}}</a> at {{datatimeFromTimestamp(submission.submitted_at)}}
+            </div>
+            <div class="sub-text">
+                Group:  <a href="/groups/{{submission.group.uid}}">{{submission.group.name}},</a>&nbsp;
+                Assignment:  <a href="/groups/{{submission.group.uid}}/assignments/{{submission.assignment.uid}}">{{submission.assignment.name}},</a>&nbsp;
+                Testsuite:  <a href="/groups/{{submission.group.uid}}/testsuites/{{submission.testsuite.uid}}">{{submission.testsuite.name}}</a>                
             </div>
 
             <div class="ui divider"></div>
 
             <div class="ui divided items">            
                 {% for testcase in submission.result.testcases %}
+
                     <div class="item">
                         <div class="content">
-                        <pre>Id : {{testcase.uid}}</pre>
-                        <pre>Input : {{testcase.stdin}}</pre>
-                        <pre>Generated output: {{testcase.stdout or '' }}</pre>
-                        <pre>Expected output : {{testcase.expected_stdout}}</pre>
-                        {% if testcase.returncode %}
-                            <pre>Error ({{testcase.returncode}}) : {{testcase.stderr}}</pre>
-                        {% endif %}
+                            <pre><code>Id : {{testcase.uid}}</code></pre>
+                            <pre><code>Input : {{testcase.stdin}}</code></pre>
+                            <pre><code>Generated output: {{testcase.stdout or '' }}</code></pre>
+                            <pre><code>Expected output : {{testcase.expected_stdout}}</code></pre>
+                            {% if testcase.returncode %}
+                                <pre><code>Error ({{testcase.returncode}}) : {{testcase.stderr}}</code></pre>
+                            {% endif %}
+                        </div>
+                        <div class="right floated content">
+                            {% if testcase.status == 'Errored' %}
+                                <label class="ui grey right floated label">Error</label>
+                            {% elif testcase.status == 'Passed' %}
+                                <label class="ui green right floated label">Passed</label>     
+                            {% elif testcase.status == 'Failed' %}                       
+                                <label class="ui red right floated label">Failed</label> 
+                            {% endif %}
                         </div>
                     </div>
+
                 {% endfor %}
             </div>
             

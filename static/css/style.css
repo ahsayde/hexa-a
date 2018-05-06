@@ -1,5 +1,5 @@
 body{
-  background: #F8F9F9
+  background: #F9F9F9
 }
 
 /* .wrapper {
@@ -7,7 +7,11 @@ body{
     padding: 20px
   } */
 
-  .segment{
+.container{
+  width:92% !important;
+}
+
+.segment{
     border:none !important;
     padding: 2em !important;
   }
@@ -46,6 +50,10 @@ body{
   padding:7px !important;
 }
 
+.small-padding{
+  padding:1em !important;  
+}
+
 .post-field, .post-field:focus{
   resize: none !important;
 }
@@ -53,4 +61,12 @@ body{
 .sub-text{
   color:grey !important;
   font-size: 0.85em !important;
+}
+
+pre, code{
+  white-space: -moz-pre-wrap !important;
+  white-space: -o-pre-wrap !important;
+  word-wrap: break-word !important;
+  overflow:auto !important;
+  white-space:pre-wrap !important;
 }

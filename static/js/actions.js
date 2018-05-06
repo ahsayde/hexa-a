@@ -99,9 +99,9 @@ $(document).ready(function () {
 
     $("#delete-group-form").submit(function(){
         var data = $(this).getFormData();
-        hexaa.groups.delete(dara.group)
+        hexaa.groups.delete(data.group)
         .then((response)=>{
-            window.location.href = '/dashboard';
+            window.location.href = '/groups';
         }).catch((error)=>{
             alert(error.responseText);
         });

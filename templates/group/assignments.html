@@ -25,8 +25,12 @@
         <div class="ui divider"></div> 
 
         <div class="ui divided items">
+            {% if not assignments.result %}
+                <p>No assignments were found in group.</p>
+            {% endif %} 
+            
             {% for assignment in assignments.result %}
-            {% include 'items/assignment-item.html'%}
+                {% include 'items/assignment-item.html'%}
             {% endfor%}
         </div>
     </div>

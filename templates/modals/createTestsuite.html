@@ -6,12 +6,19 @@
                     <label for="name">Name</label>
                     <input type="text" name="name">
                 </div>
-                <div class="field">
-                    <select name="level">
-                        <option value="basic">Basic</option>
-                        <option value="extended">Extended</option>
-                        <option value="advanced">Advanced</option> 
-                    </select>
+                <div class="two fields">
+                    <div class="eight wide field">
+                        <label for="level">Difficulty level</label>                                    
+                        <select name="level" aria-placeholder="Level">
+                            <option value="basic">Basic</option>
+                            <option value="extended">Extended</option>
+                            <option value="advanced">Advanced</option>                        
+                        </select>
+                    </div>
+                    <div class="eight wide field">
+                        <label for="attempts">Attempts</label>
+                        <input name="attempts" type="number" value="0">
+                    </div> 
                 </div>
                 <div class="field">
                     <label for="file">Import Testcases</label>
@@ -20,6 +27,12 @@
                 <div class="field">
                     <label for="attachments">Attachments</label>
                     <input type="file" name="attachments" multiple/>
+                </div>
+                <div class="field">
+                    <div class="ui toggle checkbox">
+                        <input type="checkbox" name="public">
+                        <label>Public</label>
+                    </div>
                 </div>
             </form>
         </div>

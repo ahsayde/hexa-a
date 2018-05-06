@@ -25,6 +25,10 @@
         <div class="ui divider"></div> 
 
         <div class="ui divided items">
+            {% if not testsuites.result %}
+                <p>No testsuites were found in group.</p>
+            {% endif %} 
+            
             {% for testsuite in testsuites.result %}
                 {% include 'items/testsuite-item.html'%}
             {% endfor%}

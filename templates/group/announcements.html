@@ -22,7 +22,11 @@
         
         <div class="ui divider"></div>
 
-        <div class="ui feed">    
+        <div class="ui feed">
+            {% if not announcements.result %}
+                <p>No announcements were found in group.</p>
+            {% endif %}  
+            
             {% for announcement in announcements.result %}
                 {% include 'items/announcements-item.html' %}
             {% endfor %}

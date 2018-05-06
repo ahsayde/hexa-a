@@ -102,7 +102,11 @@ $(document).ready(function(){
 	$("#create-testsuite-button").click(function(){
 		showModal('#create-testsuite-modal');
     });
-    
+
+    $("#create-group-button").click(function(){
+		showModal('#create-group-modal');
+    });
+
     $("#create-assignment-button").click(function(){
 		showModal('#create-assignment-modal');
     });
@@ -131,8 +135,8 @@ $(document).ready(function(){
 		showModal('#delete-assignment-modal');
     });
 
-    
+    $("#delete-testsuite-button").click(function(){
+		showModal('#delete-testsuite-modal');
+    });
 
-    
-    
 });

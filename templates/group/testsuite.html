@@ -6,37 +6,119 @@
 
   <div class="ui segment">
 
-    <div class="ui grid">
-        <div class="six column row">
-            <div class="column">
-            <h3>{{testsuite.name}}</h3>                
-            </div>
-            <div class="right floated column">
-            <button id="delete-assignment-button" class="ui mini red right floated button">
-                Delete
-            </button>
-                <button id="update-assignment-button" class="ui mini blue right floated button">
-                    Edit
-                </button>
-            </div>
+        <h3>{{testsuite.name}}</h3>
+        <div class="description sub-text">
+            {{'Public' if testsuite.public else 'Private'}} &nbsp;
+            {{testsuite.level|capitalize}} &nbsp;
+             Created {{timestamp_to_age(testsuite.created_at)}} by <a href="/users/{{testsuite.created_by.username}}">{{testsuite.created_by.username}}</a>
+            {% if testsuite.updated_at %}
+                - Updated {{timestamp_to_age(testsuite.updated_at)}} by <a href="/users/{{testsuite.updated_by.username}}">{{testsuite.updated_by.username}}</a>
+            {% endif %}
         </div>
-    </div>
 
-    <div class="ui tabular menu">
-        <a class="active item">Testcases</a>
-        <a class="item">Suggested testcases</a>
-        <a class="item">Attachments</a>
-    </div> 
+        <div class="ui secondary pointing blue menu">
+            <a class="{{'active' if subtab == 'testcases'}} item" onclick="setUrlParameter('subtab', 'testcases')">Testcases</a>
+            <a class="{{'active' if subtab == 'suggestions'}} item" onclick="setUrlParameter('subtab', 'suggestions')">Suggestions</a>
+            
+            {% if group.is_admin %}
+                <a class="item {{'active' if subtab == 'settings'}}" onclick="setUrlParameter('subtab', 'settings')">Settings</a>
+            {% endif %}
+        </div>
 
-    <div class="ui very relaxed divided list">
-    
-        {% for testcase in testsuite.testcases %}
-            {% include 'items/testcase-item.html'%}
-        {% endfor %}
+        <div class="ui attached segment small-padding">
+        
+            {% if subtab == 'testcases' %}
+                <div class="ui divided items">
+                    {% if not testsuite.testcases %}
+                        <p>No testcases were available.</p>  
+                    {% endif %}
 
-    </div>
+                    {% for testcase in testsuite.testcases %}
+                        {% include 'items/testcase-item.html' %}
+                    {% endfor%}
+                </div>
+
+            {% elif subtab == 'suggestions' %}
+                {% if not suggested_testcases.result %}
+                    <p>No testcases were available.</p>  
+                {% endif %}
+
+                {% for testcase in suggested_testcases.result %}
+                    {% include 'items/suggested-testcase-item.html' %}
+                {% endfor%}
+
+            {% elif subtab == 'settings' %}
+
+                <form class="ui form" id="edit-testsuite-form" group="{{group.uid}}" testsuite="{{testsuite.uid}}">
+                    <input type="hidden" name="groupId" value="{{group.uid}}">
+                    <input type="hidden" name="testsuiteId" value="{{testsuite.uid}}">
+                    <div class="twelve wide field">
+                        <label for="name">Name</label>
+                        <input type="text" name="name" value="{{testsuite.name}}">
+                    </div>
+                    <div class="two fields">
+                        <div class="six wide field">
+                            <label for="level">Difficulty level</label>                                    
+                            <select name="level" aria-placeholder="Level">
+                                <option value="basic" {{'selected' if testsuite.level == 'basic'}}>Basic</option>
+                                <option value="extended" {{'selected' if testsuite.level == 'extended'}}>Extended</option>
+                                <option value="advanced" {{'selected' if testsuite.level == 'advanced'}}>Advanced</option>                        
+                            </select>
+                        </div>
+                        <div class="six wide field">
+                            <label for="attempts">Attempts</label>
+                            <input name="attempts" type="number" value="{{testsuite.attempts}}">
+                        </div> 
+                    </div>            
+                    <div class="six wide field">
+                        <label for="attachments">Attachments</label>
+                        <input type="file" name="attachments" multiple>
+                    </div>  
+                    <div class="six wide field">
+                        <div class="ui toggle checkbox">
+                            <input type="checkbox" name="public" {{'checked' if testsuite.public}}>
+                            <label>Public</label>
+                        </div>
+                    </div>
+                    <button type="submit" class="ui blue icon labeled button">
+                        Save <i class="save icon"></i>
+                    </button>                     
+                </form>
+
+                <h4 class="ui dividing header">Attachments</h4>
+                
+                <div class="ui list">
+                    {% if not testsuite.attachment %}
+                        <p>No attachments were available.</p>  
+                    {% endif %}
+
+                    {% for attachment in testsuite.attachment %}
+                        <div class="item">
+                            <div class="right floated content">
+                                <button class="ui basic icon mini button" name="delete-testsuite-attachment" data-group="{{group.uid}}" data-testsuite="{{testsuite.uid}}" data-attachment="{{attachment}}">
+                                    <i class="trash icon"></i>
+                                </button>
+                            </div>
+                            <i class="file outline icon"></i>                            
+                            <div class="content">
+                                <div class="header">{{attachment}}</div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                
+                <h4 class="ui dividing header">Delete</h4>
+
+                <button class="ui red icon labeled button" id="delete-testsuite-button">
+                    Delete <i class="trash icon"></i>
+                </button>
+                
+            {% endif %}
+
+        </div>
     
   </div>
 
+    {% include 'modals/deleteTestsuite.html'%}
   
 {% endblock %}

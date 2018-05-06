@@ -1,54 +1,53 @@
 {% set page_title = 'HEXA-A - Settings' %}
-{% extends 'layout.html' %}
+{% set tab = 'settings' %}
+{% extends 'user/user_page.html' %}
 
-{% block container %}
+{% block user_page_content %}
 
-    <div class="ui container">    
-        <div class="ui segment">
-                        
-            <h4 class="ui dividing header">Profile settings</h4>
+    <div class="ui segment">
+                
+        <h4 class="ui dividing header">Profile settings</h4>
 
-            <form class="ui form" id="edit-user-info">
-                <div class="two fields">
-                    <div class="six wide field">
-                        <label for="firstname">First name</label>
-                        <input name="firstname" value="{{user.firstname or ''}}"></input>
-                    </div>
-                    <div class="six wide field">
-                        <label for="firstname">Last name</label>                            
-                        <input name="lastname" value="{{user.lastname or ''}}"></input>                        
-                    </div>
-                </div>
-                <button type="submit" class="ui blue button">Update profile</button>                    
-            </form>
-
-            <h4 class="ui dividing header">Account settings</h4>
-
-            <form class="ui form" id="edit-user-email">
+        <form class="ui form" id="edit-user-info">
+            <div class="two fields">
                 <div class="six wide field">
-                    <label for="email">Email address</label>
-                    <input type="email" name="email" value="{{user.email}}">
+                    <label for="firstname">First name</label>
+                    <input name="firstname" value="{{user.firstname or ''}}"></input>
                 </div>
                 <div class="six wide field">
-                    <button type="submit" class="ui blue button">Update email</button>                    
+                    <label for="firstname">Last name</label>                            
+                    <input name="lastname" value="{{user.lastname or ''}}"></input>                        
                 </div>
-            </form>
+            </div>
+            <button type="submit" class="ui blue button">Update profile</button>                    
+        </form>
 
-            <h4 class="ui dividing header">Security settings</h4>
+        <h4 class="ui dividing header">Account settings</h4>
 
-            <form class="ui form" id="edit-user-password">
+        <form class="ui form" id="edit-user-email">
+            <div class="six wide field">
+                <label for="email">Email address</label>
+                <input type="email" name="email" value="{{user.email}}">
+            </div>
+            <div class="six wide field">
+                <button type="submit" class="ui blue button">Update email</button>                    
+            </div>
+        </form>
+
+        <h4 class="ui dividing header">Security settings</h4>
+
+        <form class="ui form" id="edit-user-password">
+            <div class="six wide field">
+                <label for="password">Current password</label>
+                <input type="password" name="old_password">
+            </div>
                 <div class="six wide field">
-                    <label for="password">Current password</label>
-                    <input type="password" name="old_password">
+                    <label for="password">New password</label>
+                    <input type="password" name="new_password">
                 </div>
-                    <div class="six wide field">
-                        <label for="password">New password</label>
-                        <input type="password" name="new_password">
-                    </div>
-                    <button type="submit" class="ui blue button">Change password</button>
-            </form>
-        </div>
-    </div> 
+                <button type="submit" class="ui blue button">Change password</button>
+        </form>
+    </div>
 
 {% endblock %}
 
