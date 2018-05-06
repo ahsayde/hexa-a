@@ -1,92 +1,28 @@
-{% set page_title = 'HEXA-A - Submissions' %}
-{% extends 'group/group_page.html' %}
-
-{% block content %}
-
-    <div class="row">
-        <div class="col-8">
-            <div class="input-group input-group-sm">
-                <span class="input-group-addon">Filter</span>
-                <div class="input-group-btn">
-                    {% if group.is_admin %}
-                        <button id="filter-by-user" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                            <span class="text-muted">Users:</span> <strong>{{filters.username if filters.username else 'All'}}</strong>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-right">
-                            <button class="dropdown-item {{'active' if not filters.username }}" onclick="deleteUrlParameter('username')"><small>All</small></button>                                
-                            {% for member in members %}
-                                <button class="dropdown-item {{'active' if filters.username == member.user.username }}" onclick="setUrlParameter('username', '{{member.user.username}}')">
-                                    <img class="rounded-circle mr-1" width="16px" src="{{member.user.profile_photo}}">
-                                    <small>{{member.user.username}}</small>
-                                </button>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                </div>
-                <div class="input-group-btn">
-                    <button id="filter-by-assignment" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                        <span class="text-muted">Assignment:</span> <strong>{{filters.assignment if filters.assignment else 'All'}}</strong>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-right">
-                        <button class="dropdown-item {{'active' if not filters.assignment}}" onclick="deleteUrlParameter('assignment')"><small>All</small></button>                            
-                        {% for assignment in assignments %}
-                            <button class="dropdown-item {{'active' if filters.assignment == assignment.name }}" onclick="setUrlParameter('assignment', '{{assignment.name}}')">
-                                <small>{{assignment.name}}</small> 
-                            </button>
-                        {% endfor %}
-                    </div>
-                </div>
-                <div class="input-group-btn">
-                    <button id="filter-by-testsuite" type="button" class="btn btn-default dropdown-toggle rounded-right" data-toggle="dropdown">
-                        <span class="text-muted">Testsuite:</span> <strong>{{filters.testsuite if filters.testsuite else 'All'}}</strong>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-right">
-                        <button class="dropdown-item {{'active' if not filters.testsuite}}" onclick="deleteUrlParameter('testsuite')"><small>All</small></button>                            
-                        {% for testsuite in testsuites %}
-                            <button class="dropdown-item {{'active' if filters.testsuite == testsuite.name }}" onclick="setUrlParameter('testsuite', '{{testsuite.name}}')">
-                                <small>{{testsuite.name}}</small>
-                            </button>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-      
-    <hr class="half-rule"/>
-
-    <div class="card">
-
-        <div class="card-header card-header-sm">
-            <span class="text-muted">{{submissions.result|length}} Submissions</span>
-        </div>
-        
-        <ul class="list-group list-group-flush">
-            <li class="list-group-item pt-2 pb-2 text-muted">
-                <div class="row">
-                    <div class="col-1 text-muted"><small># ID</small></div>
-                    {% if group.is_admin %}
-                        <div class="col-2 text-muted"><small>User</small></div>
-                    {% endif %}
-                    <div class="col-2 text-muted"><small>Assignment</small></div>
-                    <div class="col-2 text-muted"><small>Testsuite</small></div>                        
-                    <div class="col-2 text-muted"><small>Submitted at</small></div>
-                    <div class="col-1 text-muted"><small>Score</small></div>  
-                    <div class="col-1 text-muted"><small>Result</small></div>                        
-                </div>
-            </li>
-
-            {% if not submissions.results %}
-                <li class="list-group-item pt-2 pb-2 text-muted">
-                    <small>No submissions were found in this group</small> 
-                </li>
-            {% endif %}
-
-            {% for submission in submissions.result %}{% include 'items/submission-item.html' %}{% endfor %}
-        </ul>
-    </div>
-     
-{% endblock %}
+<table class="ui small very basic table">
+    <thead>
+        <tr>
+        <th>ID</th>
+        {% if group.is_admin %}
+            <th>User</th>
+        {% endif %}
+        <th>Time</th>
+        <th>Result</th>
+        <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for submission in submissions.result %}
+            {% include 'items/submission-item.html'%}
+        {% endfor %}
+    </tbody>
+    <tfoot>
+    <tr>
+        <th colspan="5">
+            {% set pagenation = submissions.pagenation %}
+            {% include 'pagenation.html' %}
+        </th>
+    </tr>
+    </tfoot>
+</table>
 
 
-    

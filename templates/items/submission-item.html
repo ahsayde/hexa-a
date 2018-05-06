@@ -1,40 +1,29 @@
-<li class="list-group-item">
-    <div class="row">
-        <div class="col text-truncate">
-            <small>
-                <a href="/submissions/{{submission._id}}"><code>{{submission._id[:10]}}</code></a>
-            </small>
-        </div>
-        {% if group.is_admin %}
-            <div class="col text-truncate">
-                <small>{{submission.username}}</small>
-            </div>
+<tr>
+    <td>
+        <a href="/submissions/{{submission._id}}"><code>{{submission._id[:5]}}..</code></a>
+    </td>
+    {% if group.is_admin %}
+        <td>{{submission.username}}</td>
+    {% endif %}
+    <td>{{datatimeFromTimestamp(submission.submitted_at)}}</td>
+    <td>
+        {% if submission.result.summary %}
+
+            <span class="text-success">{{submission.result.summary.passed}} / </span> 
+            <span class="text-danger">{{submission.result.summary.failed}} / </span>
+            <span class="text-dark">{{submission.result.summary.errored}}</span>
+
+        {% else %}
+            <span>- / - / -</span>
         {% endif %}
-        <div class="col text-truncate">
-            <small>{{datatimeFromTimestamp(submission.submitted_at)}}</small>
-        </div>
-        <div class="col text-truncate">
-            <small>
-                {% if submission.result.summary %}
-
-                    <span class="text-success">{{submission.result.summary.passed}} / </span> 
-                    <span class="text-danger">{{submission.result.summary.failed}} / </span>
-                    <span class="text-dark">{{submission.result.summary.errored}}</span>
-
-                {% else %}
-                    <span>- / - / -</span>
-                {% endif %}
-                
-            </small>                
-        </div>
-        <div class="col text-truncate">
-            {% if submission.status in  ['Error', 'Compiler Error'] %}
-                <span class="badge badge-dark">{{submission.status}}</span>
-            {% elif submission.status == 'Passed' %}
-                <span class="badge badge-success">Passed</span>     
-            {% elif submission.status == 'Failed' %}                       
-                <span class="badge badge-danger">Failed</span> 
-            {% endif %}
-        </div>
-    </div>
-</li>
+    </td>
+    <td>
+        {% if submission.status in  ['Error', 'Compiler Error'] %}
+            <label class="ui label grey">{{submission.status}}</label>
+        {% elif submission.status == 'Passed' %}
+            <label class="ui label green">Passed</label>     
+        {% elif submission.status == 'Failed' %}                       
+            <label class="ui label red">Failed</label> 
+        {% endif %}
+    </td>
+</tr>

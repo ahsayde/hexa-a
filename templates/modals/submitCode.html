@@ -1,0 +1,30 @@
+<div class="ui mini modal" id="submit-code-modal">
+    <div class="header">Submit</div>
+        <div class="content">
+            <form class="ui form" id="submit-code-form" data-group="{{group.uid}}" data-assignment="{{assignment.uid}}">
+                <div class="field">
+                    <label for="testsuite">Testsuite</label>
+                    <select name="testsuite" id="submit-code-form" data-group="{{group.uid}}" data-assignment="{{assignment.uid}}">
+                        {% for testsuite in assignment.testsuites %}
+                            <option value="{{testsuite.uid}}">{{testsuite.name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="language">Language</label>                    
+                    <select name="language">
+                        <option value="cpp_98">C++ (GCC)</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="source_file">Source file</label>                                        
+                    <input type="file" name="source_file"/>                             
+                </div>
+            </form>
+        </div>
+
+        <div class="actions">
+        <button class="ui grey deny button">Cancel</button>
+        <button type="submit" class="ui green button" id="submit-code" form="submit-code-form">Submit</button>
+    </div>
+</div>

@@ -2,120 +2,36 @@
 {% extends 'layout.html' %}
 
 {% block container %}
-    {% include 'navbar.html' %}
-    <div class="container-fluid" style="margin-top:56px"><br>
-        <div class="row">
-            <div class="col-auto">
-                <h4>Submissions / <code></span>{{submission.uid}}</code></h4>
-                <small class="text-muted ml-1">
-                    Submitted by <a href="/users/{{submission.username}}">{{submission.username}}</a> at {{datatimeFromTimestamp(submission.submitted_at)}}
-                </small>
-            </div>
-        </div>
-        <hr class="half-rule"/>
-        <div class="row">
-            <div class="col-9">
-                {% if submission.result.compiler %}
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="card">
-                                <div class="card-header card-header-sm">
-                                    <p class="text-muted mb-0">Compiler</small>
-                                </div>
-                                <div class="card-body">
-                                    {% if not submission.result.compiler.returncode %}
-                                        <small class="text-muted">Completed successfully</small>
-                                    {% else %}
-                                        <code>{{submission.result.compiler.output}}</code>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                {% endif %}
 
-                <br>
-                
-                {% if submission.status != 'Compiler Error' %}
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="card">
-                                <div class="card-header card-header-sm">
-                                    <p class="text-muted mb-0">Result</p>
-                                </div>
-                                <div class="card-header card-header-sm">
-                                    <div class="progress">
-                                        <div class="progress-bar bg-success" role="progressbar" style="width: {{ submission.result.summary.passed / submission.result.summary.all * 100 }}%" aria-valuenow="{{submission.result.summary.passed}}" aria-valuemin="0" aria-valuemax="{{submission.result.summary.all}}">
-                                            {{submission.result.summary.passed}} Passed
-                                        </div>
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width:  {{ submission.result.summary.failed / submission.result.summary.all * 100 }}%" aria-valuenow="{{submission.result.summary.failed}}" aria-valuemin="0" aria-valuemax="{{submission.result.summary.all}}">
-                                            {{submission.result.summary.failed}} Failed      
-                                        </div>
-                                        <div class="progress-bar bg-dark" role="progressbar" style="width:  {{ submission.result.summary.errored / submission.result.summary.all * 100 }}%" aria-valuenow="{{submission.result.summary.errored}}" aria-valuemin="0" aria-valuemax="{{submission.result.summary.all}}">
-                                            {{submission.result.summary.errored}} Errored      
-                                        </div>
-                                    </div>
-                                </div>
-                                <ul class="list-group list-group-flush">
-                                    {% for testcase in submission.result.testcases %}
-                                        <li class="list-group-item">
-                                            <div class="row">
-                                                <div class="col-10 d-flex flex-column">
-                                                    <pre>Id : {{testcase.uid}}</pre>
-                                                    <pre>Input : {{testcase.stdin}}</pre>
-                                                    <pre>Generated output: {{testcase.stdout or '' }}</pre>
-                                                    <pre>Expected output : {{testcase.expected_stdout}}</pre>
-                                                    {% if testcase.returncode %}
-                                                       <pre>Error ({{testcase.returncode}}) : {{testcase.stderr}}</pre>
-                                                    {% endif %}
-                                                </div>
-                                                <div class="col-1 ml-auto d-flex align-items-center">
-                                                    {% if testcase.status == 'Errored' %}
-                                                        <span class="badge badge-dark">Error</span>
-                                                    {% elif testcase.status == 'Passed' %}
-                                                        <span class="badge badge-success">Passed</span>     
-                                                    {% elif testcase.status == 'Failed' %}                       
-                                                        <span class="badge badge-danger">Failed</span> 
-                                                    {% endif %}
-                                                </div>
-                                            </div>
-                                        </li>
-                                    {% endfor %}
-                                 </ul>
-                            </div>
+    <div class="ui container">
+        <div class="ui segment">
+
+            <h3>Submissions / <code></span>{{submission.uid}}</code></h3>
+            
+            <div class="description sub-text">
+                Submitted by <a href="/users/{{submission.username}}">{{submission.username}}</a> at {{datatimeFromTimestamp(submission.submitted_at)}}
+            </div>
+
+            <div class="ui divider"></div>
+
+            <div class="ui divided items">            
+                {% for testcase in submission.result.testcases %}
+                    <div class="item">
+                        <div class="content">
+                        <pre>Id : {{testcase.uid}}</pre>
+                        <pre>Input : {{testcase.stdin}}</pre>
+                        <pre>Generated output: {{testcase.stdout or '' }}</pre>
+                        <pre>Expected output : {{testcase.expected_stdout}}</pre>
+                        {% if testcase.returncode %}
+                            <pre>Error ({{testcase.returncode}}) : {{testcase.stderr}}</pre>
+                        {% endif %}
                         </div>
                     </div>
-                {% endif %}
+                {% endfor %}
             </div>
-            <div class="col-3">
-                <div class="card">
-                    <div class="card-header card-header-sm">
-                        <p class="text-muted mb-0">Info</small>
-                    </div>
-                    <div class="card-body d-flex flex-column">
-                        <small>
-                            <span class="text-muted mr-2">Group</span>
-                            <a href="/groups/{{submission.group.uid}}">{{submission.group.name}}</a>
-                        </small>
-                        <small>
-                            <span class="text-muted mr-2">Assignment</span>
-                            <a href="/groups/{{submission.group.uid}}/assignments/{{submission.assignment.uid}}">
-                                {{submission.assignment.name}}
-                            </a>
-                        </small>
-                        <small>
-                            <span class="text-muted mr-2">Testsuite</span>
-                            <a href="/groups/{{submission.group.uid}}/testsuites/{{submission.testsuite.uid}}">{{submission.testsuite.name}}</a>
-                        </small>
-                        <small>
-                            <span class="text-muted mr-2">Language</span>
-                            <a href="">{{submission.language}}</a>
-                        </small>
-                    </div>
-                </div>
-            </div>
+            
+
         </div>
     </div>
-    
 
 {% endblock %}

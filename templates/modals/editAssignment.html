@@ -1,0 +1,25 @@
+<div class="ui large modal" id="edit-assignment-modal">
+    <div class="header">Create new Assignment</div>
+        <div class="content">
+            <form class="ui form" id="edit-assignment-form">
+                <input type="hidden" name="groupId" value="{{group.uid}}">
+                <input type="hidden" name="assignmentId" value="{{assignment.uid}}">
+                <div class="field">
+                    <label for="name">Name</label>
+                    <input type="text" name="name" value="{{assignment.name}}">
+                </div>
+                <div class="field">
+                    <label for="deadline">Deadline</label>
+                    <input type="datetime-local" name="deadline" value="{{datatimeFromTimestamp(assignment.deadline)}}">
+                </div>
+                <div class="field">
+                    <label for="description">Description</label>
+                    <textarea type="text" rows="10" name="description">{{assignment.description}}</textarea>
+                </div>
+            </form>
+        </div>
+        <div class="actions">
+        <button class="ui grey deny button">Cancel</button>
+        <button type="submit" class="ui green button" form="edit-assignment-form">Update</button>
+    </div>
+</div>

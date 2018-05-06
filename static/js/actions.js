@@ -97,9 +97,9 @@ $(document).ready(function () {
         return false
     });
 
-    $("#delete-group-button").click(function(){
-        var groupId = $(this).data('group');
-        hexaa.groups.delete(groupId)
+    $("#delete-group-form").submit(function(){
+        var data = $(this).getFormData();
+        hexaa.groups.delete(dara.group)
         .then((response)=>{
             window.location.href = '/dashboard';
         }).catch((error)=>{
@@ -446,9 +446,8 @@ $(document).ready(function () {
         var data = $(this).data();
         var formData = new FormData(this);
 
-        $('#submit-code').text('Submitting ...');
+        $('#submit-code').addClass('loading');
         $('#submit-code').prop( "disabled", true);
-        $('#submit-loading').show();
 
         hexaa.groups.assignments.submit(data.group, data.assignment, formData)
         .then((response) =>{
@@ -460,9 +459,8 @@ $(document).ready(function () {
             alert(error.responseText);
         })
         .then(()=>{
-            $('#submit-code').text('Submit');
+            $('#submit-code').removeClass('loading');
             $('#submit-code').prop('disabled', false);  
-            $('#submit-loading').hide();  
         });
         return false;
     });  

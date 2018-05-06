@@ -49,3 +49,8 @@ body{
 .post-field, .post-field:focus{
   resize: none !important;
 }
+
+.sub-text{
+  color:grey !important;
+  font-size: 0.85em !important;
+}

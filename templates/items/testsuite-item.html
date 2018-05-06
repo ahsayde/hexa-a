@@ -3,7 +3,7 @@
         <a href="/groups/{{group.uid}}/testsuites/{{testsuite.uid}}">
             <h4>{{testsuite.name}}</h4>
         </a>
-        <div class="meta">
+        <div class="meta sub-text">
             <span>Created by <a href="/users/{{testsuite.created_by.username}}">{{testsuite.created_by.username}}</a></span>
             <div class="ui label right floated">
                 <i class="lock icon"></i> {{'Public' if testsuite.public else 'Private'}}

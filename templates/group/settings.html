@@ -4,35 +4,38 @@
 
 {% block group_content %}
 
-<div class="ui segment">
+    <div class="ui segment">
 
-    <h3>Group settings</h3>
-    <div class="ui divider"></div> 
+        <h3>Group settings</h3>
+        <div class="ui divider"></div> 
 
-    <form class="ui form" id="edit-group-form">
-        <input type="hidden" name="group" value="{{group.uid}}"></input>
-        <div class="ten wide field">
-            <label for="name">Name</label>
-            <input type="text" name="name" value="{{group.name}}">
-        </div>
-        <div class="ten wide field">
-            <label for="name">Description</label>
-            <textarea type="text" rows="3" name="description">{{group.description}}</textarea>
-        </div>
-        <button type="submit" class="ui green button">Update</button>
-    </form>
+        <form class="ui form" id="edit-group-form">
+            <input type="hidden" name="group" value="{{group.uid}}"></input>
+            <div class="ten wide field">
+                <label for="name">Name</label>
+                <input type="text" name="name" value="{{group.name}}">
+            </div>
+            <div class="ten wide field">
+                <label for="name">Description</label>
+                <textarea type="text" rows="3" name="description">{{group.description}}</textarea>
+            </div>
+            <button type="submit" class="ui green button">Update</button>
+        </form>
 
-</div>
+    </div>
 
-<div class="ui segment">
+    <div class="ui segment">
 
-    <h3>Delete group</h3>
-    <div class="ui divider"></div>
+        <h3>Delete group</h3>
+        <div class="ui divider"></div>
 
-    <p>Deleting your group will prementally delete all assignments, testsuites, and members's submissions data and you will not be able to recover them.</p>
-    <button type="submit" class="ui red button">Delete group</button>
+        <p>Deleting your group will prementally delete all assignments, testsuites, and members's submissions data and you will not be able to recover them.</p>
+        <button type="submit" class="ui red button" id="delete-group-button">Delete group</button>
 
-</div>
+    </div>
+
+    {% include 'modals/deleteGroup.html'%}
+
 {% endblock %}
 
 

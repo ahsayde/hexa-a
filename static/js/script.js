@@ -106,6 +106,10 @@ $(document).ready(function(){
     $("#create-assignment-button").click(function(){
 		showModal('#create-assignment-modal');
     });
+
+    $("#edit-assignment-button").click(function(){
+		showModal('#edit-assignment-modal');
+    });
     
     $("#create-announcement-button").click(function(){
 		showModal('#create-announcement-modal');
@@ -114,5 +118,21 @@ $(document).ready(function(){
     $("#add-members-button").click(function(){
 		showModal('#add-members-modal');
     });
+
+    $("#submit-code-button").click(function(){
+		showModal('#submit-code-modal');
+    });
+
+    $("#delete-group-button").click(function(){
+		showModal('#delete-group-modal');
+    });
+
+    $("#delete-assignment-button").click(function(){
+		showModal('#delete-assignment-modal');
+    });
+
+    
+
+    
     
 });

@@ -16,24 +16,24 @@
 
                 <div class="ui stackable secondary vertical small fluid menu">
                     <a href="/groups/{{group.uid}}/announcements" class="item {{'active' if tab == 'announcements'}}">
-                        <i class="bullhorn icon"></i>
+                        <i class="bullhorn grey icon"></i>
                         Announcements
                     </a>                    
                     <a href="/groups/{{group.uid}}/assignments" class="item {{'active' if tab == 'assignments'}}">
-                        <i class="code icon"></i>
+                        <i class="code grey icon"></i>
                         Assignments
                     </a>
                     <a href="/groups/{{group.uid}}/testsuites" class="item {{'active' if tab == 'testsuites'}}">
-                        <i class="tasks icon"></i>                    
+                        <i class="tasks grey icon"></i>                    
                         Testsuites
                     </a>                
                     <a href="/groups/{{group.uid}}/members" class="item {{'active' if tab == 'members'}}">
-                        <i class="users icon"></i>
+                        <i class="users grey icon"></i>
                         Members
                     </a>                
                     {% if group.is_admin %}
                         <a href="/groups/{{group.uid}}/settings" class="item {{'active' if tab == 'settings'}}">
-                            <i class="cog icon"></i>
+                            <i class="cog grey icon"></i>
                             Settings
                         </a>
                     {% endif %}
