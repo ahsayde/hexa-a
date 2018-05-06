@@ -70,3 +70,8 @@ pre, code{
   overflow:auto !important;
   white-space:pre-wrap !important;
 }
+
+.bp{
+  overflow:auto !important;
+  white-space:pre-wrap !important;
+}
