@@ -46,5 +46,5 @@ def GetAvatar(** kwargs):
     return send_file(local_picture_path, mimetype='image/gif')
 
 if __name__ == '__main__':
-    app.run('127.0.0.1', port=8080, threaded=True)
+    app.run('0.0.0.0', port=8080, threaded=True)
 
