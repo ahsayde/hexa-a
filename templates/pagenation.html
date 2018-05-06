@@ -1,12 +1,28 @@
-<div class="ui pagination mini menu bp">
+<div class="ui pagination mini stackable menu">
     <a class="icon item {{'disabled' if not pagenation.prev_page}}" onclick="pagenate('{{pagenation.prev_page}}')">
         <i class="left arrow icon"></i>
     </a>
 
-    {% for page in range(1, pagenation.pages + 1) %}
-        <a class="{{'active' if page == pagenation.current_page}} item" onclick="pagenate('{{page}}')">{{page}}</a>
-    {% endfor %}
+    {% if pagenation.current_page > 1 %}
+        <a class="item" onclick="pagenate('1')">1</a>
+    {% endif %}
 
+    {% if pagenation.current_page > 2 %}
+        <a class="item">...</a>
+        <a class="item" onclick="pagenate('{{pagenation.current_page -1 }}')">{{pagenation.current_page -1 }}</a>
+    {% endif %}
+
+    <a class="active item" onclick="pagenate('{{pagenation.current_page}}')">{{pagenation.current_page}}</a>
+
+    {% if pagenation.current_page <  pagenation.pages - 1 %}
+        <a class="item" onclick="pagenate('{{pagenation.current_page + 1}}')">{{pagenation.current_page + 1 }}</a>
+        <a class="item">...</a>
+    {% endif %}
+
+    {% if pagenation.current_page <  pagenation.pages %}
+        <a class="item" onclick="pagenate('{{pagenation.pages}}')">{{pagenation.pages}}</a>
+    {% endif %} 
+    
     <a class="icon item {{'disabled' if not pagenation.next_page}}" onclick="pagenate('{{pagenation.next_page}}')">
         <i class="right arrow icon"></i>
     </a>
