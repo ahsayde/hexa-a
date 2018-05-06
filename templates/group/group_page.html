@@ -2,30 +2,51 @@
 
 {% block container %}
 
-    <div class="ui container" style="margin-top:20px;">
 
-        <div class="ui stackable grid">
+        <div class="ui stackable grid container">
+            <div class="four wide column">
 
-            <div class="three wide column">
+                <div class="ui stackable blue segment">
+                
                 <h3>{{group.name}}</h3>
                 <p>{{group.description}}</p>
+                
                 <div class="ui divider"></div> 
-                <div class="ui stackable secondary vertical container small menu">
-                    <a href="/groups/{{group.uid}}/announcements" class="item {{'active' if tab == 'announcements'}}">Announcements</a>                    
-                    <a href="/groups/{{group.uid}}/assignments" class="item {{'active' if tab == 'assignments'}}">Assignments</a>
-                    <a href="/groups/{{group.uid}}/testsuites" class="item {{'active' if tab == 'testsuites'}}">Testsuites</a>                
-                    <a href="/groups/{{group.uid}}/members" class="item {{'active' if tab == 'members'}}">Members</a>                
+
+
+                <div class="ui stackable secondary vertical small fluid menu">
+                    <a href="/groups/{{group.uid}}/announcements" class="item {{'active' if tab == 'announcements'}}">
+                        <i class="bullhorn icon"></i>
+                        Announcements
+                    </a>                    
+                    <a href="/groups/{{group.uid}}/assignments" class="item {{'active' if tab == 'assignments'}}">
+                        <i class="code icon"></i>
+                        Assignments
+                    </a>
+                    <a href="/groups/{{group.uid}}/testsuites" class="item {{'active' if tab == 'testsuites'}}">
+                        <i class="tasks icon"></i>                    
+                        Testsuites
+                    </a>                
+                    <a href="/groups/{{group.uid}}/members" class="item {{'active' if tab == 'members'}}">
+                        <i class="users icon"></i>
+                        Members
+                    </a>                
                     {% if group.is_admin %}
-                        <a href="/groups/{{group.uid}}/settings" class="item {{'active' if tab == 'settings'}}">Settings</a>
-                {% endif %}
+                        <a href="/groups/{{group.uid}}/settings" class="item {{'active' if tab == 'settings'}}">
+                            <i class="cog icon"></i>
+                            Settings
+                        </a>
+                    {% endif %}
                 </div>
+
             </div>
 
-            <div class="thirteen wide stretched column">
+            </div>
+
+            <div class="twelve wide column">
                 {% block group_content %}{% endblock %}
             </div>
-            
-        </div>
+
     </div>
 
 {% endblock %}

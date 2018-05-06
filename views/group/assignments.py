@@ -31,12 +31,12 @@ def AssignmentPage(** kwargs):
     groupId = kwargs.get('groupId')
     assignmentId = kwargs.get('assignmentId')
     filters = dict(request.args)
-    tab = request.args.get('tab', 'details')
+    subtab = request.args.get('subtab', 'details')
 
     group = api.groups.get(groupId=groupId).json()
     assignment = api.groups.assignments.get(groupId, assignmentId).json()
 
-    if tab == 'submissions':
+    if subtab == 'submissions':
         limit = request.args.get('limit', 25, int)
         _page = request.args.get('page', 1, int)
         params = {'limit':limit, 'page':_page}
@@ -46,7 +46,7 @@ def AssignmentPage(** kwargs):
         return render_template(
             'group/assignment.html', 
             page=page, 
-            tab='submissions', 
+            subtab='submissions', 
             group=group, 
             assignment=assignment, 
             submissions=submissions, 
@@ -54,19 +54,7 @@ def AssignmentPage(** kwargs):
             filters=filters
         )
 
-    elif tab == 'leaderboard':
-        leaderboard = api.groups.assignments.leaderBoard(groupId, assignmentId).json()
-        return render_template(
-            'group/assignment.html', 
-            page=page, 
-            tab='leaderboard', 
-            group=group, 
-            assignment=assignment, 
-            leaderboard=leaderboard
-        )
-
-
-    else:
+    elif subtab == 'settings':
         testsuites = []
         if user_role == 'admin':
             testsuites = api.groups.testsuites.list(groupId).json()
@@ -74,10 +62,20 @@ def AssignmentPage(** kwargs):
         return render_template(
             'group/assignment.html', 
             page=page, 
-            tab='details', 
+            subtab='settings', 
             group=group, 
             assignment=assignment,
-            testsuites=testsuites,            
+            testsuites=testsuites
+        )
+
+
+    else:
+        return render_template(
+            'group/assignment.html', 
+            page=page, 
+            subtab='details', 
+            group=group, 
+            assignment=assignment
         )
         
 

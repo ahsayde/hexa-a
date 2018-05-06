@@ -1,8 +1,12 @@
 <div class="item">
     
     <div class="right floated content">
-        <button name="acceptJoinRequest" class="ui mini green button" data-group="{{group.uid}}" data-request="{{request.uid}}">Accept</button>
-        <button name="rejectJoinRequest" class="ui mini red button" data-group="{{group.uid}}" data-request="{{request.uid}}">Reject</button>                                                
+        <button name="acceptJoinRequest" class="ui mini green labeled icon button" data-group="{{group.uid}}" data-request="{{request.uid}}">
+            <i class="check icon"></i> Accept 
+        </button>
+        <button name="rejectJoinRequest" class="ui mini red labeled icon button" data-group="{{group.uid}}" data-request="{{request.uid}}">
+            <i class="check icon"></i> Reject
+        </button>                                                
     </div>
     
     <img class="ui avatar image" src="{{request.user.profile_photo}}">

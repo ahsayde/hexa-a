@@ -5,8 +5,12 @@
         </a>
         <div class="meta">
             <span>Created by <a href="/users/{{testsuite.created_by.username}}">{{testsuite.created_by.username}}</a></span>
-            <div class="ui label right floated">{{'Public' if testsuite.public else 'Private'}}</div>
-            <div class="ui label right floated">{{testsuite.level|capitalize}}</div>
+            <div class="ui label right floated">
+                <i class="lock icon"></i> {{'Public' if testsuite.public else 'Private'}}
+            </div>
+            <div class="ui label right floated">
+                {{testsuite.level|capitalize}}
+            </div>
         </div>
     </div>
 </div>
