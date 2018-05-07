@@ -3,21 +3,40 @@
 
 {% block container %}
 
-    <div class="ui container">
-        <div class="ui stackable grid">
+
+<div class="ui container">
+        <div class="ui stackable grid segment">
 
             <div class="ten wide column">
+                <div class="ui vertical masthead basic segment">
+                    <h1 class="ui header">HEXA-A</h1>
+                    <p class="text-large">
+                        Opensource platform allows educators to create groups, distribute coding assignments and review students submissions.
+                    </p>
+
+                    <br>
+
+                    <div class="ui labeled button" tabindex="0">
+                        <div class="ui black button">
+                            <i class="github large icon"></i>
+                        </div>
+                        <a class="ui basic black left pointing label">
+                            View on Github
+                        </a>
+                    </div>
+
+                </div>
             </div>
 
             <div class="six wide column">
-                <div class="ui segment left aligned">
+                <div class="ui basic segment left aligned">
 
                     <div class="ui tabular menu" id="endpoint-options">
-                        <a class="active item" data-tab="signin">Sign in</a>  
-                        <a class="item" data-tab="signup">Sign up</a>        
-                    </div><br>
+                        <a class="item active" data-tab="signup">Sign up</a>
+                        <a class="item" data-tab="signin">Sign in</a>                                  
+                    </div>
                     
-                    <div class="ui tab active" data-tab="signin">
+                    <div class="ui tab" data-tab="signin">
                         <form class="ui form" action="/login" method="post">
                             <input type="hidden" name="current_url" value="{{current_url or ''}}"/>
                             <div class="field">
@@ -35,21 +54,21 @@
                         </form>
                     </div>
 
-                    <div class="ui tab" data-tab="signup">
+                    <div class="ui tab active" data-tab="signup">
                         <form class="ui form" action="/signup" method="post">
                             <div class="field">
                                 <label for="username">Username</label>
-                                <input type="text" name="username" required>
+                                <input type="text" name="username" placeholder="Username" required>
                             </div>
                             <div class="field">
-                                <label for="email">Email</label>
-                                <input type="email" name="email" required>
+                                <label for="email">Email address</label>
+                                <input type="email" name="email" placeholder="Email address" required>
                             </div>
                             <div class="field">
                                 <label for="password">Password</label>
-                                <input type="password" name="password" required>
+                                <input type="password" name="password" placeholder="Password" required>
                             </div>
-                            <button type="submit" class="ui green fluid button">Sign up</button>
+                            <button type="submit" class="ui green fluid button">Create Account</button>
                         </form>
                     </div>        
                 </div>
