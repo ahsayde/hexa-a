@@ -20,6 +20,12 @@
             <div class="ui secondary blue pointing inverted large menu bg-blue">
                 <div class="ui container">
                     <a class="header item" href="/">HEXA-A</a>
+                    {% if userInfo %}
+                        <div class="right menu">
+                            <a class="ui item" href="/settings">{{userInfo.username}}</a>
+                            <a class="ui item" href="/logout">Logout</a>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
 
@@ -29,10 +35,7 @@
             <div class="ui basic segment no-padding container">
                 <div class="ui divider"></div> 
                 <div class="ui text menu">
-                    <a class="item" href="https://github.com/ahmedelsayed-93/hexa-a">Github</a>
-                    <a class="item">About</a>
-                    <a class="item">Help</a>
-                    <a class="item">API</a>
+                    <a class="item" target="_blank" href="https://github.com/ahmedelsayed-93/hexa-a">Github</a>
                 </div>         
             </div>
         </footer>
