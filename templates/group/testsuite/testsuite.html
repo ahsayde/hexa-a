@@ -4,9 +4,26 @@
 
 {% block group_content %}
 
-  <div class="ui segment">
+  <div class="ui clearing segment">
 
-        <h3>{{testsuite.name}}</h3>
+        <div class="ui grid">
+            <div class="four column row">
+                <div class="column">
+                    <h3>{{testsuite.name}}</h3>
+                </div>
+                <div class="right floated column">
+                    <button class="ui green icon labeled right floated mini button" id="add-testcase-button">
+                        <i class="add icon"></i>
+                        {% if group.is_admin %}
+                            Add testcase
+                        {% else %}
+                            Suggest testcase
+                        {% endif %}
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <div class="description sub-text">
             {{'Public' if testsuite.public else 'Private'}} &nbsp;
             {{testsuite.level|capitalize}} &nbsp;
@@ -25,13 +42,6 @@
             {% endif %}
         </div>
 
-        <button class="ui green button" id="add-testcase-button">
-            {% if group.is_admin %}
-                Add testcase
-            {% else %}
-                Suggest testcase
-            {% endif %}
-        </button>
 
         <div class="ui attached segment small-padding">
         
