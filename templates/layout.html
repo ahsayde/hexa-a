@@ -6,26 +6,29 @@
         <meta charset="utf-8" />
         <link rel="stylesheet" href="/static/css/semantic.min.css"/>
         <link rel="stylesheet" href="/static/css/semantic.css"/>
-        <link rel="stylesheet" href="/static/css/style.css?v=10003"/>   
+        <link rel="stylesheet" href="/static/css/style.css?v=10005"/>   
         <link rel="stylesheet" href="/static/css/github-markdown.css"/>   
         <script src="/static/js/jquery-3.1.1.min.js"></script>
         <script src="/static/js/semantic.min.js"></script>
         <script src="/static/js/semantic.js"></script>
-        <script src="/static/js/script.js?v=10001"></script>      
-        <script src="/static/js/api_client.js?v=10001"></script>    
-        <script src="/static/js/actions.js?v=10001"></script>      
+        <script src="/static/js/script.js?v=10005"></script>      
+        <script src="/static/js/api_client.js?v=10005"></script>    
+        <script src="/static/js/actions.js?v=10005"></script>      
     </head>
     <body class="Site">
         <main class="Site-content">
             <div class="ui secondary blue pointing inverted large menu bg-blue">
                 <div class="ui container">
                     <a class="header item" href="/">HEXA-A</a>
-                    {% if userInfo %}
-                        <div class="right menu">
+                    <div class="right menu">                    
+                        {% if userInfo %}
                             <a class="ui item" href="/settings">{{userInfo.username}}</a>
                             <a class="ui item" href="/logout">Logout</a>
-                        </div>
-                    {% endif %}
+                        {% else %}
+                            <a class="ui item" href="/login">Login</a>
+                            <a class="ui item" href="/signup">Sign up</a>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
 

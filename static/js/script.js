@@ -98,6 +98,10 @@ $(document).ready(function(){
         $('.ui.sidebar').sidebar('toggle');
     });
 
+    $(".close.icon").click(function(){
+        $(this).parent().hide();
+    });
+
 
 	$("#create-testsuite-button").click(function(){
 		showModal('#create-testsuite-modal');
