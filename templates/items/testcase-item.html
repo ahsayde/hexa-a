@@ -9,10 +9,12 @@
             Added by <a href="/users/{{testcase.added_by}}">{{testcase.added_by}}</a> {{timestamp_to_age(testcase.added_at)}}
         </span>
     </div>
-    <div class="right floated content">
-        <button name="deleteTestcase" class="ui icon basic mini right floated button" data-group="{{group.uid}}" data-testsuite="{{testsuite.uid}}"data-testcase="{{testcase.uid}}">
-            <i class="trash icon"></i>
-        </button>
-    </div>
+    {% if group.is_admin %}
+        <div class="right floated content">
+            <button name="deleteTestcase" class="ui icon basic mini right floated button" data-group="{{group.uid}}" data-testsuite="{{testsuite.uid}}"data-testcase="{{testcase.uid}}">
+                <i class="trash icon"></i>
+            </button>
+        </div>
+    {% endif %}
 </div>
 
