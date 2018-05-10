@@ -1,0 +1,11 @@
+{% if assignment.description %}
+    <article class="markdown-body">{{render_markdown(assignment.description)}}</article>
+{% else %}
+    <p>No description provided</p>
+{% endif %}
+
+<br>
+
+{% if assignment.published and assignment.status == 'open' %}
+    <button class="ui blue button" id="submit-code-button">Submit</button>
+{% endif %}

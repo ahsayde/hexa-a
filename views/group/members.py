@@ -30,4 +30,4 @@ def MembersPage(** kwargs):
     if subtab not in ['members', 'requests']:
         subtab = 'members'
         
-    return render_template('group/members.html', page=page, subtab=subtab, group=group, members=members, requests=requests)
+    return render_template('group/members/members.html', page=page, subtab=subtab, group=group, members=members, requests=requests)

@@ -66,7 +66,7 @@ def SubmissionsPage(**kwargs):
         submissions = Submission.objects(group=groupId, username=username, **query)
 
     return render_template(
-        'group/submissions.html', 
+        'group/assignment/submissions.html', 
         page=page, 
         group=group,
         members=members,
@@ -82,6 +82,6 @@ def SubmissionPage(**kwargs):
     username = kwargs.get('username')
     submissionId = kwargs.get('submissionId', None)
     submission = api.groups.submissions.get(submissionId).json()
-    return render_template('group/submission.html', page=page, submission=submission,)
+    return render_template('group/assignment/submission.html', page=page, submission=submission,)
 
 

@@ -18,4 +18,4 @@ def client_auth(**kwargs):
 def SettingsPage(** kwargs):
     groupId = kwargs.get('groupId')
     group = api.groups.get(groupId=groupId).json()
-    return render_template('group/settings.html', page=page, group=group)
+    return render_template('group/settings/settings.html', page=page, group=group)

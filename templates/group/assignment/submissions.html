@@ -1,0 +1,61 @@
+{% if not submissions.result %}
+    <p>No submissions were found.</p>
+{% else %}
+    <table class="ui small very basic table">
+        <thead>
+            <tr>
+            <th>ID</th>
+            {% if group.is_admin %}
+                <th>User</th>
+            {% endif %}
+            <th>Time</th>
+            <th>Result</th>
+            <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for submission in submissions.result %}
+                <tr>
+                    <td>
+                        <a href="/submissions/{{submission._id}}"><code>{{submission._id[:5]}}..</code></a>
+                    </td>
+                    {% if group.is_admin %}
+                        <td>{{submission.username}}</td>
+                    {% endif %}
+                    <td>{{datatimeFromTimestamp(submission.submitted_at)}}</td>
+                    <td>
+                        {% if submission.result.summary %}
+                
+                            <span class="green">{{submission.result.summary.passed}} / </span> 
+                            <span class="red">{{submission.result.summary.failed}} / </span>
+                            <span class="black">{{submission.result.summary.errored}}</span>
+                
+                        {% else %}
+                            <span>- / - / -</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if submission.status in  ['Error', 'Compiler Error'] %}
+                            <label class="ui label grey">{{submission.status}}</label>
+                        {% elif submission.status == 'Passed' %}
+                            <label class="ui label green">Passed</label>     
+                        {% elif submission.status == 'Failed' %}                       
+                            <label class="ui label red">Failed</label> 
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+        <tr>
+            <th colspan="5">
+                <p>{{submissions.pagenation.count}} submission(s)</p>
+                {% set pagenation = submissions.pagenation %}
+                {% include 'pagenation.html' %}
+            </th>
+        </tr>
+        </tfoot>
+    </table>
+{% endif %}
+
+

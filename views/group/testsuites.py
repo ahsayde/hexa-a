@@ -20,7 +20,7 @@ def TestsuitesPage(** kwargs):
     groupId = kwargs.get('groupId')
     group = api.groups.get(groupId=groupId).json()
     testsuites = api.groups.testsuites.list(groupId).json()
-    return render_template('group/testsuites.html', page=page, group=group, testsuites=testsuites)
+    return render_template('group/testsuite/testsuites.html', page=page, group=group, testsuites=testsuites)
 
 @testsuites_pages.route("/groups/<groupId>/testsuites/<testsuiteId>")
 @login_required
@@ -41,7 +41,7 @@ def TestsuitePage(** kwargs):
         suggested_testcases = api.groups.testsuites.getSuggestedTestcases(groupId, testsuiteId).json()
 
     return render_template(
-        'group/testsuite.html', 
+        'group/testsuite/testsuite.html', 
         page=page, 
         subtab=subtab,
         group=group, 

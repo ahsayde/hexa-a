@@ -1,0 +1,31 @@
+{% if not suggested_testcases.result %}
+    <p>No testcases were available.</p>  
+{% endif %}
+
+<div class="ui divided items">
+    {% for testcase in suggested_testcases.result %}
+        <div class="item">
+            <div class="content">
+                <pre><code>stdin : {{testcase.stdin}}</code></pre>
+                <pre><code>stdout: {{testcase.expected_stdout}}</code></pre>
+                <span class="sub-text">
+                    Suggested by <a href="/users/{{testcase.user.username}}">{{testcase.user.username}}</a> {{timestamp_to_age(testcase.suggested_at)}}
+                </span>
+                <div class="right floated content">
+                    {% if group.is_admin %}
+                        <button name="rejectTestcase" class="ui icon labeled basic mini right floated button" data-group="{{group.uid}}" data-testsuite="{{testsuite.uid}}"data-testcase="{{testcase.uid}}">
+                            <i class="trash icon"></i> Reject
+                        </button>
+                        <button name="acceptTestcase" class="ui icon labeled basic mini right floated button" data-group="{{group.uid}}" data-testsuite="{{testsuite.uid}}"data-testcase="{{testcase.uid}}">
+                            <i class="check icon"></i> Accept
+                        </button>
+                    {% elif userInfo.username ==  testcase.user.username %}
+                        <button name="rejectTestcase" class="ui icon labeled basic mini right floated button" data-group="{{group.uid}}" data-testsuite="{{testsuite.uid}}"data-testcase="{{testcase.uid}}">
+                            <i class="trash icon"></i> Delete
+                        </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endfor%}
+</div>

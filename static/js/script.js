@@ -143,4 +143,8 @@ $(document).ready(function(){
 		showModal('#delete-testsuite-modal');
     });
 
+    $("#add-testcase-button").click(function(){
+		showModal('#add-testcase-modal');
+    });
+
 });

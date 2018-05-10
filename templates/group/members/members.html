@@ -1,0 +1,100 @@
+{% set page_title = 'HEXA-A - Members' %}
+{% set tab = 'members' %}
+{% extends 'group/group_page.html' %}
+
+{% block group_content %}
+
+
+    {% if group.is_admin and requests %}
+
+        <div class="ui segment"> 
+            <h3>Requests</h3>
+            <div class="ui divider"></div> 
+            <div class="ui very relaxed list">
+                {% for request in requests %}
+                    <div class="item">
+                        <div class="right floated content">
+                            <button name="acceptJoinRequest" class="ui mini green labeled icon button" data-group="{{group.uid}}" data-request="{{request.uid}}">
+                                <i class="check icon"></i> Accept 
+                            </button>
+                            <button name="rejectJoinRequest" class="ui mini red labeled icon button" data-group="{{group.uid}}" data-request="{{request.uid}}">
+                                <i class="check icon"></i> Reject
+                            </button>                                                
+                        </div>
+                        <img class="ui avatar image" src="{{request.user.profile_photo}}">
+                        <div class="content">
+                            <a class="header" href="/users/{{request.user.username}}">{{request.user.username}}</a>
+                            <div class="description">
+                                Sent {{timestamp_to_age(request.created_at)}}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+    {% endif %}
+
+    <div class="ui segment">
+        <div class="ui grid">
+            <div class="four column row">
+                <div class="column">
+                    <h3>Members</h3>
+                </div>
+                <div class="right floated column">
+                    {% if  group.is_admin %}
+                    <button id="add-members-button" class="ui mini green right floated labeled icon button">
+                        Add <i class="plus icon"></i>
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="ui divider"></div> 
+      
+        <div class="ui very relaxed list">
+            {% for member in members.result %}
+            
+                <div class="item">
+                    {% if group.is_admin or userInfo.username == member.user.username %}
+                        <div class="right floated content">
+                            <div class="ui top right mini pointing dropdown basic button">...
+                                <div class="menu">
+                                {% if member.user.username == userInfo.username %}
+                                    <button class="fluid ui basic button item" name="leaveGroup" data-group="{{group.uid}}" data-member="{{member.user.username}}">Leave group</button>
+                                {% elif  group.is_admin %}
+                                    {% set newrole = 'member' if member.role =='admin' else 'admin' %}
+                                    <button class="fluid ui basic button item" name="updateMemberRole" data-group="{{group.uid}}" data-member="{{member.user.username}}" data-newrole="{{newrole}}">Change role to {{newrole}}</button>
+                                    <button class="fluid ui basic button item" name="removeMember" data-group="{{group.uid}}" data-member="{{member.user.username}}">Remove</button>
+                                {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                
+                    <img class="ui avatar image" src="{{member.user.profile_photo}}">
+                    <div class="content">
+                        <a class="header" href="/users/{{member.user.username}}">{{member.user.username}}</a>
+                        <div class="description sub-text">
+                
+                            <div class="ui secondary mini horizontal label">
+                                {{member.role|capitalize}}
+                            </div>
+                
+                            {% if member.added_by == member.user %} 
+                                Created the group {{timestamp_to_age(group.created_at)}}
+                            {% else %}
+                                Added by <a href="/users/{{member.added_by.username}}">{{member.added_by.username}}</a> {{timestamp_to_age(member.joined_at)}}
+                            {% endif %}
+                            
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+  {% include 'modals/addMember.html'%}
+
+{% endblock %}

@@ -1,0 +1,50 @@
+{% if not assignment.published %}
+    <button type="submit" class="ui green icon labeled button" id="publish-assignment-button" type="button" data-group="{{group.uid}}" data-assignment="{{assignment.uid}}">
+        Publish <i class="globe icon"></i>
+    </button>
+{% endif %}
+                
+<h4 class="ui dividing header">Update detail</h4>
+
+<form class="ui form" id="edit-assignment-form">
+    <input type="hidden" name="groupId" value="{{group.uid}}">
+    <input type="hidden" name="assignmentId" value="{{assignment.uid}}">
+    <div class="field">
+        <label for="name">Name</label>
+        <input type="text" name="name" value="{{assignment.name}}">
+    </div>
+    <div class="field">
+        <label for="deadline">Deadline</label>
+        <input type="datetime-local" name="deadline" value="{{datatimeFromTimestamp(assignment.deadline)}}">
+    </div>
+    <div class="field">
+        <label for="description">Description</label>
+        <textarea type="text" rows="10" name="description">{{assignment.description}}</textarea>
+    </div>
+    <button type="submit" class="ui blue icon labeled button">
+        Save <i class="save icon"></i>
+    </button>
+</form>
+
+
+<h4 class="ui dividing header">Testsuites</h4>
+<div class="ui list">
+    {% if not testsuites.result %}   
+        <p>No testsuites are available.</p>  
+    {% endif %}
+
+    {% for testsuite in testsuites.result %}
+        <div class="item">
+            <div class="ui toggle checkbox">
+                <input type="checkbox" name="link-unlink-testsuite-checkbox" data-group="{{group.uid}}" data-assignment="{{assignment.uid}}" data-testsuite="{{testsuite.uid}}" {{'checked' if testsuite.uid in get_object_attr(assignment.testsuites, 'uid') }}>
+                <label>{{testsuite.name}} </label>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+<h4 class="ui dividing header">Delete</h4>
+
+<button class="ui red icon labeled button" id="delete-assignment-button">
+    Delete <i class="trash icon"></i>
+</button>

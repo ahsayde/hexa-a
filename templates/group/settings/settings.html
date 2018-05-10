@@ -5,7 +5,6 @@
 {% block group_content %}
 
     <div class="ui segment">
-
         <h3>Group settings</h3>
         <div class="ui divider"></div> 
 
@@ -21,17 +20,14 @@
             </div>
             <button type="submit" class="ui green button">Update</button>
         </form>
-
     </div>
 
     <div class="ui segment">
-
         <h3>Delete group</h3>
         <div class="ui divider"></div>
 
         <p>Deleting your group will prementally delete all assignments, testsuites, and members's submissions data and you will not be able to recover them.</p>
         <button type="submit" class="ui red button" id="delete-group-button">Delete group</button>
-
     </div>
 
     {% include 'modals/deleteGroup.html'%}

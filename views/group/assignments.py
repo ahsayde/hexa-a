@@ -20,7 +20,7 @@ def AssignmentsPage(** kwargs):
     groupId = kwargs.get('groupId')
     group = api.groups.get(groupId=groupId).json()
     assignments = api.groups.assignments.list(groupId).json()
-    return render_template('group/assignments.html', page=page, group=group, assignments=assignments)
+    return render_template('group/assignment/assignments.html', page=page, group=group, assignments=assignments)
 
 @assignments_pages.route("/groups/<groupId>/assignments/<assignmentId>")
 @login_required
@@ -44,7 +44,7 @@ def AssignmentPage(** kwargs):
         submissions = api.groups.assignments.submissions(groupId, assignmentId, params=params).json()
 
         return render_template(
-            'group/assignment.html', 
+            'group/assignment/assignment.html', 
             page=page, 
             subtab='submissions', 
             group=group, 
@@ -60,7 +60,7 @@ def AssignmentPage(** kwargs):
             testsuites = api.groups.testsuites.list(groupId).json()
 
         return render_template(
-            'group/assignment.html', 
+            'group/assignment/assignment.html', 
             page=page, 
             subtab='settings', 
             group=group, 
@@ -71,7 +71,7 @@ def AssignmentPage(** kwargs):
 
     else:
         return render_template(
-            'group/assignment.html', 
+            'group/assignment/assignment.html', 
             page=page, 
             subtab='details', 
             group=group, 

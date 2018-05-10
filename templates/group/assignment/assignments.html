@@ -5,7 +5,6 @@
 {% block group_content %}
 
   <div class="ui segment">
-
         <div class="ui grid">
             <div class="four column row">
                 <div class="column">
@@ -14,8 +13,7 @@
                 <div class="right floated column">
                     {% if group.is_admin %}
                         <button id="create-assignment-button" class="ui mini green right floated labeled icon button">
-                            New
-                            <i class="plus icon"></i>
+                            New <i class="plus icon"></i>
                         </button>
                     {% endif %}
                 </div>
@@ -30,7 +28,16 @@
             {% endif %} 
             
             {% for assignment in assignments.result %}
-                {% include 'items/assignment-item.html'%}
+                <div class="item">
+                    <div class="content">
+                        <a href="/groups/{{group.uid}}/assignments/{{assignment.uid}}">
+                            <h4>{{assignment.name}}</h4>
+                        </a>
+                        <div class="meta sub-text">
+                            <span>Created by <a href="/users/{{assignment.created_by.username}}">{{assignment.created_by.username}}</a></span>
+                        </div>
+                    </div>
+                </div>
             {% endfor%}
         </div>
     </div>

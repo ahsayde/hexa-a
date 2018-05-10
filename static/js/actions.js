@@ -384,10 +384,8 @@ $(document).ready(function () {
     });
 
     $("#add-testcase-form").submit(function(){
-        var groupId = $(this).data('group');
-        var testsuiteId = $(this).data('testsuite');
         var data = $(this).getFormData();
-        hexaa.groups.testsuites.addTestcase(groupId, testsuiteId, data.stdin, data.expected_stdout)
+        hexaa.groups.testsuites.addTestcase(data.group, data.testsuite, data.stdin, data.expected_stdout)
         .then((response)=>{
             window.location.reload();
         }).catch((error)=>{

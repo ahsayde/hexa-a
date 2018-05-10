@@ -1,0 +1,56 @@
+{% set tab = 'assignments' %}
+{% set page_title = 'HEXA-A - Assignments' %}
+{% extends 'group/group_page.html' %}
+
+{% block group_content %}
+
+    <div class="ui clearing segment">
+
+        <h3>{{assignment.name}}</h3>
+        <div class="description sub-text">
+            {% if not assignment.published %}
+                <div class="ui grey mini label">Unpublished</div>
+            {% elif assignment.status == 'open' %}
+                <div class="ui green mini label">Open</div>
+            {% elif assignment.status == 'closed' %}
+                <div class="ui red mini label">Closed</div>
+            {% endif %}
+            
+            &nbsp; Created {{timestamp_to_age(assignment.created_at)}} by <a href="/users/{{assignment.created_by.username}}">{{assignment.created_by.username}}</a>
+            {% if assignment.updated_at %}
+                - Updated {{timestamp_to_age(assignment.updated_at)}} by <a href="/users/{{assignment.updated_by.username}}">{{assignment.updated_by.username}}</a>
+            {% endif %}
+        </div>
+
+        <div class="ui secondary pointing blue menu">
+            <a class="{{'active' if subtab == 'details'}} item" onclick="setUrlParameter('subtab', 'details')">Details</a>
+            <a class="{{'active' if subtab == 'submissions'}} item" onclick="setUrlParameter('subtab', 'submissions')">Submissions</a>
+            {% if group.is_admin %}
+                <a class="item {{'active' if subtab == 'settings'}}" onclick="setUrlParameter('subtab', 'settings')">Settings</a>
+            {% endif %}
+        </div>
+
+        <div class="ui attached segment small-padding">
+
+            {% if subtab == 'details' %}
+
+                {% include 'group/assignment/details.html'%}
+            
+            {% elif subtab == 'submissions'%}
+                
+                {% include 'group/assignment/submissions.html' %}
+
+            {% elif subtab == 'settings'%}
+                
+                {% include 'group/assignment/settings.html' %}
+            
+            {% endif %}
+
+        </div>
+    
+    </div>
+
+    {% include 'modals/submitCode.html'%}
+    {% include 'modals/deleteAssignment.html'%}
+
+{% endblock %}
