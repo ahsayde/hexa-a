@@ -109,3 +109,13 @@ pre, code{
 .text-large{
   font-size:1.7rem;
 }
+
+.segment-status-passed{
+  border-top:2px solid #229954 !important
+}
+.segment-status-failed{
+  border-top:2px solid #db2828 !important;
+}
+.segment-status-errored{
+  border-top:2px solid black !important
+}

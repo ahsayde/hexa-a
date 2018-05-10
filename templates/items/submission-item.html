@@ -9,9 +9,9 @@
     <td>
         {% if submission.result.summary %}
 
-            <span class="text-success">{{submission.result.summary.passed}} / </span> 
-            <span class="text-danger">{{submission.result.summary.failed}} / </span>
-            <span class="text-dark">{{submission.result.summary.errored}}</span>
+            <span class="green">{{submission.result.summary.passed}} / </span> 
+            <span class="red">{{submission.result.summary.failed}} / </span>
+            <span class="black">{{submission.result.summary.errored}}</span>
 
         {% else %}
             <span>- / - / -</span>
