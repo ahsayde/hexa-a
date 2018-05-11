@@ -29,48 +29,24 @@
             </div>
 
             <div class="six wide column">
-                <div class="ui basic segment left aligned">
-
-                    <div class="ui tabular menu" id="endpoint-options">
-                        <a class="item active" data-tab="signup">Sign up</a>
-                        <a class="item" data-tab="signin">Sign in</a>                                  
-                    </div>
-                    
-                    <div class="ui tab" data-tab="signin">
-                        <form class="ui form" action="/login" method="post">
-                            <input type="hidden" name="current_url" value="{{current_url or ''}}"/>
-                            <div class="field">
-                                <label for="username">Username or email</label>
-                                <input type="text" name="identifier" placeholder="Email or username">
-                            </div>
-                            <div class="field">
-                                <label for="password">Password</label>
-                                <input type="password" name="password" placeholder="Password">
-                            </div>
-                            <div class="field">
-                                <a href="/sendresetpassword">Forget password?</a>
-                            </div>
-                            <button type="submit" class="ui blue fluid button">Sign in</button>
-                        </form>
-                    </div>
-
-                    <div class="ui tab active" data-tab="signup">
-                        <form class="ui form" action="/signup" method="post">
-                            <div class="field">
-                                <label for="username">Username</label>
-                                <input type="text" name="username" placeholder="Username" required>
-                            </div>
-                            <div class="field">
-                                <label for="email">Email address</label>
-                                <input type="email" name="email" placeholder="Email address" required>
-                            </div>
-                            <div class="field">
-                                <label for="password">Password</label>
-                                <input type="password" name="password" placeholder="Password" required>
-                            </div>
-                            <button type="submit" class="ui green fluid button">Create Account</button>
-                        </form>
-                    </div>        
+                <div class="ui attached segment left aligned">
+                    <form class="ui form" action="/login" method="post">
+                        <input type="hidden" name="current_url" value="{{current_url or ''}}"/>
+                        <div class="field">
+                            <label for="username">Username or email</label>
+                            <input type="text" name="identifier" placeholder="Username or email">
+                        </div>
+                        <div class="field">
+                            <label for="password">Password</label>
+                            <input type="password" name="password" placeholder="Password">
+                        </div>
+                        <div class="field">
+                            <a href="/sendresetpassword">Forget password?</a>
+                        </div>
+                        <button type="submit" class="ui blue fluid button">Sign in</button>
+                    </form>
+                    <div class="ui horizontal divider">Or</div>
+                    <a href="/signup" class="ui green fluid button">Create new account</a>
                 </div>
             </div>
 
