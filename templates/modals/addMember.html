@@ -1,0 +1,23 @@
+<div class="ui mini modal" id="add-members-modal">
+    <div class="header">Add new member</div>
+        <div class="content">
+            <form class="ui form" id="add-members-form">
+                <input type="hidden" name="groupId" value="{{group.uid}}">
+                <div class="field">
+                    <label for="member">Username</label>
+                    <input type="text" name="member" placeholder="username"></input>
+                </div>
+                <div class="field">
+                    <label for="role">Role</label>
+                    <select name="role">
+                        <option value="member">Member</option>                        
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+        <div class="actions">
+        <button class="ui grey deny button">Cancel</button>
+        <button type="submit" class="ui green button" form="add-members-form">Add</button>
+    </div>
+</div>

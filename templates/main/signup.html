@@ -1,36 +1,30 @@
-{% set page_title = 'HEXA-A - Signup' %}
+{% set page_title = 'HEXA-A - Create Account' %}
 {% extends 'layout.html' %}
 {% block container %}
 
-    <div class="container" style="width:400px; margin-top:50px">
-        <h3 class="text-center">HEXA-A</h3>
-
-        <h4>Sign up</h4>
-        <hr class="half-rule">
-
-        {% if error %}
-            <div class="alert alert-danger" role="alert">
-                {% for key, value in error.items() %}
-                    <p class="m-0"><strong>{{key}}</strong> : {{value}}</p>
-                {% endfor %}
+<div class="ui container" style="margin-top:30px">
+    <div class="ui middle aligned center aligned grid">
+        <div class="ui six wide column">
+            <div class="ui segment left aligned">
+                <h3>Create new account</h3>
+                <div class="ui divider"></div> 
+                <form class="ui form" action="/signup" method="post">
+                    <div class="field">
+                        <label for="username">Username</label>
+                        <input type="text" name="username" placeholder="Username" required>
+                    </div>
+                    <div class="field">
+                        <label for="email">Email</label>
+                        <input type="email" name="email" placeholder="Email address" required>
+                    </div>
+                    <div class="field">
+                        <label for="password">Password</label>
+                        <input type="password" name="password" placeholder="Password" required>
+                    </div>
+                    <button type="submit" class="ui green fluid button">Sign up</button>
+                </form>
             </div>
-        {% endif %}
-
-        <form action="/signup" method="post">
-            <div class="form-group">
-                 <label for="username">Username</label>
-                <input type="text" class="form-control" name="username" required>
-            </div>
-            <div class="form-group">
-                 <label for="email">Email</label>
-                <input type="email" class="form-control" name="email" required>
-            </div>
-            <div class="form-group">
-                 <label for="password">Password</label>
-                <input type="password" class="form-control" name="password" required>
-            </div>
-            <button type="submit" class="btn btn-success btn-block">Signup</button>
-        </form>
+        </div>
     </div>
-
+</div>
 {% endblock %}

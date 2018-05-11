@@ -1,40 +1,37 @@
+{% set page_title = 'HEXA-A - {{user.username}}' %}
 {% extends 'layout.html' %}
 
 {% block container %}
 
-    {% include 'navbar.html' %}
-
-    <div class="container w-50" style="margin-top:120px; height:100%">
-        <div class="bg-white p-3 border">
-            <div class="row">
-                <div class="col">
-                    <img class="float-left mr-3 rounded-circle" src="{{user.profile_photo}}" width="60px">
-                    {% if user.firstname and user.lastname %}
-                        <h4>{{user.firstname}} {{user.lastname}}</h4>
-                        <p class="text-muted m-0">{{user.username}}</p>
-                    {% else %}
-                        <h5>{{user.username}}</h5>
-                    {% endif %}
-                </div>
-                {% if userInfo.username == user.username %}
-                    <div class="col-auto ml-auto">
-                        <a href="/settings">
-                            <button type="button" class="btn btn-default btn-sm">Edit profile</button>
-                        </a>
+    <div class="ui container" style="margin-top:30px">
+        <div class="ui middle aligned center aligned grid">
+            <div class="ui six wide column"> 
+                <div class="ui card">
+                    <div class="image">
+                        <img src="{{user.profile_photo}}">
                     </div>
-                {% endif %}
-            </div>
-
-            <hr class="half-rule"/>
-
-            <div class="row mt-2">
-                <div class="col-auto">
-                    <small class="text-muted">Joined at {{dataFromTimestamp(user.created_at)}}</small>   
+                    <div class="content">
+                        {% if user.firstname and user.lastname %}
+                            <div class="header">
+                                {{user.firstname}} {{user.lastname}}
+                            </div>
+                            <div class="meta">
+                                <a>{{user.username}}</a>
+                            </div>
+                        {% else %}
+                            <div class="header">
+                                {{user.username}}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="extra content">
+                        <span>
+                            Joined at {{dataFromTimestamp(user.created_at)}}
+                        </span>
+                    </div>
                 </div>
-            </div>
-        
         </div>
     </div>
-
+    
 {% endblock %}
 

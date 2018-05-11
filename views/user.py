@@ -10,12 +10,6 @@ user_pages = Blueprint('user_pages', __name__)
 def client_auth(**kwargs):
     api.set_auth_header('Bearer %s' % session['jwt'])
 
-@user_pages.route("/dashboard")
-@login_required
-def DashboardPage(username):
-    notifications = api.users.getNotifications().json()
-    return render_template('user/dashboard.html', notifications=notifications)
-
 @user_pages.route("/groups")
 @login_required
 def GroupsPage(** kwargs):

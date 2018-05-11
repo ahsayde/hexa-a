@@ -1,0 +1,63 @@
+<form class="ui form" id="edit-testsuite-form" group="{{group.uid}}" testsuite="{{testsuite.uid}}">
+    <input type="hidden" name="groupId" value="{{group.uid}}">
+    <input type="hidden" name="testsuiteId" value="{{testsuite.uid}}">
+    <div class="twelve wide field">
+        <label for="name">Name</label>
+        <input type="text" name="name" value="{{testsuite.name}}">
+    </div>
+    <div class="two fields">
+        <div class="six wide field">
+            <label for="level">Difficulty level</label>                                    
+            <select name="level" aria-placeholder="Level">
+                <option value="basic" {{'selected' if testsuite.level == 'basic'}}>Basic</option>
+                <option value="extended" {{'selected' if testsuite.level == 'extended'}}>Extended</option>
+                <option value="advanced" {{'selected' if testsuite.level == 'advanced'}}>Advanced</option>                        
+            </select>
+        </div>
+        <div class="six wide field">
+            <label for="attempts">Attempts</label>
+            <input name="attempts" type="number" value="{{testsuite.attempts}}">
+        </div> 
+    </div>            
+    <div class="six wide field">
+        <label for="attachments">Attachments</label>
+        <input type="file" name="attachments" multiple>
+    </div>  
+    <div class="six wide field">
+        <div class="ui toggle checkbox">
+            <input type="checkbox" name="public" {{'checked' if testsuite.public}}>
+            <label>Public</label>
+        </div>
+    </div>
+    <button type="submit" class="ui blue icon labeled button">
+        Save <i class="save icon"></i>
+    </button>                     
+</form>
+
+<h4 class="ui dividing header">Attachments</h4>
+    
+<div class="ui list">
+    {% if not testsuite.attachment %}
+        <p>No attachments were available.</p>  
+    {% endif %}
+
+    {% for attachment in testsuite.attachment %}
+        <div class="item">
+            <div class="right floated content">
+                <button class="ui basic icon mini button" name="delete-testsuite-attachment" data-group="{{group.uid}}" data-testsuite="{{testsuite.uid}}" data-attachment="{{attachment}}">
+                    <i class="trash icon"></i>
+                </button>
+            </div>
+            <i class="file outline icon"></i>                            
+            <div class="content">
+                <div class="header">{{attachment}}</div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+    
+<h4 class="ui dividing header">Delete</h4>
+
+<button class="ui red icon labeled button" id="delete-testsuite-button">
+    Delete <i class="trash icon"></i>
+</button>

@@ -1,0 +1,47 @@
+{% set page_title = 'HEXA-A - Testsuites' %}
+{% set tab = 'assignments'%}
+{% extends 'group/group_page.html' %}
+
+{% block group_content %}
+
+  <div class="ui segment">
+        <div class="ui grid">
+            <div class="four column row">
+                <div class="column">
+                    <h3>Assignments</h3>
+                </div>
+                <div class="right floated column">
+                    {% if group.is_admin %}
+                        <button id="create-assignment-button" class="ui mini green right floated labeled icon button">
+                            New <i class="plus icon"></i>
+                        </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="ui divider"></div> 
+
+        <div class="ui divided items">
+            {% if not assignments.result %}
+                <p>No assignments were found in group.</p>
+            {% endif %} 
+            
+            {% for assignment in assignments.result %}
+                <div class="item">
+                    <div class="content">
+                        <a href="/groups/{{group.uid}}/assignments/{{assignment.uid}}">
+                            <h4>{{assignment.name}}</h4>
+                        </a>
+                        <div class="meta sub-text">
+                            <span>Created by <a href="/users/{{assignment.created_by.username}}">{{assignment.created_by.username}}</a></span>
+                        </div>
+                    </div>
+                </div>
+            {% endfor%}
+        </div>
+    </div>
+
+  {% include 'modals/createAssignment.html'%}
+  
+{% endblock %}

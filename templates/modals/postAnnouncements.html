@@ -1,0 +1,15 @@
+<div class="ui small modal" id="create-announcement-modal">
+    <div class="header">Post new announcement</div>
+        <div class="content">
+            <form class="ui form" id="create-announcements-form">
+                <input type="hidden" name="groupId" value="{{group.uid}}">
+                <div class="field">
+                    <textarea type="text" name="content"></textarea>
+                </div>
+            </form>
+        </div>
+        <div class="actions">
+        <button class="ui grey deny button">Cancel</button>
+        <button type="submit" class="ui green button" form="create-announcements-form">Post</button>
+    </div>
+</div>

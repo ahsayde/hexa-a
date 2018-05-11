@@ -87,9 +87,8 @@ $(document).ready(function () {
     });
 
     $("#edit-group-form").submit(function(){
-        var groupId = $(this).data('group');
         var data = $(this).getFormData();
-        hexaa.groups.update(groupId, data.name, data.description)
+        hexaa.groups.update(data.group, data.name, data.description)
         .then((response)=>{
             window.location.reload();
         }).catch((error)=>{
@@ -98,11 +97,11 @@ $(document).ready(function () {
         return false
     });
 
-    $("#delete-group-button").click(function(){
-        var groupId = $(this).data('group');
-        hexaa.groups.delete(groupId)
+    $("#delete-group-form").submit(function(){
+        var data = $(this).getFormData();
+        hexaa.groups.delete(data.group)
         .then((response)=>{
-            window.location.href = '/dashboard';
+            window.location.href = '/groups';
         }).catch((error)=>{
             alert(error.responseText);
         });
@@ -147,9 +146,9 @@ $(document).ready(function () {
     
     // =========================== Memberships ============================
 
-    $("#add-member-form").submit(function(){
+    $("#add-members-form").submit(function(){
         var data = $(this).getFormData();
-        hexaa.groups.memberships.create(data.groupId, data.member)
+        hexaa.groups.memberships.create(data.groupId, data.member, data.role)
         .then((data)=>{
             window.location.reload();
         }).catch((error)=>{
@@ -385,10 +384,8 @@ $(document).ready(function () {
     });
 
     $("#add-testcase-form").submit(function(){
-        var groupId = $(this).data('group');
-        var testsuiteId = $(this).data('testsuite');
         var data = $(this).getFormData();
-        hexaa.groups.testsuites.addTestcase(groupId, testsuiteId, data.stdin, data.expected_stdout)
+        hexaa.groups.testsuites.addTestcase(data.group, data.testsuite, data.stdin, data.expected_stdout)
         .then((response)=>{
             window.location.reload();
         }).catch((error)=>{
@@ -447,9 +444,8 @@ $(document).ready(function () {
         var data = $(this).data();
         var formData = new FormData(this);
 
-        $('#submit-code').text('Submitting ...');
+        $('#submit-code').addClass('loading');
         $('#submit-code').prop( "disabled", true);
-        $('#submit-loading').show();
 
         hexaa.groups.assignments.submit(data.group, data.assignment, formData)
         .then((response) =>{
@@ -461,9 +457,8 @@ $(document).ready(function () {
             alert(error.responseText);
         })
         .then(()=>{
-            $('#submit-code').text('Submit');
+            $('#submit-code').removeClass('loading');
             $('#submit-code').prop('disabled', false);  
-            $('#submit-loading').hide();  
         });
         return false;
     });  

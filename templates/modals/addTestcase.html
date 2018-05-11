@@ -1,25 +1,27 @@
-<div class="modal fade" id="add-testcase" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Add new testcase</h4>
+<div class="ui modal" id="add-testcase-modal">
+    <div class="header">
+        {% if group.is_admin %}
+            Add new testcase
+        {% else %}
+            Suggest new testcase
+        {% endif %}
+    </div>
+    <div class="content">
+        <form class="ui form" id="add-testcase-form">
+            <input type="hidden" name="group" value="{{group.uid}}">
+            <input type="hidden" name="testsuite" value="{{testsuite.uid}}">                
+            <div class="field">
+                <label for="stdin">STDIN</label>
+                <textarea rows="5" name="stdin"></textarea>
             </div>
-            <div class="modal-body">
-                <form id="add-testcase-form" data-group="{{group.uid}}" data-testsuite="{{testsuite.uid}}">
-                    <div class="form-group">
-                        <label for="stdin">STDIN</label>
-                        <textarea rows="5" class="form-control" name="stdin"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="expected_stdout">STDOUT</label>
-                        <textarea rows="5" class="form-control" name="expected_stdout"></textarea>
-                    </div>
-                </form>
+            <div class="field">
+                <label for="expected_stdout">STDOUT</label>
+                <textarea rows="5" name="expected_stdout"></textarea>
             </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-            <button type="submit" class="btn btn-success" form="add-testcase-form">Add</button>
-        </div>
-        </div>
+        </form>
+    </div>
+    <div class="actions">
+        <button class="ui grey deny button">Cancel</button>
+        <button type="submit" class="ui green button" form="add-testcase-form">Add</button>
     </div>
 </div>

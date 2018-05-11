@@ -1,0 +1,69 @@
+{% set tab = 'testsuites' %}
+{% set page_title = 'HEXA-A - Testsuites' %}
+{% extends 'group/group_page.html' %}
+
+{% block group_content %}
+
+  <div class="ui clearing segment">
+
+        <div class="ui grid">
+            <div class="four column row">
+                <div class="column">
+                    <h3>{{testsuite.name}}</h3>
+                </div>
+                <div class="right floated column">
+                    <button class="ui green icon labeled right floated mini button" id="add-testcase-button">
+                        <i class="add icon"></i>
+                        {% if group.is_admin %}
+                            Add testcase
+                        {% else %}
+                            Suggest testcase
+                        {% endif %}
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="description sub-text">
+            {{'Public' if testsuite.public else 'Private'}} &nbsp;
+            {{testsuite.level|capitalize}} &nbsp;
+             Created {{timestamp_to_age(testsuite.created_at)}} by <a href="/users/{{testsuite.created_by.username}}">{{testsuite.created_by.username}}</a>
+            {% if testsuite.updated_at %}
+                - Updated {{timestamp_to_age(testsuite.updated_at)}} by <a href="/users/{{testsuite.updated_by.username}}">{{testsuite.updated_by.username}}</a>
+            {% endif %}
+        </div>
+
+        <div class="ui secondary pointing blue menu">
+            <a class="{{'active' if subtab == 'testcases'}} item" onclick="setUrlParameter('subtab', 'testcases')">Testcases</a>
+            <a class="{{'active' if subtab == 'suggestions'}} item" onclick="setUrlParameter('subtab', 'suggestions')">Suggestions</a>
+            
+            {% if group.is_admin %}
+                <a class="item {{'active' if subtab == 'settings'}}" onclick="setUrlParameter('subtab', 'settings')">Settings</a>
+            {% endif %}
+        </div>
+
+
+        <div class="ui attached segment small-padding">
+        
+            {% if subtab == 'testcases' %}
+    
+                {% include 'group/testsuite/testcases.html'%}
+
+            {% elif subtab == 'suggestions' %}
+
+                {% include 'group/testsuite/suggestions.html'%}
+
+            {% elif subtab == 'settings' %}
+    
+                {% include 'group/testsuite/settings.html'%}
+    
+            {% endif %}
+
+        </div>
+    
+  </div>
+  
+    {% include 'modals/addTestcase.html'%}
+    {% include 'modals/deleteTestsuite.html'%}
+  
+{% endblock %}

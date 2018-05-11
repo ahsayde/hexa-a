@@ -1,0 +1,77 @@
+{% set page_title = 'HEXA-A - Submissions' %}
+{% extends 'layout.html' %}
+
+{% block container %}
+
+    <div class="ui container">
+        <div class="ui segment">
+
+            <h3>
+                <a href="/groups/{{submission.group.uid}}/assignments/{{submission.assignment.uid}}?subtab=submissions">Submissions</a> / 
+                <code></span>{{submission.uid}}</code>
+            </h3>
+            
+            <div class="description sub-text">
+                Submitted by <a href="/users/{{submission.username}}">{{submission.username}}</a> at {{datatimeFromTimestamp(submission.submitted_at)}}
+            </div>
+            <div class="sub-text">
+                Group:  <a href="/groups/{{submission.group.uid}}">{{submission.group.name}},</a>&nbsp;
+                Assignment:  <a href="/groups/{{submission.group.uid}}/assignments/{{submission.assignment.uid}}">{{submission.assignment.name}},</a>&nbsp;
+                Testsuite:  <a href="/groups/{{submission.group.uid}}/testsuites/{{submission.testsuite.uid}}">{{submission.testsuite.name}}</a>                
+            </div>
+
+            <div class="ui divider"></div>
+
+            {% if submission.result.compiler.returncode > 0 %}
+                <h3 class="ui header">Compiler Error</h3>
+                <div class="ui segment segment-status-errored" style="background:rgb(252, 251, 251)">
+                    <code>{{submission.result.compiler.output}}</code>
+                </div>
+            {% else %}
+                <div class="ui tiny statistics">
+                    <div class="ui green horizontal statistic">
+                        <div class="value">{{submission.result.summary.passed}}</div>
+                        <div class="green label">Passed</div>
+                    </div>
+                    <div class="ui red horizontal statistic">
+                        <div class="value">{{submission.result.summary.failed}}</div>
+                        <div class="red label">Failed</div>
+                    </div>
+                    <div class="ui black horizontal statistic">
+                        <div class="value">{{submission.result.summary.errored}}</div>
+                        <div class="black label">Errored</div>
+                    </div>
+                </div>
+                <div class="ui segment segment-status-{{submission.status}}">
+                    <div class="ui divided items">            
+                        {% for testcase in submission.result.testcases %}
+                            <div class="item">
+                                <div class="content">
+                                    <pre><code>Id : {{testcase.uid}}</code></pre>
+                                    <pre><code>Input : {{testcase.stdin}}</code></pre>
+                                    <pre><code>Generated output: {{testcase.stdout or '' }}</code></pre>
+                                    <pre><code>Expected output : {{testcase.expected_stdout}}</code></pre>
+                                    {% if testcase.returncode %}
+                                        <pre><code>Error ({{testcase.returncode}}) : {{testcase.stderr}}</code></pre>
+                                    {% endif %}
+                                </div>
+                                <div class="right floated content">
+                                    {% if testcase.status == 'Errored' %}
+                                        <label class="ui grey right floated label">Error</label>
+                                    {% elif testcase.status == 'Passed' %}
+                                        <label class="ui green right floated label">Passed</label>     
+                                    {% elif testcase.status == 'Failed' %}                       
+                                        <label class="ui red right floated label">Failed</label> 
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+            
+        </div>
+    </div>
+
+{% endblock %}

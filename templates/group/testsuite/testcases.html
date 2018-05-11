@@ -1,0 +1,27 @@
+{% if not testsuite.testcases %}
+    <p>No testcases were available.</p>  
+{% endif %}
+
+ <div class="ui divided items">
+    {% for testcase in testsuite.testcases %}
+        <div class="item">
+            <div class="content">
+                <pre><code>stdin : {{testcase.stdin}}</code></pre>
+                <pre><code>stdout: {{testcase.expected_stdout}}</code></pre>
+                <span class="sub-text">
+                    {% if testcase.suggested_by%} 
+                        Suggested by <a href="/users/{{testcase.suggested_by}}">{{testcase.suggested_by}}</a>,
+                    {% endif %}
+                    Added by <a href="/users/{{testcase.added_by}}">{{testcase.added_by}}</a> {{timestamp_to_age(testcase.added_at)}}
+                </span>
+                {% if group.is_admin %}
+                    <div class="right floated content">
+                        <button name="deleteTestcase" class="ui icon labeled basic mini right floated button" data-group="{{group.uid}}" data-testsuite="{{testsuite.uid}}"data-testcase="{{testcase.uid}}">
+                            <i class="trash icon"></i> Delete
+                        </button>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    {% endfor%}
+</div>

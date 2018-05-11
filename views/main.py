@@ -198,4 +198,4 @@ def Signup():
         credentials.save()
 
         authorize_user(identifier=username)
-        return redirect('/dashboard', code=302)
+        return redirect('/', code=302)

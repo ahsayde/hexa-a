@@ -1,20 +1,14 @@
-<div class="modal fade" id="delete-testsuite" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-        <div class="modal-header">
-            <h4 class="modal-title">Delete testsuite</h4>
-        </div>
-        <div class="modal-body">
-            Are sure you want to remove testsuite <strong>{{testsuite.name}}</strong>
+<div class="ui mini modal" id="delete-testsuite-modal">
+    <div class="header">Delete testsuite</div>
+        <div class="content">
+            Are sure you want to remove testsuite <strong>{{testsuite.name}}</strong>?
             <form id="delete-testsuite-form">
                 <input type="hidden" name="groupId" value="{{group.uid}}">
-                <input type="hidden" name="testsuiteId" value="{{testsuite.uid}}">
+                <input type="hidden" name="testsuiteId" value="{{testsuite.uid}}">                
             </form>
         </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-            <button type="submit" class="btn btn-danger" form="delete-testsuite-form">Delete</button>
-        </div>
-        </div>
+        <div class="actions">
+        <button class="ui grey deny button">Cancel</button>
+        <button type="submit" class="ui red button" form="delete-testsuite-form">Delete</button>
     </div>
 </div>

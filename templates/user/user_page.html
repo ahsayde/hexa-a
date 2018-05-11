@@ -1,0 +1,41 @@
+{% set page_title = 'HEXA-A - Groups' %}
+{% extends 'layout.html' %}
+
+{% block container %}
+
+    <div class="ui container" style="margin-top:30px;">
+
+        <div class="ui stackable grid">
+            <div class="four wide column">
+
+                <h3 class="ui header">
+                    <img src="{{userInfo.profile_photo}}" class="ui circular image">
+                    {{userInfo.username}}
+                </h3>
+                <div class="sub header">{{userInfo.email}}</div>
+                
+
+                <div class="ui divider"></div>
+
+                <div class="ui stackable secondary vertical small fluid menu">
+                    <a class="{{'active' if tab == 'groups' }} item" href="/groups">
+                        <i class="users grey icon"></i>
+                        Groups
+                    </a>
+                    <a class="{{'active' if tab == 'settings' }} item" href="/settings">
+                        <i class="cog grey icon"></i>
+                        Settings
+                    </a>
+                </div>
+            </div>
+            <div class="twelve wide column">
+                {% block user_page_content %}{% endblock %}
+            </div>
+        </div>
+
+    </div>
+    
+{% endblock %}
+
+
+

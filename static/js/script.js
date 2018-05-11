@@ -1,10 +1,11 @@
 window.onload = function(){
-    var ratio = window.outerWidth / window.innerWidth;
+    $('.ui.dropdown').dropdown();
+    // var ratio = window.outerWidth / window.innerWidth;
     
-    $('html').css({
-        'width':(ratio) * ($(window).width()),
-        'height':(ratio) * ($(window).height())
-    });
+    // $('html').css({
+    //     'width':(ratio) * ($(window).width()),
+    //     'height':(ratio) * ($(window).height())
+    // });
 };
 
 (function($){
@@ -78,4 +79,72 @@ $('input[id^="custom-file-handler-"]').change(function(){
     if(filename.length > 0){
         $(target_button_id).text(filename);
     }
+});
+
+
+function showModal(modalId){
+	$(modalId).modal({
+		duration:100,
+		transition:'fade'
+	}).modal('show');
+}
+
+$(document).ready(function(){
+
+	$('.menu .item').tab();
+    $('.ui .dropdown').dropdown();
+
+    $('#menu').click(function(){
+        $('.ui.sidebar').sidebar('toggle');
+    });
+
+    $(".close.icon").click(function(){
+        $(this).parent().hide();
+    });
+
+
+	$("#create-testsuite-button").click(function(){
+		showModal('#create-testsuite-modal');
+    });
+
+    $("#create-group-button").click(function(){
+		showModal('#create-group-modal');
+    });
+
+    $("#create-assignment-button").click(function(){
+		showModal('#create-assignment-modal');
+    });
+
+    $("#edit-assignment-button").click(function(){
+		showModal('#edit-assignment-modal');
+    });
+    
+    $("#create-announcement-button").click(function(){
+		showModal('#create-announcement-modal');
+    });
+
+    $("#add-members-button").click(function(){
+		showModal('#add-members-modal');
+    });
+
+    $("#submit-code-button").click(function(){
+		showModal('#submit-code-modal');
+    });
+
+    $("#delete-group-button").click(function(){
+		showModal('#delete-group-modal');
+    });
+
+    $("#delete-assignment-button").click(function(){
+		showModal('#delete-assignment-modal');
+    });
+
+    $("#delete-testsuite-button").click(function(){
+		showModal('#delete-testsuite-modal');
+    });
+
+    $("#add-testcase-button").click(function(){
+		showModal('#add-testcase-modal');
+    });
+
 });

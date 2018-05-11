@@ -1,0 +1,24 @@
+<div class="ui large modal" id="create-assignment-modal">
+    <div class="header">Create new Assignment</div>
+        <div class="content">
+            <form class="ui form" id="create-assignment-form">
+                <input type="hidden" name="groupId" value="{{group.uid}}">
+                <div class="field">
+                    <label for="name">Name</label>
+                    <input type="text" name="name">
+                </div>
+                <div class="field">
+                    <label for="deadline">Deadline</label>
+                    <input type="datetime-local" name="deadline">
+                </div>
+                <div class="field">
+                    <label for="description">Description</label>
+                    <textarea type="text" name="description"></textarea>
+                </div>
+            </form>
+        </div>
+        <div class="actions">
+        <button class="ui grey deny button">Cancel</button>
+        <button type="submit" class="ui green button" form="create-assignment-form">Create</button>
+    </div>
+</div>

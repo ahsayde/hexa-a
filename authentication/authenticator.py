@@ -111,7 +111,7 @@ def logout_required(func):
     @wraps(func)
     def decorator(*args, **kwargs):
         if is_authorized():
-            return redirect('/dashboard', code=302)
+            return redirect('/', code=302)
         return func(*args, **kwargs)
     return decorator
 

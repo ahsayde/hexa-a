@@ -1,40 +1,39 @@
+{% set page_title = 'HEXA-A - Join group' %}
 {% extends 'layout.html' %}
 
 {% block container %}
 
-    {% include 'navbar.html' %}
-
-    <div class="container w-50" style="margin-top:120px; height:100%">
-        <div class="bg-white p-3 border">
-            <div class="row">
-                <div class="col">
-                    <h4>{{group.name}}</h4>
-                    <p class="text-muted m-0">{{group.description}}</p>
-                </div>
-            </div>
-
-            <div class="row mt-2">
-                <div class="col-auto">
-                    <small class="text-muted">Created by <a href="/users/{{group.created_at.username}}">{{group.created_by.username}}</a></small>   
-                </div>
-                <div class="col-auto">
-                    <small class="text-muted">{{group.members_count}} members</small>
-                </div>
-            </div>
-
-            <hr class="half-rule"/>
-            
-            <div class="row">
-                <div class="col">
+    <div class="ui container" style="margin-top:30px">
+        <div class="ui middle aligned center aligned grid">
+            <div class="ui six wide column">
+                <h3 class="ui left aligned header">Join group</h3>
+                <div class="ui divider"></div>         
+                <div class="ui fluid card">
+                    <div class="content">
+                        <div class="center aligned header">{{group.name}}</div>
+                        <div class="center aligned description">
+                        <p>{{group.description}}</p>
+                        </div>
+                    </div>
+                    <div class="extra content">
+                        <p class="left floated">
+                            Created by <a href="/users/{{group.created_by.username}}">{{group.created_by.username}}</a>
+                        </p>
+                        <p class="right floated">{{group.members_count}} members</p>
+                    </div>
                     {% if not group.join_request %}
-                        <button id="join-group-button" type="button" class="btn btn-success" data-group="{{group.uid}}">Join group</button>
+                        <div id="join-group-button" class="ui bottom attached blue button" data-group="{{group.uid}}">
+                            <i class="add icon"></i> Join group
+                        </div>
                     {% else %}
-                        <button type="button" class="btn btn-primary">Join request sent</button>
+                        <div class="ui bottom attached green button">
+                            <i class="check icon"></i> Join request sent
+                        </div>
                     {% endif %}
                 </div>
             </div>
         </div>
     </div>
-
+    
 {% endblock %}
 

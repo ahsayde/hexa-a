@@ -19,5 +19,5 @@ def AnnouncementsPage(** kwargs):
     groupId = kwargs.get('groupId')
     group = api.groups.get(groupId=groupId).json()
     announcements = api.groups.announcements.list(groupId).json()
-    return render_template('group/announcements.html', page=page, group=group, announcements=announcements)
+    return render_template('group/announcement/announcements.html', page=page, group=group, announcements=announcements)
 
