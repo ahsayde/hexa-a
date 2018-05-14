@@ -42,33 +42,39 @@
                         <div class="black label">Errored</div>
                     </div>
                 </div>
-                <div class="ui segment segment-status-{{submission.status}}">
-                    <div class="ui divided items">            
-                        {% for testcase in submission.result.testcases %}
-                            <div class="item">
-                                <div class="content">
-                                    <pre><code>Id : {{testcase.uid}}</code></pre>
-                                    <pre><code>Input : {{testcase.stdin}}</code></pre>
-                                    <pre><code>Generated output: {{testcase.stdout or '' }}</code></pre>
-                                    <pre><code>Expected output : {{testcase.expected_stdout}}</code></pre>
-                                    {% if testcase.returncode %}
-                                        <pre><code>Error ({{testcase.returncode}}) : {{testcase.stderr}}</code></pre>
-                                    {% endif %}
+                {% if group.is_admin or submission.testsuite.public %}
+                    <div class="ui segment segment-status-{{submission.status}}">
+                        <div class="ui divided items">            
+                            {% for testcase in submission.result.testcases %}
+                                <div class="item">
+                                    <div class="content">
+                                        <pre><code>Id : {{testcase.uid}}</code></pre>
+                                        <pre><code>Input : {{testcase.stdin}}</code></pre>
+                                        <pre><code>Generated output: {{testcase.stdout or '' }}</code></pre>
+                                        <pre><code>Expected output : {{testcase.expected_stdout}}</code></pre>
+                                        {% if testcase.returncode %}
+                                            <pre><code>Error ({{testcase.returncode}}) : {{testcase.stderr}}</code></pre>
+                                        {% endif %}
+                                    </div>
+                                    <div class="right floated content">
+                                        {% if testcase.status == 'Errored' %}
+                                            <label class="ui grey right floated label">Error</label>
+                                        {% elif testcase.status == 'Passed' %}
+                                            <label class="ui green right floated label">Passed</label>     
+                                        {% elif testcase.status == 'Failed' %}                       
+                                            <label class="ui red right floated label">Failed</label> 
+                                        {% endif %}
+                                    </div>
                                 </div>
-                                <div class="right floated content">
-                                    {% if testcase.status == 'Errored' %}
-                                        <label class="ui grey right floated label">Error</label>
-                                    {% elif testcase.status == 'Passed' %}
-                                        <label class="ui green right floated label">Passed</label>     
-                                    {% elif testcase.status == 'Failed' %}                       
-                                        <label class="ui red right floated label">Failed</label> 
-                                    {% endif %}
-                                </div>
-                            </div>
 
-                        {% endfor %}
+                            {% endfor %}
+                        </div>
                     </div>
-                </div>
+                {% else %}
+                    <div class="ui segment center aligned">
+                        <p>Nothing to show, this is a private testsuite. Only admins can see its content</p>
+                    </div>
+                {% endif %}
             {% endif %}
             
         </div>

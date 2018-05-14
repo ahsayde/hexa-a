@@ -8,6 +8,15 @@
                 <div class="ui segment left aligned">
                     <h3>Sign in</h3>
                     <div class="ui divider"></div> 
+                    {% if error %}
+                        <div class="ui negative message">
+                            <i class="close icon"></i>
+                            <div class="header">Error</div>
+                            <ul class="list">
+                                <li>{{error}}</li>
+                            </ul>
+                        </div> 
+                    {% endif %}
                     <form class="ui form" action="/login" method="post">
                         <input type="hidden" name="current_url" value="{{current_url or ''}}"/>
                         <div class="field">

@@ -7,7 +7,7 @@ minimal_repr = {
     'User': ['username', 'profile_photo'],
     'Group': ['uid', 'name'],
     'Assignment': ['uid', 'name'],
-    'Testsuite': ['uid', 'name', 'level', 'attempts'],
+    'Testsuite': ['uid', 'name', 'level', 'attempts', 'public'],
     'Testcase':['uid', 'stdin', 'expected_stdout', 'added_by', 'added_at', 'suggested_at', 'suggested_by'],
     'Notification':['uid', 'entity_type', 'entity', 'from_user', 'to_user']
 }

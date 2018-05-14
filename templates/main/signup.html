@@ -8,6 +8,17 @@
             <div class="ui segment left aligned">
                 <h3>Create new account</h3>
                 <div class="ui divider"></div> 
+                {% if error %}
+                    <div class="ui negative message">
+                        <i class="close icon"></i>
+                        <div class="header">Error</div>
+                        <ul class="list">
+                            {% for key, value in error.items() %}
+                                <li>{{key|capitalize}}: {{value|capitalize}}</li>
+                            {% endfor %}
+                        </ul>
+                    </div> 
+                {% endif %}
                 <form class="ui form" action="/signup" method="post">
                     <div class="field">
                         <label for="username">Username</label>

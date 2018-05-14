@@ -298,8 +298,7 @@ $(document).ready(function () {
         var data = $(this).getFormData();
         hexaa.groups.assignments.update(data.groupId, data.assignmentId, data.name, data.description, data.deadline)
         .then((resp)=>{
-            let url = '/groups/' + data.groupId + '/assignments/' + data.assignmentId;
-            window.location.href = url;
+            window.location.reload();
         }).catch((error)=>{
             alert(JSON.stringify(error));
         });
@@ -363,8 +362,7 @@ $(document).ready(function () {
         var data = new FormData(this);
         hexaa.groups.testsuites.update(groupId, testsuiteId, data)
         .then((response)=>{
-            let url = '/groups/' + groupId + '/testsuites/' + testsuiteId;
-            window.location.href = url;
+            window.location.reload();
         }).catch((error)=>{
             alert(error.responseText);
         });

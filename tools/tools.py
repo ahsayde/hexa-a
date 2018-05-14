@@ -95,7 +95,7 @@ def datatimeFromTimestamp(timestamp):
     if not timestamp:
         return None
 
-    return datetime.fromtimestamp(int(timestamp)).strftime('%Y-%m-%d %H:%M')
+    return datetime.fromtimestamp(int(timestamp)).strftime('%Y-%m-%dT%H:%M')
 
 def dataFromTimestamp(timestamp):
     if not timestamp:

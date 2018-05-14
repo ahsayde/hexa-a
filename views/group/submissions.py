@@ -82,6 +82,7 @@ def SubmissionPage(**kwargs):
     username = kwargs.get('username')
     submissionId = kwargs.get('submissionId', None)
     submission = api.groups.submissions.get(submissionId).json()
-    return render_template('group/assignment/submission.html', page=page, submission=submission,)
+    group = api.groups.get(submission['group']['uid']).json()    
+    return render_template('group/assignment/submission.html', page=page, group=group, submission=submission,)
 
 

@@ -18,17 +18,17 @@
             <label for="attempts">Attempts</label>
             <input name="attempts" type="number" value="{{testsuite.attempts}}">
         </div> 
-    </div>            
-    <div class="six wide field">
-        <label for="attachments">Attachments</label>
-        <input type="file" name="attachments" multiple>
     </div>  
     <div class="six wide field">
         <div class="ui toggle checkbox">
             <input type="checkbox" name="public" {{'checked' if testsuite.public}}>
             <label>Public</label>
         </div>
-    </div>
+    </div>          
+    <div class="six wide field">
+        <label for="attachments">Attachments</label>
+        <input type="file" name="attachments" multiple>
+    </div>  
     <button type="submit" class="ui blue icon labeled button">
         Save <i class="save icon"></i>
     </button>                     

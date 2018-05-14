@@ -17,13 +17,19 @@ def getSubmission(**kwargs):
     if not submission:
         return http.NotFound()
 
-    if submission.username != username:
-        groupId = submission.group.uid
-        group_membership = GroupMembership.get(group=groupId, user=username)
-        if not group_membership:
-            return http.Forbidden()
+    groupId = submission.group.uid
+    group_membership = GroupMembership.get(group=groupId, user=username)
 
-        if group_membership.role != 'admin':
-            return http.Forbidden()
+    if not group_membership:
+        return http.Forbidden()
+    
+    result = submission.to_dict()
 
-    return http.Ok(json.dumps(submission.to_dict()))
+    if group_membership.role != 'admin':
+        if submission.username != username:        
+            return http.Forbidden()
+        
+        if not submission.testsuite.public:
+            del result['result']['testcases']
+
+    return http.Ok(json.dumps(result))

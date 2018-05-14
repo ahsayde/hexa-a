@@ -2,13 +2,20 @@
 
 {% block container %}
 
-    <div class="container w-50 " style="height:100%">
-        <div class="jumbotron bg-white">
-            <h1 class="display-3">
-                <span class="text-danger">403</span> <small class="text-muted">Forbidden</small>
-            </h1>
-            <hr class="my-4">
-            <p>You don't have premissions to access this page, <a href="/" role="button">Back to the home page</a></p>
+    <div class="ui container" style="margin-top:30px">
+        <div class="ui middle aligned center aligned grid">
+            <div class="ui ten wide column">
+                <div class="ui left aligned segment">
+                    <h1 class="ui red header">
+                        <i class="ui large lock red icon"></i>
+                        <div class="content">
+                            Access denied [403]
+                        </div>
+                    </h1>
+                    <div class="ui divider"></div>
+                    <p>You don't have premissions to access this page.</p>
+                </div>
+            </div>
         </div>
     </div>
 
