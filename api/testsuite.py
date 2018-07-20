@@ -75,6 +75,7 @@ def CreateTestsuite(** kwargs):
     name = request.form.get('name')
     level = request.form.get('level')
     public = bool(request.form.get('public'))
+    enable_suggestions = bool(request.form.get('enable_suggestions'))
     attempts = request.form.get('attempts') or 0
     file = request.files.get('file', None)
     attachments = request.files.getlist('attachments', None)
@@ -102,6 +103,7 @@ def CreateTestsuite(** kwargs):
         name=name,
         level=level,
         public=public,
+        enable_suggestions=enable_suggestions,
         attempts=attempts,
         group=groupId,
         testcases=testcases,
@@ -133,6 +135,7 @@ def UpdateTestsuite(** kwargs):
     name = request.form.get('name')
     level = request.form.get('level')
     public = bool(request.form.get('public'))
+    enable_suggestions =  bool(request.form.get('enable_suggestions'))
     attempts = request.form.get('attempts', 0)
     attachments = request.files.getlist('attachments', None)
 
@@ -153,6 +156,7 @@ def UpdateTestsuite(** kwargs):
             name=name, 
             level=level,
             public=public,
+            enable_suggestions=enable_suggestions,
             attempts=attempts,
             updated_at=generate_timestamp(),
             updated_by=user,
@@ -291,6 +295,9 @@ def AddTestcase(** kwargs):
     elif user_role == 'member':
         
         if not testsuite.public:
+            return http.Forbidden()
+
+        if not testsuite.enable_suggestions:
             return http.Forbidden()
 
         testcase = SuggestedTestcase(

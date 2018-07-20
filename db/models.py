@@ -141,6 +141,7 @@ class Testsuite(BaseModel):
     name = fields.StringField(required=True, min_length=3, max_length=50)
     level = fields.StringField(required=True, choice=['basic', 'extended', 'advanced'])
     public = fields.BooleanField(default=False)
+    enable_suggestions = fields.BooleanField(default=False)
     attempts = fields.IntField(default=0)
     group = fields.ReferenceField(Group, required=True, reverse_delete_rule=2)
     testcases = fields.EmbeddedDocumentListField(Testcase, default=[])
@@ -176,6 +177,7 @@ class Assignment(BaseModel):
     updated_at = fields.IntField()
     updated_by = fields.ReferenceField(User)
     deadline = fields.IntField()
+    submissions_access = fields.StringField(choice=['allow', 'allow_after_deadline', 'deny'], default='allow')
     testsuites = fields.ListField(fields.ReferenceField(Testsuite), reverse_delete_rule=4)
     settings = fields.DictField(default={})
     # db collection

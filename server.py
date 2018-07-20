@@ -14,6 +14,8 @@ config = hexaa._config
 http = HttpResponse()
 
 app.jinja_env.globals.update(timestamp_to_age=timestamp_to_age)
+app.jinja_env.globals.update(max=max)
+app.jinja_env.globals.update(min=min)
 app.jinja_env.globals.update(render_markdown=render_markdown)
 app.jinja_env.globals.update(datatimeFromTimestamp=datatimeFromTimestamp)
 app.jinja_env.globals.update(dataFromTimestamp=datatimeFromTimestamp)
@@ -31,11 +33,9 @@ def errors(error):
 @app.context_processor
 def context_processor():
     userInfo = {}
-    # notifications = []
     if is_authorized():
         userInfo = User.get(username=session['user_id'])
-        # notifications = Notification.objects(to_user=userInfo.username)
-    return dict(userInfo=userInfo, notifications=[])
+    return dict(userInfo=userInfo)
 
 @app.route("/avatars/<avatarId>")
 def GetAvatar(** kwargs):
@@ -46,5 +46,4 @@ def GetAvatar(** kwargs):
     return send_file(local_picture_path, mimetype='image/gif')
 
 if __name__ == '__main__':
-    app.run('127.0.0.1', port=8080)
-
+    app.run('0.0.0.0', port=8080, threaded=True)

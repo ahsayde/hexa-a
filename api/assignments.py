@@ -91,6 +91,7 @@ def CreateAssignment(** kwargs):
     name = request.json.get('name')
     description = request.json.get('description', '')
     deadline = datetimeToEpoc(request.json.get('deadline', None))
+    submissions_access = request.json.get('submissions_access')
 
     if deadline:
         if deadline <= int(time.time()):
@@ -101,6 +102,7 @@ def CreateAssignment(** kwargs):
         name=name,
         description=description,
         deadline=deadline,
+        submissions_access=submissions_access,
         group=groupId,
         created_at=generate_timestamp(),
         created_by=username
@@ -163,6 +165,7 @@ def UpdateAssignment(** kwargs):
     description = request.json.get('description', '')
     settings = request.json.get('settings', None)
     deadline = datetimeToEpoc(request.json.get('deadline', None))
+    submissions_access = request.json.get('submissions_access', assignment.submissions_access)
 
     if deadline:
         if assignment.published:
@@ -179,6 +182,7 @@ def UpdateAssignment(** kwargs):
             description=description,
             settings=settings,
             deadline=deadline,
+            submissions_access=submissions_access,
             updated_at=generate_timestamp(),
             updated_by=user
         )
@@ -401,6 +405,10 @@ def ListSubmissions(**kwargs):
     username = kwargs.get('username')
     groupId = kwargs.get('groupId')
     assignmentId = kwargs.get('assignmentId')
+    assignment = Assignment.get(uid=assignmentId)
+
+    if not assignment:
+        return http.NotFound()
 
     query = {}
     data = []
@@ -414,6 +422,12 @@ def ListSubmissions(**kwargs):
                 query[filter] = value
     
     elif user_role == 'member':
+        if assignment.submissions_access == 'deny':
+            return http.Forbidden()
+
+        elif assignment.submissions_access == 'allow_after_deadline' and int(time.time()) < assignment.deadline:
+            return http.Forbidden()
+                            
         query['username'] = username
         for filter in member_filters:
             value = request.args.get(filter)
