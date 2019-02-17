@@ -1,21 +1,21 @@
 server:
-  host: 
+  host:
   port:
   
 database:
-  db: 
-  host: 
-  port: 
-  username: null
-  password: null
+  db:
+  host:
+  port:
+  username: 
+  password:
 
-dirs:
-  USERS_TMP_CODE_DIR: 
-  TESTSUITES_ATTACHMENTS:
-  USERS_PROFILE_PHOTOS_DIR:
+minio:
+  url:
+  key:
+  secret:
 
-jwt-secret: 
-session-secret: 
+jwt-secret:
+session-secret:
 
 smtp:
   host: 
@@ -27,7 +27,7 @@ emails:
     password: 
 
 sandbox:
-  user: 
+  user:
   image: 
   workdir: 
   mounts:
