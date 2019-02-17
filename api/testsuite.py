@@ -4,12 +4,14 @@ from db.models import *
 from tools.tools import *
 from tools.http import HttpResponse
 from authentication.authenticator import auth_required, group_access_level
+from minio import Minio
 
 config = read_config()
 http = HttpResponse()
 testsuites_api = Blueprint('testsuites_api', __name__)
 
-TESTSUITES_ATTACHMENTS = config['dirs']['TESTSUITES_ATTACHMENTS']
+minioconf = config["minio"]
+miniocl = Minio(minioconf["url"], minioconf["key"], minioconf["secret"], secure=False)
 
 @testsuites_api.route("/testsuites")
 @auth_required
@@ -62,8 +64,17 @@ def GetTestsuiteInfo(** kwargs):
 
     if not (user_role == 'admin' or testsuite.public):
         return http.Forbidden()
+    
+    attachments_list = []
+    attachments = miniocl.list_objects("testsuites", prefix="{}/".format(testsuiteId))
+    for attachment in attachments:
+        name = attachment.object_name.split("/")[1]
+        attachments_list.append(name)
 
-    return http.Ok(json.dumps(testsuite.to_dict()))
+    testsuite = testsuite.to_dict()
+    testsuite["attachments"] = attachments_list
+
+    return http.Ok(json.dumps(testsuite))
 
 @testsuites_api.route("/testsuites", methods=['POST'])
 @auth_required
@@ -93,10 +104,10 @@ def CreateTestsuite(** kwargs):
 
     if attachments:
         for attachment in attachments:
-            attachment_name = attachment.filename        
-            attachment_uid = '%s_%s' % (uid, attachment_name)
-            attachment.save(os.path.join(TESTSUITES_ATTACHMENTS, attachment_uid))
-            attachments_list.append(attachment_name)
+            name = attachment.filename
+            length = get_object_length(attachment.stream)
+            path = "{}/{}".format(uid, name)
+            miniocl.put_object("testsuites", path, attachment.stream, length)
 
     testsuite = Testsuite(
         uid=uid,
@@ -108,8 +119,7 @@ def CreateTestsuite(** kwargs):
         group=groupId,
         testcases=testcases,
         created_at=timestamp,
-        created_by=username,
-        attachment=attachments_list
+        created_by=username
     )
 
     err = testsuite.check()
@@ -145,11 +155,10 @@ def UpdateTestsuite(** kwargs):
     attachments_list = []
     if attachments:
         for attachment in attachments:
-            attachment_name = attachment.filename        
-            attachment_uid = '%s_%s' % (testsuite.uid, attachment_name)
-            attachment.save(os.path.join(TESTSUITES_ATTACHMENTS, attachment_uid))
-            attachments_list.append(attachment_name)
-
+            name = attachment.filename
+            length = get_object_length(attachment.stream)
+            path = "{}/{}".format(testsuiteId, name)
+            miniocl.put_object("testsuites", path, attachment.stream, length)
     try:
         user = User.get(username=username)
         Testsuite.get(uid=testsuiteId).update(
@@ -159,8 +168,7 @@ def UpdateTestsuite(** kwargs):
             enable_suggestions=enable_suggestions,
             attempts=attempts,
             updated_at=generate_timestamp(),
-            updated_by=user,
-            push__attachment=attachments_list
+            updated_by=user
         )
     except Exception as e:
         return http.InternalServerError(json.dumps(e.args))
@@ -172,26 +180,20 @@ def UpdateTestsuite(** kwargs):
 @group_access_level('admin')
 def DeleteTestsuite(** kwargs):
     testsuiteId = kwargs.get('testsuiteId')
-
     testsuite = Testsuite.get(uid=testsuiteId)
-
     if not testsuite:
         return http.NotFound('testsuite is not found')
 
     if Assignment.objects.filter(testsuites=testsuiteId):
         return http.BadRequest("Can't delete testsuite linked to assignment")
-
     try:
-        Testsuite.delete(uid=testsuiteId)        
-        
-        for attachment in testsuite.attachment:
-            attachment_uid = '%s_%s' % (testsuite.uid, attachment)
-            attachment_path = os.path.join(TESTSUITES_ATTACHMENTS, attachment_uid)
-            os.remove(attachment_path)
+        attachments = miniocl.list_objects("testsuites", prefix="{}/".format(testsuiteId))
+        for attachment in attachments:
+            miniocl.remove_object("testsuites", attachment.object_name)
 
+        Testsuite.delete(uid=testsuiteId)        
     except Exception as e:
         return http.InternalServerError(json.dumps(e.args))
-
     return http.NoContent()
 
 @testsuites_api.route("/testsuites/<testsuiteId>/testcases/<testcasesId>", methods=['DELETE'])
@@ -388,18 +390,11 @@ def DeleteAttachment(** kwargs):
     groupId = kwargs.get('groupId')
     testsuiteId = kwargs.get('testsuiteId')
     attachmentId = kwargs.get('attachmentId')
-
     testsuite = Testsuite.get(uid=testsuiteId)
     if not testsuite:
         return http.NotFound('testsuite is not found')
 
-    if not attachmentId in testsuite.attachment:
-        return http.NotFound()
-
-    attachment_uid = '%s_%s' % (testsuite.uid, attachmentId)
-    attachment_path = os.path.join(TESTSUITES_ATTACHMENTS, attachment_uid)
-    os.remove(attachment_path)
-    testsuite.update(pull__attachment=attachmentId)
-    
+    object_name = "{}/{}".format(testsuiteId, attachmentId)
+    miniocl.remove_object("testsuites", object_name)
     return http.NoContent()
 

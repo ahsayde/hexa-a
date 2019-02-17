@@ -62,15 +62,15 @@ $(document).ready(function () {
         return false
     });
 
-    $('#custom-file-handler-picture').change(function(){ 
-        var file = $(this).prop('files')[0];
-        var fileReader = new FileReader();
-        fileReader.readAsDataURL(file);
-        fileReader.onload = function(e) {
-            $('#picturePreview').attr('src', e.target.result);
-        };
-        $('#edit-user-picture').submit();
-    });
+    // $('#custom-file-handler-picture').change(function(){ 
+    //     var file = $(this).prop('files')[0];
+    //     var fileReader = new FileReader();
+    //     fileReader.readAsDataURL(file);
+    //     fileReader.onload = function(e) {
+    //         $('#picturePreview').attr('src', e.target.result);
+    //     };
+    //     $('#edit-user-picture').submit();
+    // });
   
     // ============================= Groups ===============================
 

@@ -6,12 +6,14 @@ from werkzeug.utils import secure_filename
 from tools.http import HttpResponse
 from mongoengine import Q, errors
 from authentication.authenticator import hash_password, auth_required
+from minio import Minio
 
 http = HttpResponse()
 config = read_config()
 users_api = Blueprint('users_api', __name__)
 
-USERS_PROFILE_PHOTOS_DIR = config['dirs']['USERS_PROFILE_PHOTOS_DIR']
+minioconf = config["minio"]
+miniocl = Minio(minioconf["url"], minioconf["key"], minioconf["secret"], secure=False)
 
 @users_api.route("/user")
 @auth_required
@@ -83,11 +85,8 @@ def UpdateUserInfo(** kwargs):
 def UpdateUserProfilePicture(** kwargs):
     username = kwargs.get('username')
     picture = request.files.get('picture')
-    source_file_name = secure_filename(picture.filename)
-    picture_hash = hashlib.md5(username.encode('utf-8')).hexdigest()
-    picture.save(os.path.join(USERS_PROFILE_PHOTOS_DIR, picture_hash))
-    profile_picture_url = '/avatars/{}'.format(picture_hash)
-    User.get(username=username).update(profile_photo=profile_picture_url)
+    length = get_object_length(picture.stream)
+    miniocl.put_object("pictures", username, picture.stream, length)
     return http.NoContent()
 
 @users_api.route("/user/picture", methods=['DELETE'])

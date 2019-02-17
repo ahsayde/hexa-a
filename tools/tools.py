@@ -1,4 +1,4 @@
-from os import path, mkdir, getcwd
+from os import path, mkdir, getcwd, fstat
 from datetime import datetime
 from flask import Markup
 import uuid, time, hashlib, json, yaml, mistune
@@ -62,7 +62,7 @@ def timestamp_to_age(target):
 
 
 def parse_testcases_file(file, username, timestamp):
-    content = file.read().decode('utf-')
+    content = file.read().decode('utf-8')
     lines = content.splitlines()
     if len(lines) % 2 != 0:
         return None
@@ -150,3 +150,6 @@ def pagenate(limit, page, count, request_url):
         'prev_page': prev_page 
     }
     return pagenation
+
+def get_object_length(obj):
+    return fstat(obj.fileno()).st_size
