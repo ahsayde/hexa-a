@@ -1,19 +1,22 @@
-import json, shutil, os, requests, zipfile
+import json, shutil, os, zipfile
 from flask import Blueprint, request
 from db.models import *
+from tools.sandbox import Sandbox
 from tools.tools import *
 from tools.http import HttpResponse
 from werkzeug.utils import secure_filename
 from authentication.authenticator import auth_required, group_access_level
-from tools.judger import Judger
+from minio import Minio
 from pymongo.errors import DocumentTooLarge
 
 http = HttpResponse()
+sandbox = Sandbox()
 assignments_api = Blueprint('assignments_api', __name__)
 
 config = read_config('config.yaml')
-
-TESTSUITES_ATTACHMENTS = config['dirs']['TESTSUITES_ATTACHMENTS']
+tmp_code_dir = config['dirs']['tmp_code_dir']
+minioconf = config["minio"]
+miniocl = Minio(minioconf["url"], minioconf["key"], minioconf["secret"], secure=False)
 
 @assignments_api.route("/assignments")
 @auth_required
@@ -281,7 +284,7 @@ def submit(**kwargs):
     assignmentId = kwargs.get('assignmentId')
     testsuiteId = request.form.get('testsuite')
     language = request.form.get('language')
-    source_file = request.files.get('source_file')
+    sourcefile = request.files.get('source_file')
 
     group = Group.get(uid=groupId)
     assignment = Assignment.get(uid=assignmentId)
@@ -307,78 +310,62 @@ def submit(**kwargs):
         if assignment.deadline <= int(time.time()):
             return http.Forbidden('Can\'t submit to closed assignment')
 
-    if not source_file:
+    if not sourcefile:
         return http.BadRequest('no selected file')
 
-    reference_id = generate_uuid(20)
+    referenceId = generate_uuid(20)
+    
+    # create user dirs
+    userdir = os.path.join(tmp_code_dir, referenceId)
+    os.mkdir(userdir)
 
-    user_temp_dir = '{0}/{1}'.format(
-        config['dirs']['USERS_TMP_CODE_DIR'],
-        reference_id
-    )
+    # write testcases
+    testpath = os.path.join(userdir, "testcases.json")
+    with open(testpath, "w") as f:
+        testcases = testsuite.to_dict()["testcases"]
+        json.dump(testcases, f)
 
-    os.mkdir(user_temp_dir)
+    # download test attachments
+    attachments = miniocl.list_objects("testsuites", prefix="{}/".format(testsuiteId))
+    if attachments:
+        for attachment in attachments:
+            attachment_name = attachment.object_name
+            path = os.path.join(userdir, attachment_name.split("/")[1])
+            miniocl.fget_object('testsuites', attachment_name, path)
+ 
 
-    source_file_path =  '{0}/{1}/{2}'.format(
-        config['dirs']['USERS_TMP_CODE_DIR'],
-        reference_id,
-        source_file.filename
-    )
-    source_file.save(source_file_path)
+    sourcefilepath = os.path.join(userdir, sourcefile.filename)
+    sourcefile.save(sourcefilepath)
 
-    if testsuite.attachment:
-        for attachment in testsuite.attachment:
-            attachment_uid = '%s_%s' % (testsuite.uid, attachment)
-            attachment_path = os.path.join(TESTSUITES_ATTACHMENTS, attachment_uid)
-            shutil.copyfile(attachment_path, os.path.join(user_temp_dir, attachment))
-            
-    ext = source_file.filename[source_file.filename.rfind('.')+1:]
-
-    if ext not in ['zip', 'cpp']:
-        shutil.rmtree(user_temp_dir)
-        return http.BadRequest('Unsupported file format (.%s), supports only (.zip & .cpp)' % (ext))
-
-    if ext in 'zip':
-        try:
-            file = zipfile.ZipFile(source_file_path)
-            file.extractall(path=user_temp_dir)
-            file.close()
-        except:
-            shutil.rmtree(user_temp_dir)
-            return http.BadRequest('Cannot uncommpress your file, file maybe is corrupted')
+    result = dict()
+    try:
+        envars = {
+            "PRO_LANGUAGE":language, 
+            "SOURCE_FILE":sourcefile.filename,
+             "TEST_FILE": "testcases.json"
+        }
+        container = sandbox.create("checker", userdir, env=envars)
+        container.start()
+        container.wait(timeout=60)
+        result = container.logs()
+    finally:
+        shutil.rmtree(userdir)
+        container.remove(force=True)
 
     try:
-        judger = Judger(reference_id=reference_id)
-        judger_result = judger.judge(testsuite.to_dict()['testcases'])
+        result = json.loads(result.decode('utf-8'))
     except:
-        return http.InternalServerError('Unexpected error')
-    finally:
-        shutil.rmtree(user_temp_dir)
-    
-    status = 'unknown'
-    compiler_result = judger_result['compiler']
-    if compiler_result:
-        if compiler_result['returncode']:
-            status = 'Compiler Error'
-        else:
-            test_summary = judger_result['summary']
-            if test_summary['errored']:
-                status = 'Error'
-            elif test_summary['failed']:
-                status = 'Failed'
-            else:
-                status = 'Passed'
+        raise http.InternalServerError("Failed to decode tests results") 
 
     submission = Submission(
-        uid=reference_id,
+        uid=referenceId,
         group=groupId,
         assignment=assignmentId,
         testsuite=testsuiteId,
         submitted_at=generate_timestamp(),
         username=username,
         language=language,
-        result=judger_result,
-        status=status
+        result=result,
     )
     err = submission.check()
     if err:
@@ -391,7 +378,7 @@ def submit(**kwargs):
     except:
         return http.InternalServerError()
 
-    return http.Created(json.dumps({'uid':reference_id}))
+    return http.Created(json.dumps({'uid':referenceId}))
 
 @assignments_api.route("/assignments/<assignmentId>/submissions")
 @auth_required

@@ -1,0 +1,39 @@
+from subprocess import run, PIPE
+
+workdir = None
+extensions = ["cpp", "cc"]
+
+
+def compile(sourcefile, timeout=60):
+    if isinstance(sourcefile, list):
+        sourcefile = " ".join(
+            [
+                filename
+                for filename in sourcefile
+                if filename.split(".")[1] in extensions
+            ]
+        )
+
+    cmd = ["/bin/bash", "-c", "g++ {} -o output.out".format(sourcefile)]
+    response = run(
+        cmd,
+        stderr=PIPE,
+        stdout=PIPE,
+        cwd=workdir,
+        timeout=timeout,
+        universal_newlines=True,
+    )
+    return response
+
+
+def runTest(stdin, timeout=60):
+    cmd = ["/bin/bash", "-c", "./output.out {}".format(stdin)]
+    response = run(
+        cmd,
+        stderr=PIPE,
+        stdout=PIPE,
+        cwd=workdir,
+        timeout=timeout,
+        universal_newlines=True,
+    )
+    return response

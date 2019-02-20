@@ -209,7 +209,6 @@ class Submission(BaseModel):
     submitted_at = fields.IntField(required=True)
     language = fields.StringField(required=True)
     result = fields.DictField(required=True)
-    status = fields.StringField(required=True)
     # db collection
     meta = {"collection":"submissions"}
 

@@ -104,9 +104,8 @@ def CreateTestsuite(** kwargs):
 
     if attachments:
         for attachment in attachments:
-            name = attachment.filename
             length = get_object_length(attachment.stream)
-            path = "{}/{}".format(uid, name)
+            path = "{}/{}".format(uid, attachment.filename)
             miniocl.put_object("testsuites", path, attachment.stream, length)
 
     testsuite = Testsuite(

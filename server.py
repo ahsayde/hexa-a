@@ -25,7 +25,7 @@ app.jinja_env.globals.update(datatimeFromTimestamp=datatimeFromTimestamp)
 app.jinja_env.globals.update(dataFromTimestamp=datatimeFromTimestamp)
 app.jinja_env.globals.update(get_object_attr=get_object_attr)
 app.jinja_env.globals.update(search_for_object=search_for_object)
-app.config['UPLOAD_FOLDER'] = config['dirs']['USERS_TMP_CODE_DIR']
+app.config['UPLOAD_FOLDER'] = config['dirs']['tmp_code_dir']
 
 @app.errorhandler(HTTPError)
 def errors(error):
