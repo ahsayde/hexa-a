@@ -24,22 +24,20 @@
                     {% endif %}
                     <td>{{datatimeFromTimestamp(submission.submitted_at)}}</td>
                     <td>
-                        {% if submission.result.summary %}
-                
-                            <span class="green">{{submission.result.summary.passed}} / </span> 
-                            <span class="red">{{submission.result.summary.failed}} / </span>
-                            <span class="black">{{submission.result.summary.errored}}</span>
-                
+                        {% if submission.result.summary.status not in "Compiler Error" %}
+                            <span class="green">{{submission.result.summary.success}} / </span> 
+                            <span class="red">{{submission.result.summary.failures}} / </span>
+                            <span class="black">{{submission.result.summary.errors}}</span>
                         {% else %}
                             <span>- / - / -</span>
                         {% endif %}
                     </td>
                     <td>
-                        {% if submission.status in  ['Error', 'Compiler Error'] %}
-                            <label class="ui label grey">{{submission.status}}</label>
-                        {% elif submission.status == 'Passed' %}
+                        {% if submission.result.summary.status in  ['Error', 'Compiler Error'] %}
+                            <label class="ui label grey">{{submission.result.summary.status}}</label>
+                        {% elif submission.result.summary.status == 'Passed' %}
                             <label class="ui label green">Passed</label>     
-                        {% elif submission.status == 'Failed' %}                       
+                        {% elif submission.result.summary.status == 'Failed' %}                       
                             <label class="ui label red">Failed</label> 
                         {% endif %}
                     </td>

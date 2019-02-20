@@ -30,7 +30,7 @@
             {% for announcement in announcements.result %}
                 <div class="event">
                     <div class="label">
-                        <img src="{{announcement.created_by.profile_photo}}">
+                        <img src="/avatar/{{announcement.created_by.username}}">
                     </div>
                     <div class="content">
                         <div class="summary">

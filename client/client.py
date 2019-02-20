@@ -1,13 +1,16 @@
 import requests
+from tools.tools import read_config
 from flask import session
 from client.groups import Groups
 from client.users import Users
 from client.authentication import Authentication
 
 class Client:
-    
-    def __init__(self, url='http://127.0.0.1:8080'):
-        self.base_url = url
+    def __init__(self):
+        self.config = read_config()
+        self.host = self.config["server"]["host"]
+        self.port = self.config["server"]["port"]
+        self.base_url = "http://{}:{}".format(self.host, self.port)
         self.api_url = self.base_url + '/api'
         self.session = requests.session()
         self.groups = Groups(self)

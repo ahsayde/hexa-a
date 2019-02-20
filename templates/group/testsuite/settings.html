@@ -43,11 +43,11 @@
 <h4 class="ui dividing header">Attachments</h4>
     
 <div class="ui list">
-    {% if not testsuite.attachment %}
+    {% if not testsuite.attachments %}
         <p>No attachments were available.</p>  
     {% endif %}
 
-    {% for attachment in testsuite.attachment %}
+    {% for attachment in testsuite.attachments %}
         <div class="item">
             <div class="right floated content">
                 <button class="ui basic icon mini button" name="delete-testsuite-attachment" data-group="{{group.uid}}" data-testsuite="{{testsuite.uid}}" data-attachment="{{attachment}}">

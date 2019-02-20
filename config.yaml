@@ -1,6 +1,6 @@
 server:
-  host: 
-  port:
+  host: 0.0.0.0 
+  port: 5000
   
 database:
   db: 
@@ -9,12 +9,15 @@ database:
   username: null
   password: null
 
-dirs:
-  USERS_TMP_CODE_DIR: 
-  TESTSUITES_ATTACHMENTS:
-  USERS_PROFILE_PHOTOS_DIR:
+dirs: 
+  tmp_code_dir:
+  
+minio:
+  url: 
+  key: 
+  secret: 
 
-jwt-secret: 
+jwt-secret:
 session-secret: 
 
 smtp:
@@ -25,10 +28,3 @@ emails:
   noreply:
     addr:
     password: 
-
-sandbox:
-  user: 
-  image: 
-  workdir: 
-  mounts:
-  mem_limit:

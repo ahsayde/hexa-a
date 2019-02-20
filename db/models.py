@@ -83,7 +83,6 @@ class User(BaseModel):
     lastname = fields.StringField(min_length=3, max_length=15)
     created_at = fields.IntField(required=True)
     updated_at = fields.IntField()
-    profile_photo = fields.StringField(default='/avatars/c21f969b5f03d33d43e04f8f136e7682')
     # db collection
     meta = {"collection":"users"}
 
@@ -149,7 +148,6 @@ class Testsuite(BaseModel):
     created_by = fields.ReferenceField(User, required=True)
     updated_at = fields.IntField()
     updated_by = fields.ReferenceField(User)
-    attachment = fields.ListField(fields.StringField())
     # db collection
     meta = {"collection":"testsuite"}
 
@@ -211,7 +209,6 @@ class Submission(BaseModel):
     submitted_at = fields.IntField(required=True)
     language = fields.StringField(required=True)
     result = fields.DictField(required=True)
-    status = fields.StringField(required=True)
     # db collection
     meta = {"collection":"submissions"}
 
