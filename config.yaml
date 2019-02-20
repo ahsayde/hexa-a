@@ -1,21 +1,24 @@
 server:
-  host:
-  port:
+  host: 0.0.0.0 
+  port: 5000
   
 database:
-  db:
-  host:
-  port:
-  username: 
-  password:
+  db: 
+  host: 
+  port: 
+  username: null
+  password: null
 
+dirs: 
+  tmp_code_dir:
+  
 minio:
-  url:
-  key:
-  secret:
+  url: 
+  key: 
+  secret: 
 
 jwt-secret:
-session-secret:
+session-secret: 
 
 smtp:
   host: 
@@ -25,10 +28,3 @@ emails:
   noreply:
     addr:
     password: 
-
-sandbox:
-  user:
-  image: 
-  workdir: 
-  mounts:
-  mem_limit:
