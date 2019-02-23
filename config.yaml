@@ -3,22 +3,19 @@ server:
   port: 5000
   
 database:
-  db: 
-  host: 
-  port: 
+  db: hexa-a-db
+  host: mongodb
+  port: 27017
   username: null
   password: null
 
 dirs: 
-  tmp_code_dir:
+  tmp_code_dir: /tmp
   
 minio:
-  url: 
+  url: minio:9000
   key: 
   secret: 
-
-jwt-secret:
-session-secret: 
 
 smtp:
   host: 
@@ -27,4 +24,4 @@ smtp:
 emails:
   noreply:
     addr:
-    password: 
+    password:

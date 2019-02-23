@@ -22,27 +22,28 @@
 
             <div class="ui divider"></div>
 
-            {% if submission.result.compiler.returncode > 0 %}
-                <h3 class="ui header">Compiler Error</h3>
-                <div class="ui segment segment-status-errored" style="background:rgb(252, 251, 251)">
-                    <code>{{submission.result.compiler.error}}</code>
-                </div>
-            {% else %}
-                <div class="ui tiny statistics">
-                    <div class="ui green horizontal statistic">
-                        <div class="value">{{submission.result.summary.success}}</div>
-                        <div class="green label">Passed</div>
+            {% if group.is_admin or submission.testsuite.public %}
+
+                {% if submission.result.compiler.returncode > 0 %}
+                    <h3 class="ui header">Compiler Error</h3>
+                    <div class="ui segment segment-status-errored" style="background:rgb(252, 251, 251)">
+                        <code>{{submission.result.compiler.error}}</code>
                     </div>
-                    <div class="ui red horizontal statistic">
-                        <div class="value">{{submission.result.summary.failures}}</div>
-                        <div class="red label">Failed</div>
+                {% else %}
+                    <div class="ui tiny statistics">
+                        <div class="ui green horizontal statistic">
+                            <div class="value">{{submission.result.summary.success}}</div>
+                            <div class="green label">Passed</div>
+                        </div>
+                        <div class="ui red horizontal statistic">
+                            <div class="value">{{submission.result.summary.failures}}</div>
+                            <div class="red label">Failed</div>
+                        </div>
+                        <div class="ui black horizontal statistic">
+                            <div class="value">{{submission.result.summary.errors}}</div>
+                            <div class="black label">Errored</div>
+                        </div>
                     </div>
-                    <div class="ui black horizontal statistic">
-                        <div class="value">{{submission.result.summary.errors}}</div>
-                        <div class="black label">Errored</div>
-                    </div>
-                </div>
-                {% if group.is_admin or submission.testsuite.public %}
                     <div class="ui segment segment-status-{{submission.result.summary.status}}">
                         <div class="ui divided items">            
                             {% for testcase in submission.result.tests %}
@@ -70,11 +71,12 @@
                             {% endfor %}
                         </div>
                     </div>
-                {% else %}
-                    <div class="ui segment center aligned">
-                        <p>Nothing to show, this is a private testsuite. Only admins can see its content</p>
-                    </div>
                 {% endif %}
+            
+            {% else %}
+                <div class="ui segment center aligned">
+                    <pre><code>Your code is submitted successfully <br> Reference id: {{submission.uid}}</code></pre>
+                </div>
             {% endif %}
             
         </div>

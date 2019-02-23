@@ -30,6 +30,6 @@ def getSubmission(**kwargs):
             return http.Forbidden()
         
         if not submission.testsuite.public:
-            del result['result']['testcases']
+            del result['result']
 
     return http.Ok(json.dumps(result))

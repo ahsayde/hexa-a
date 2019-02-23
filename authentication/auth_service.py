@@ -1,11 +1,11 @@
-import json, jwt, time
+import json, jwt, time, os
 from flask import Blueprint, request
 from tools.tools import *
 from tools.http import HttpResponse
 from authentication.authenticator import is_valid_credentials, is_authorized
 
 http = HttpResponse()
-secret = read_config()['jwt-secret']
+secret = os.environ.get("JWT_SECRET")
 auth_service = Blueprint('auth_service', __name__)
 
 @auth_service.route("/auth", methods=["POST"])

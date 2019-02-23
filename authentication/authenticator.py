@@ -1,4 +1,4 @@
-import time, jwt, uuid, hashlib
+import time, jwt, uuid, hashlib, os
 from functools import wraps
 from db.models import *
 from tools.tools import *
@@ -10,7 +10,7 @@ from mongoengine import Q, DoesNotExist
 
 http = HttpResponse()
 sessionManager = SessionManager()
-jwt_secret = read_config()['jwt-secret']
+jwt_secret = os.environ.get("JWT_SECRET")
 
 def is_valid_credentials(identifier, password):
     try:

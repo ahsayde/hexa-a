@@ -1,1 +1,0 @@
-docker run -p 9000:9000 --name minio -e "MINIO_ACCESS_KEY=7fb2603ced10d0ff76c328b03c38c000" -e "MINIO_SECRET_KEY=e4d5255aa70f610f71240d9fa2e894f0" -v /home/ahmed/minio/data:/data -v /home/ahmed/minio/config:/root/.minio minio/minio server /home/ahmed/minio/data

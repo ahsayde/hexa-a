@@ -4,41 +4,48 @@
     <table class="ui small very basic table">
         <thead>
             <tr>
-            <th>ID</th>
-            {% if group.is_admin %}
+                <th>ID</th>
                 <th>User</th>
-            {% endif %}
-            <th>Time</th>
-            <th>Result</th>
-            <th>Status</th>
+                <th>Time</th>
+                <th>Result</th>
+                <th>Status</th>
+                <th>File</th>
             </tr>
         </thead>
         <tbody>
             {% for submission in submissions.result %}
                 <tr>
                     <td>
-                        <a href="/submissions/{{submission._id}}"><code>{{submission._id[:5]}}..</code></a>
+                        <a href="/submissions/{{submission.uid}}"><code>{{submission.uid[:5]}}..</code></a>
                     </td>
-                    {% if group.is_admin %}
-                        <td>{{submission.username}}</td>
-                    {% endif %}
+                    <td>{{submission.username}}</td>
                     <td>{{datatimeFromTimestamp(submission.submitted_at)}}</td>
+                    {% if submission.result %}
+                        <td>
+                            {% if submission.result.summary.status not in "Compiler Error" %}
+                                <span class="green">{{submission.result.summary.success}} / </span> 
+                                <span class="red">{{submission.result.summary.failures}} / </span>
+                                <span class="black">{{submission.result.summary.errors}}</span>
+                            {% else %}
+                                <span>- / - / -</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if submission.result.summary.status in  ['Error', 'Compiler Error'] %}
+                                <label class="ui label grey">{{submission.result.summary.status}}</label>
+                            {% elif submission.result.summary.status == 'Passed' %}
+                                <label class="ui label green">Passed</label>     
+                            {% elif submission.result.summary.status == 'Failed' %}                       
+                                <label class="ui label red">Failed</label> 
+                            {% endif %}
+                        </td>
+                    {% else %}
+                        <td>- / - / -</td>
+                        <td>Submitted</td>
+                    {% endif %}
                     <td>
-                        {% if submission.result.summary.status not in "Compiler Error" %}
-                            <span class="green">{{submission.result.summary.success}} / </span> 
-                            <span class="red">{{submission.result.summary.failures}} / </span>
-                            <span class="black">{{submission.result.summary.errors}}</span>
-                        {% else %}
-                            <span>- / - / -</span>
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if submission.result.summary.status in  ['Error', 'Compiler Error'] %}
-                            <label class="ui label grey">{{submission.result.summary.status}}</label>
-                        {% elif submission.result.summary.status == 'Passed' %}
-                            <label class="ui label green">Passed</label>     
-                        {% elif submission.result.summary.status == 'Failed' %}                       
-                            <label class="ui label red">Failed</label> 
+                        {% if submission.file_ref %}
+                            <a href="#">Download</a>
                         {% endif %}
                     </td>
                 </tr>
