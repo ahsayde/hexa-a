@@ -4,3 +4,6 @@ requests
 pyjwt
 pyyaml
 mistune
+minio
+docker
+gunicorn

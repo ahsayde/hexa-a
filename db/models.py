@@ -175,7 +175,6 @@ class Assignment(BaseModel):
     updated_at = fields.IntField()
     updated_by = fields.ReferenceField(User)
     deadline = fields.IntField()
-    submissions_access = fields.StringField(choice=['allow', 'allow_after_deadline', 'deny'], default='allow')
     testsuites = fields.ListField(fields.ReferenceField(Testsuite), reverse_delete_rule=4)
     settings = fields.DictField(default={})
     # db collection
@@ -209,6 +208,7 @@ class Submission(BaseModel):
     submitted_at = fields.IntField(required=True)
     language = fields.StringField(required=True)
     result = fields.DictField(required=True)
+    file_ref = fields.StringField()
     # db collection
     meta = {"collection":"submissions"}
 

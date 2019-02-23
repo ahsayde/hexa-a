@@ -1,0 +1,56 @@
+version: '2'
+services:
+  hexa-a:
+    container_name: hexa-a
+    restart: always 
+    build: .
+    ports:
+    - 5000:5000
+    environment:
+    - JWT_SECRET:${JWT_SECRET}
+    - SESSION_SECRET:${SESSION_SECRET}
+    volumes:
+    - /opt/code/hexa-a/config.yaml:/code/config.yaml
+    links:
+    - mongodb
+    - minio
+    depends_on:
+    - mongodb
+    - minio
+    command: gunicorn -w 5 -b :5000 wsgi:app
+  mongodb:
+    container_name: mongodb
+    restart: always
+    image: mongo:3.4
+    environment:
+    - MONGO_DATA_DIR=/data/db
+    volumes:
+    - /data/db:/data/db
+    ports:
+    - 27017:27017
+    command: mongod --smallfiles --logpath=/dev/null
+  minio:
+    container_name: minio
+    restart: always
+    image: minio/minio:latest 
+    environment:
+    - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY}
+    - MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
+    volumes:
+    - /data/minio/storage:/data
+    - /data/minio/config:/root/.minio minio/minio
+    ports:
+    - 9000:9000
+    command: server /data
+  caddy:
+    container_name: caddy
+    restart: always
+    image: abiosoft/caddy:latest 
+    ports:
+    - 80:80
+    - 443:443
+    environment:
+    - ACME_AGREE=true
+    volumes:
+    - /opt/code/hexa-a/Caddyfile:/etc/Caddyfile
+    - /root/.caddy:/root/.caddy

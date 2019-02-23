@@ -11,7 +11,7 @@ class HEXAA:
         self._config = read_config()
         self._app = Flask(__name__, template_folder='templates', static_folder='static')
         # set session secret
-        self._app.secret_key = self._config['session-secret']
+        self._app.secret_key = os.environ.get("SESSION_SECRET")
         # connect to database
         self._connect_to_database(self._config['database'])
         # load api blueprints

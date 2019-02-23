@@ -38,8 +38,13 @@ def AssignmentPage(** kwargs):
 
     if subtab == 'submissions':
         limit = request.args.get('limit', 25, int)
-        _page = request.args.get('page', 1, int)
-        params = {'limit':limit, 'page':_page}
+        page_ = request.args.get('page', 1, int)
+        params = {'limit':limit, 'page':page_}
+        for arg in request.args:
+            if arg in ['username', 'testsuite', 'status']:
+                params[arg] = request.args.get(arg)
+        
+        
         members = api.groups.members.list(groupId).json()        
         submissions = api.groups.assignments.submissions(groupId, assignmentId, params=params).json()
 

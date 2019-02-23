@@ -94,7 +94,6 @@ def CreateAssignment(** kwargs):
     name = request.json.get('name')
     description = request.json.get('description', '')
     deadline = datetimeToEpoc(request.json.get('deadline', None))
-    submissions_access = request.json.get('submissions_access')
 
     if deadline:
         if deadline <= int(time.time()):
@@ -105,7 +104,6 @@ def CreateAssignment(** kwargs):
         name=name,
         description=description,
         deadline=deadline,
-        submissions_access=submissions_access,
         group=groupId,
         created_at=generate_timestamp(),
         created_by=username
@@ -168,7 +166,6 @@ def UpdateAssignment(** kwargs):
     description = request.json.get('description', '')
     settings = request.json.get('settings', None)
     deadline = datetimeToEpoc(request.json.get('deadline', None))
-    submissions_access = request.json.get('submissions_access', assignment.submissions_access)
 
     if deadline:
         if assignment.published:
@@ -185,7 +182,6 @@ def UpdateAssignment(** kwargs):
             description=description,
             settings=settings,
             deadline=deadline,
-            submissions_access=submissions_access,
             updated_at=generate_timestamp(),
             updated_by=user
         )
@@ -290,6 +286,8 @@ def submit(**kwargs):
     assignment = Assignment.get(uid=assignmentId)
     testsuite = Testsuite.get(uid=testsuiteId)
 
+    file_ref = None
+
     if testsuite.attempts > 0:
         user_submissions =  Submission.objects(
             username=username,
@@ -337,6 +335,11 @@ def submit(**kwargs):
     sourcefilepath = os.path.join(userdir, sourcefile.filename)
     sourcefile.save(sourcefilepath)
 
+    if not testsuite.public:
+        object_name = os.path.join(referenceId, sourcefile.filename)
+        miniocl.fput_object("submissions", object_name, sourcefilepath)
+        file_ref = object_name
+
     result = dict()
     try:
         envars = {
@@ -366,6 +369,7 @@ def submit(**kwargs):
         username=username,
         language=language,
         result=result,
+        file_ref=file_ref
     )
     err = submission.check()
     if err:
@@ -408,13 +412,7 @@ def ListSubmissions(**kwargs):
             if value:
                 query[filter] = value
     
-    elif user_role == 'member':
-        if assignment.submissions_access == 'deny':
-            return http.Forbidden()
-
-        elif assignment.submissions_access == 'allow_after_deadline' and int(time.time()) < assignment.deadline:
-            return http.Forbidden()
-                            
+    elif user_role == 'member':                    
         query['username'] = username
         for filter in member_filters:
             value = request.args.get(filter)
@@ -427,11 +425,20 @@ def ListSubmissions(**kwargs):
         assignment=assignmentId,
         **query).order_by('-submitted_at').limit(limit).skip(offset)
 
+    submissions_list = []
+    if user_role == "admin":
+        submissions_list = [s.to_dict() for s in submissions]
+    else:
+        for submission in submissions:
+            if not submission.testsuite.public:
+                submission.result = None
+            submissions_list.append(submission.to_dict())
+
     pagenation = pagenate(limit, page, count, request.url)
 
     data = {
         'pagenation': pagenation,
-        'result': json.loads(submissions.to_json())
+        'result': submissions_list
     }
     return http.Ok(json.dumps(data))
 
