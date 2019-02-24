@@ -5,7 +5,7 @@ from tools.tools import read_config
 from api import *
 from views import *
 from authentication.auth_service import auth_service
-# from views.group import group_page
+from minio import Minio
 
 class HEXAA:
     def __init__(self):
@@ -19,10 +19,20 @@ class HEXAA:
         self._load_api_blueprints()
         # load portal bluprint
         self._load_portal_blueprints()
+        # create required buckets
+        self._make_storage_buckets()
 
     def _connect_to_database(self, config):
         self._db = Database()
         self._db.connect(** config)
+
+    def _make_storage_buckets(self):
+        minio_key = os.environ.get("MINIO_ACCESS_KEY") or self._config["minio"]["key"]
+        minio_secret = os.environ.get("MINIO_SECRET_KEY") or  self._config["minio"]["secret"]
+        miniocl = Minio(self._config["minio"]["url"], minio_key, minio_secret, secure=False)
+        for bucket in ["pictures", "submissions", "testsuites"]:
+            if not miniocl.bucket_exists(bucket):
+                miniocl.make_bucket(bucket)
 
     def _load_api_blueprints(self):
         self._app.register_blueprint(auth_service)
