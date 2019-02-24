@@ -1,3 +1,4 @@
+import os
 from flask import Flask
 from db.db import Database
 from tools.tools import read_config
