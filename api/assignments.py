@@ -16,7 +16,10 @@ assignments_api = Blueprint('assignments_api', __name__)
 config = read_config('config.yaml')
 tmp_code_dir = config['dirs']['tmp_code_dir']
 minioconf = config["minio"]
-miniocl = Minio(minioconf["url"], minioconf["key"], minioconf["secret"], secure=False)
+
+minio_key = os.environ.get("MINIO_ACCESS_KEY") or minioconf["key"]
+minio_secret = os.environ.get("MINIO_SECRET_KEY") or  minioconf["secret"]
+miniocl = Minio(minioconf["url"], minio_key, minio_secret, secure=False)
 
 @assignments_api.route("/assignments")
 @auth_required

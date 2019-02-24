@@ -11,7 +11,9 @@ http = HttpResponse()
 testsuites_api = Blueprint('testsuites_api', __name__)
 
 minioconf = config["minio"]
-miniocl = Minio(minioconf["url"], minioconf["key"], minioconf["secret"], secure=False)
+minio_key = os.environ.get("MINIO_ACCESS_KEY") or minioconf["key"]
+minio_secret = os.environ.get("MINIO_SECRET_KEY") or  minioconf["secret"]
+miniocl = Minio(minioconf["url"], minio_key, minio_secret, secure=False)
 
 @testsuites_api.route("/testsuites")
 @auth_required
