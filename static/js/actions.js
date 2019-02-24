@@ -459,6 +459,17 @@ $(document).ready(function () {
             $('#submit-code').prop('disabled', false);  
         });
         return false;
-    });  
+    });
+
+    $("a[name='downloadfile']").click(function(){
+        var data = $(this).data();
+        hexaa.groups.assignments.downloadFile(data.submission)
+        .then((data)=>{
+            window.location.href = data.url;
+        }).catch((error)=>{
+            alert(error.responseText);
+        });
+        return false
+    });
 
 });

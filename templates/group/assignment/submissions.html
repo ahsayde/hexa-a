@@ -45,7 +45,9 @@
                     {% endif %}
                     <td>
                         {% if submission.file_ref %}
-                            <a href="#">Download</a>
+                            <a href="#" name="downloadfile" data-submission="{{submission.uid}}">Download</a>
+                        {% else %}
+                            N/A
                         {% endif %}
                     </td>
                 </tr>
@@ -53,7 +55,7 @@
         </tbody>
         <tfoot>
         <tr>
-            <th colspan="5">
+            <th colspan="6">
                 <p>{{submissions.pagenation.count}} submission(s)</p>
                 {% set pagenation = submissions.pagenation %}
                 {% include 'pagenation.html' %}

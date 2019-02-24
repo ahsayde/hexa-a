@@ -244,6 +244,11 @@ function Assignment(client) {
         let dataType = 'json';
         return this.client.call_api(url, 'post', data, null, dataType);
     }
+    this.downloadFile = function(submissionId){
+        let url = '/api/submissions/' + submissionId + '/download';
+        let dataType = 'json';
+        return this.client.call_api(url, 'get', null, null, dataType);
+    }
 }
 
 function Testsuite(client) {
