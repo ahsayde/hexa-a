@@ -344,13 +344,13 @@ def submit(**kwargs):
         file_ref = object_name
 
     result = dict()
+    envars = {
+        "PRO_LANGUAGE":language, 
+        "SOURCE_FILE":sourcefile.filename,
+            "TEST_FILE": "testcases.json"
+    }
+    container = sandbox.create("checker", userdir, env=envars)
     try:
-        envars = {
-            "PRO_LANGUAGE":language, 
-            "SOURCE_FILE":sourcefile.filename,
-             "TEST_FILE": "testcases.json"
-        }
-        container = sandbox.create("checker", userdir, env=envars)
         container.start()
         container.wait(timeout=60)
         result = container.logs()

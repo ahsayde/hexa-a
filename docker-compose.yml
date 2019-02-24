@@ -3,6 +3,7 @@ services:
   hexa-a:
     container_name: hexa-a
     restart: always 
+    privileged: true
     build: .
     ports:
     - 5000:5000
@@ -12,6 +13,8 @@ services:
     - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY}
     - MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
     volumes:
+    - /tmp:/tmp
+    - /var/run/docker.sock:/var/run/docker.sock
     - /opt/code/hexa-a/config.yaml:/code/config.yaml
     links:
     - mongodb

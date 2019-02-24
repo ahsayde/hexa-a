@@ -1,5 +1,5 @@
 echo "[*] Building check image .."
-docker build -t checker:latest ../checker/
+docker build -t checker:latest checker/
 
 echo "[*] Generating secrets .."
 export JWT_SECRET=$(openssl rand -hex 24)
