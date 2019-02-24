@@ -9,6 +9,8 @@ services:
     environment:
     - JWT_SECRET=${JWT_SECRET}
     - SESSION_SECRET=${SESSION_SECRET}
+    - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY}
+    - MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
     volumes:
     - /opt/code/hexa-a/config.yaml:/code/config.yaml
     links:
