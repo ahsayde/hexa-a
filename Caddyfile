@@ -1,11 +1,20 @@
 <domain> {
+
     log stdout
     errors stdout
     tls <email>
-    proxy / 127.0.0.1:5000 {
+    proxy / hexa-a:5000 {
          transparent
     }
-    proxy /files 127.0.0.1:9000 {
-         transparent
+
+    proxy /files minio:9000 {
+         without /files
+         header_upstream X-Forwarded-Proto {scheme}
+         header_upstream X-Forwarded-Host {host}
+         header_upstream Host minio:9000
     }
+}
+
+www.<domain> {
+    redir https://<domain>
 }
