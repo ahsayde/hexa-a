@@ -58,7 +58,7 @@
                                         {% endif %}
                                     </div>
                                     <div class="right floated content">
-                                        {% if testcase.status == 'error' %}
+                                        {% if testcase.status == 'errored' %}
                                             <label class="ui grey right floated label">Error</label>
                                         {% elif testcase.status == 'passed' %}
                                             <label class="ui green right floated label">Passed</label>     
