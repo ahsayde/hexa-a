@@ -19,7 +19,7 @@ def authentecation(** kwargs):
     payload = {
         'iss':'hexa-a',
         'user_id': login,
-        'exp': time.time() + 8600
+        'exp': time.time() + 86400
     }
 
     token = jwt.encode(payload, secret, algorithm='HS256').decode('utf-8')

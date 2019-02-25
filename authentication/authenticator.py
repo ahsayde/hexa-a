@@ -70,7 +70,7 @@ def is_authorized():
         
 
 def generate_jwt(user_id):
-    timestamp = generate_timestamp() + 8600
+    timestamp = generate_timestamp() + 86400
     payload = {
         'iss':'hexa-a',
         'user_id':user_id,

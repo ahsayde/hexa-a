@@ -14,7 +14,7 @@ class SessionManager:
             user_id=user_id,
             jwt=jwt,
             created_at=timestamp,
-            expires_at=(timestamp + 8600),
+            expires_at=(timestamp + 86400),
         )
 
         client_session['key'] = session.key
