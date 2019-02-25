@@ -53,8 +53,8 @@
                                         <pre><code>Input : {{testcase.stdin}}</code></pre>
                                         <pre><code>Generated output: {{testcase.generated_stdout or '' }}</code></pre>
                                         <pre><code>Expected output : {{testcase.stdout}}</code></pre>
-                                        {% if testcase.returncode %}
-                                            <pre><code>Error ({{testcase.returncode}}) : {{testcase.stderr}}</code></pre>
+                                        {% if testcase.stderr %}
+                                            <pre><code>Error : {{testcase.stderr}}</code></pre>
                                         {% endif %}
                                     </div>
                                     <div class="right floated content">
