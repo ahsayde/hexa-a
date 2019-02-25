@@ -4,7 +4,7 @@ server:
   
 database:
   db: hexa-a-db
-  host: 127.0.0.1
+  host: mongodb
   port: 2000
   username: null
   password: null
