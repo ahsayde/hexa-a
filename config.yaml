@@ -1,11 +1,11 @@
 server:
-  host: 0.0.0.0 
+  host: hexa-a 
   port: 5000
   
 database:
   db: hexa-a-db
-  host: mongodb
-  port: 27017
+  host: 127.0.0.1
+  port: 2000
   username: null
   password: null
 
@@ -15,7 +15,7 @@ dirs:
 minio:
   url: minio:9000
   key: 
-  secret: 
+  secret:
 
 smtp:
   host: 

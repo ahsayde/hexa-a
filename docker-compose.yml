@@ -22,7 +22,9 @@ services:
     depends_on:
     - mongodb
     - minio
-    command: gunicorn -w 5 -b :5000 wsgi:app
+    command: gunicorn -w 5 -b hexa-a:5000 wsgi:app
+    networks:
+      - private
   mongodb:
     container_name: mongodb
     restart: always
@@ -33,7 +35,9 @@ services:
     - /data/db:/data/db
     ports:
     - 27017:27017
-    command: mongod --smallfiles --logpath=/dev/null
+    command: mongod --bind_ip mongodb --smallfiles --logpath=/dev/null
+    networks:
+      - private
   minio:
     container_name: minio
     restart: always
@@ -47,10 +51,15 @@ services:
     ports:
     - 9000:9000
     command: server /data
+    networks:
+      - private
   caddy:
     container_name: caddy
     restart: always
     image: abiosoft/caddy:latest 
+    links:
+    - minio
+    - hexa-a
     ports:
     - 80:80
     - 443:443
@@ -59,3 +68,13 @@ services:
     volumes:
     - /opt/code/hexa-a/Caddyfile:/etc/Caddyfile
     - /root/.caddy:/root/.caddy
+    networks:
+      - private
+      - public
+
+networks:
+  private:
+    driver: bridge
+    internal: true
+  public:
+    driver: bridge

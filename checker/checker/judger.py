@@ -60,7 +60,7 @@ class TestCase(unittest.TestCase):
         if response.returncode:
             if response.returncode > 128:
                 response.returncode -= 128
-            self.stderr = exit_codes.get(self.response.returncode, "Unknown Error")
+            self.stderr = exit_codes.get(response.returncode, "Unknown Error")
             self.fail("Program exited with exit code {}".format(self.returncode))
        
         stdout = str(self.testcase["expected_stdout"]).strip()
