@@ -1,5 +1,5 @@
 import unittest, traceback
-from codes import exit_codes
+from subprocess import TimeoutExpired
 
 class TestcaseError(BaseException):
     pass
@@ -31,13 +31,12 @@ class TestResult(unittest.TextTestResult):
     def saveTestCaseResult(self, test, status, error=None):
         result = {
             "uid": test.testcase["uid"],
-            "status": status,
             "stdin": repr(test.testcase["stdin"]),
-            "stdout": repr(test.testcase["expected_stdout"]),
-            "stderr": getattr(test, "stderr", ""),
-            "generated_stdout": repr(getattr(test, "generated_stdout", "")),
+            "stdout": repr(test.stdout),
+            "stderr": test.response.stderr,
+            "generated_stdout": repr(test.response.stdout),
+            "status": status,
         }
-
         if error:
             error = "".join(traceback.format_exception_only(error[0], error[1])).strip()
             result["error"] = error
@@ -53,24 +52,20 @@ class TestCase(unittest.TestCase):
         self.timeout = timeout
 
     def runTest(self):
-        response = self.module.runTest(
+        self.stdout = str(self.testcase["expected_stdout"]).strip()
+
+        self.response = self.module.runTest(
             stdin=self.testcase["stdin"], timeout=self.timeout
         )
-        exitcode = abs(response.returncode)
-        if exitcode: 
-            errmsg = exit_codes.get(exitcode, "Unknown Error")
-            if isinstance(errmsg, dict):
-                errmsg = errmsg["descr"]
-                
-            self.stderr = "Exit code ({}): {}".format(exitcode, errmsg)
-            self.fail(self.stderr)
+    
+        if self.response.returncode:
+            self.fail(self.response.stderr)
        
-        stdout = str(self.testcase["expected_stdout"]).strip()
-        self.generated_stdout = str(response.stdout).strip()
+        self.generated_stdout = self.response.stdout.strip()
 
-        if self.generated_stdout != stdout:
+        if self.generated_stdout != self.stdout:
             raise AssertionError(
-                "{} != {}".format(repr(self.generated_stdout), repr(stdout))
+                "{} != {}".format(repr(self.generated_stdout), repr(self.stdout))
             )
 
 class Judger:

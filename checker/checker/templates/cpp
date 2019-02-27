@@ -1,8 +1,7 @@
-from subprocess import run, PIPE
+from executer import execute
 
 workdir = None
 extensions = ["cpp", "cc"]
-
 
 def compile(sourcefile, timeout=60):
     if isinstance(sourcefile, list):
@@ -14,26 +13,9 @@ def compile(sourcefile, timeout=60):
             ]
         )
 
-    cmd = ["/bin/bash", "-c", "g++ {} -o output.out".format(sourcefile)]
-    response = run(
-        cmd,
-        stderr=PIPE,
-        stdout=PIPE,
-        cwd=workdir,
-        timeout=timeout,
-        universal_newlines=True,
-    )
-    return response
-
-
+    cmd = "g++ {} -o output.out".format(sourcefile)
+    return execute(cmd, workdir=workdir, timeout=timeout)
+  
 def runTest(stdin, timeout=60):
-    cmd = ["/bin/bash", "-c", "./output.out {}".format(stdin)]
-    response = run(
-        cmd,
-        stderr=PIPE,
-        stdout=PIPE,
-        cwd=workdir,
-        timeout=timeout,
-        universal_newlines=True,
-    )
-    return response
+    cmd = "./output.out {}".format(stdin)
+    return execute(cmd, workdir=workdir, timeout=timeout)

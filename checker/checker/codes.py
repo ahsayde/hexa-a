@@ -1,4 +1,4 @@
-exit_codes = {
+exitcodes = {
 	1: {
 		"name": "SIGHUP",
 		"descr": "Hangup"

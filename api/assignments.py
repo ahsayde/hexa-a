@@ -360,8 +360,10 @@ def submit(**kwargs):
 
     try:
         result = json.loads(result.decode('utf-8'))
-    except:
-        raise http.InternalServerError("Failed to decode tests results") 
+    except Exception as e:
+        return http.InternalServerError(
+            "Failed to decode tests results, Error: {}".format(str(e))
+        ) 
 
     submission = Submission(
         uid=referenceId,
