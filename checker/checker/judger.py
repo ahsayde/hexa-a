@@ -56,12 +56,8 @@ class TestCase(unittest.TestCase):
         response = self.module.runTest(
             stdin=self.testcase["stdin"], timeout=self.timeout
         )
-
-        if response.returncode:
-            exitcode = response.returncode
-            if response.returncode > 128:
-                exitcode -= 128
-            
+        exitcode = abs(response.returncode)
+        if exitcode: 
             errmsg = exit_codes.get(exitcode, "Unknown Error")
             if isinstance(errmsg, dict):
                 errmsg = errmsg["descr"]
