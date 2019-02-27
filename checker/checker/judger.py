@@ -63,6 +63,9 @@ class TestCase(unittest.TestCase):
                 exitcode -= 128
             
             errmsg = exit_codes.get(exitcode, "Unknown Error")
+            if isinstance(errmsg, dict):
+                errmsg = errmsg["descr"]
+                
             self.stderr = "Exit code ({}): {}".format(exitcode, errmsg)
             self.fail(self.stderr)
        
