@@ -44,6 +44,9 @@ class Checker:
         self.judger.judge(module, self.sourcefile, self.testcases)
         return self.judger.result
 
+    def _export_result(self, results):
+        with open(path.join(self.workdir, "result.json"), "w") as f:
+            json.dump(results, f)
         
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -53,5 +56,5 @@ if __name__ == "__main__":
     parser.add_argument("-t", "--testfile", type=str, default=environ.get("TEST_FILE"), help="test file")
     args = parser.parse_args()
     checker =  Checker(args.workdir, args.language, args.sourcefile, args.testfile)
-    result = checker.check()
-    print(json.dumps(result))
+    results = checker.check()
+    checker._export_result(results)

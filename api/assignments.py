@@ -347,23 +347,21 @@ def submit(**kwargs):
     envars = {
         "PRO_LANGUAGE":language, 
         "SOURCE_FILE":sourcefile.filename,
-            "TEST_FILE": "testcases.json"
+        "TEST_FILE": "testcases.json"
     }
     container = sandbox.create("checker", userdir, env=envars)
     try:
         container.start()
         container.wait(timeout=60)
-        result = container.logs()
+        resultpath = os.path.join(userdir, "result.json")
+        if os.path.isfile(resultpath):
+            with open(resultpath, "r") as f:
+                result = json.load(f)
+        else:
+            return http.InternalServerError("Can't fetch test result")
     finally:
         shutil.rmtree(userdir)
         container.remove(force=True)
-
-    try:
-        result = json.loads(result.decode('utf-8'))
-    except Exception as e:
-        return http.InternalServerError(
-            "Failed to decode tests results, Error: {}".format(str(e))
-        ) 
 
     submission = Submission(
         uid=referenceId,
