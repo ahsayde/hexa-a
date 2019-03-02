@@ -57,10 +57,10 @@ class TestCase(unittest.TestCase):
         self.response = self.module.runTest(
             stdin=self.testcase["stdin"], timeout=self.timeout
         )
-    
+
         if self.response.returncode:
-            self.fail(self.response.stderr)
-       
+            raise TestcaseError(self.response.stderr)
+           
         self.generated_stdout = self.response.stdout.strip()
 
         if self.generated_stdout != self.stdout:
