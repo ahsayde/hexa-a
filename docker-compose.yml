@@ -22,7 +22,7 @@ services:
     depends_on:
     - mongodb
     - minio
-    command: gunicorn -w 5 -b hexa-a:5000 wsgi:app
+    command: gunicorn -w 5 -b hexa-a:5000 --timeout 120 wsgi:app
     networks:
       - private
   mongodb:

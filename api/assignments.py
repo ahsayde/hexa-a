@@ -352,7 +352,7 @@ def submit(**kwargs):
     container = sandbox.create("checker", userdir, env=envars)
     try:
         container.start()
-        container.wait(timeout=60)
+        container.wait(timeout=120)
         resultpath = os.path.join(userdir, "result.json")
         if os.path.isfile(resultpath):
             with open(resultpath, "r") as f:
