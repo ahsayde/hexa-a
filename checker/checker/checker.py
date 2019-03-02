@@ -41,7 +41,7 @@ class Checker:
                 zpf.extractall(self.workdir)
             self.sourcefile = zpf.namelist()
 
-        self.judger.judge(module, self.sourcefile, self.testcases, timeout=5)
+        self.judger.judge(module, self.sourcefile, self.testcases, timeout=3)
         return self.judger.result
 
     def _export_result(self, results):

@@ -25,6 +25,7 @@ services:
     command: gunicorn -w 5 -b hexa-a:5000 --timeout 120 wsgi:app
     networks:
       - private
+      - public
   mongodb:
     container_name: mongodb
     restart: always

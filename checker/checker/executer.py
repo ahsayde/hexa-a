@@ -37,6 +37,6 @@ def execute(cmd, workdir=None, timeout=60):
             stderr="Internal Checker Error"
         )
 
-    response.stdout = str(response.stdout)
+    response.stdout = "" if not response.stdout else str(response.stdout)
     response.returncode, response.stderr = _error_decode(response)
     return response

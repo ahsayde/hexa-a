@@ -82,7 +82,7 @@ def SendRestPasswordPage(**kwargs):
         resettoken.save()
 
     subject = "[HEXA-A] Reset account password"
-    reset_url = "https://hexa-tool.com/resetpassword?email={}&resettoken={}".format(email, token)
+    reset_url = "https://hexa-a.com/resetpassword?email={}&resettoken={}".format(email, token)
     body = "Please click here {0} to reset your account's password".format(reset_url)
 
     send_email(
