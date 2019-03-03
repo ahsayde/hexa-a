@@ -79,7 +79,7 @@ class BaseModel(Document):
 class User(BaseModel):
     username = fields.StringField(primary_key=True, required=True, min_length=3, max_length=15, regex='^[a-zA-Z0-9_]*$')
     email = fields.EmailField(unique=True, required=True)
-    firstname = fields.StringField(min_length=3, max_length=15)
+    firstname = fields.StringField(min_length=2, max_length=15)
     lastname = fields.StringField(min_length=3, max_length=15)
     created_at = fields.IntField(required=True)
     updated_at = fields.IntField()
