@@ -93,6 +93,8 @@
                 </div>
             {% endfor %}
         </div>
+        {% set pagenation = members.pagenation %}
+        {% include 'pagenation.html' %}
     </div>
 
   {% include 'modals/addMember.html'%}

@@ -169,7 +169,7 @@ def ListGroupMembership(**kwargs):
     groupId = kwargs.get('groupId')
     fields = ['user', 'joined_at', 'added_by', 'role']
     count = GroupMembership.objects(group=groupId).count()
-    requested_members = GroupMembership.objects(group=groupId).only(*fields)
+    requested_members = GroupMembership.objects(group=groupId).only(*fields).limit(limit).skip(offset)
 
     members = []
     for member in requested_members:
