@@ -400,7 +400,7 @@ def DeleteAttachment(** kwargs):
     return http.NoContent()
 
 
-@submission_api.route("/testsuites/<testsuiteId>/attachments/<attachmentId>")
+@testsuites_api.route("/testsuites/<testsuiteId>/attachments/<attachmentId>")
 @auth_required
 @group_access_level('admin')
 def DownlodFile(**kwargs):
