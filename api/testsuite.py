@@ -156,9 +156,9 @@ def UpdateTestsuite(** kwargs):
     attachments_list = []
     if attachments:
         for attachment in attachments:
-            name = attachment.filename
+            attachment_name = attachment.filename
             length = get_object_length(attachment.stream)
-            path = "{}/{}".format(testsuiteId, name)
+            path = "{}/{}".format(testsuiteId, attachment_name)
             miniocl.put_object("testsuites", path, attachment.stream, length)
     try:
         user = User.get(username=username)

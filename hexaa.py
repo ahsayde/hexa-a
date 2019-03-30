@@ -11,8 +11,10 @@ class HEXAA:
     def __init__(self):
         self._config = read_config()
         self._app = Flask(__name__, template_folder='templates', static_folder='static')
+        # load config
+        self._load_config()
         # set session secret
-        self._app.secret_key = os.environ.get("SESSION_SECRET")
+        self._app.secret_key = os.urandom(32)
         # connect to database
         self._connect_to_database(self._config['database'])
         # load api blueprints
@@ -22,14 +24,20 @@ class HEXAA:
         # create required buckets
         self._make_storage_buckets()
 
+    def _load_config(self):
+        self._app.config.update(self._config)
+
     def _connect_to_database(self, config):
         self._db = Database()
         self._db.connect(** config)
 
     def _make_storage_buckets(self):
-        minio_key = os.environ.get("MINIO_ACCESS_KEY") or self._config["minio"]["key"]
-        minio_secret = os.environ.get("MINIO_SECRET_KEY") or  self._config["minio"]["secret"]
-        miniocl = Minio(self._config["minio"]["url"], minio_key, minio_secret, secure=False)
+        minio_url = self._config["minio"]["url"] or "localhost:9000"
+        minio_key = os.environ.get("MINIO_ACCESS_KEY", self._config["minio"]["key"])
+        minio_secret = os.environ.get("MINIO_SECRET_KEY", self._config["minio"]["secret"])
+        # import ipdb; ipdb.set_trace()
+        miniocl = Minio(minio_url, minio_key, minio_secret, secure=False)
+        self._app.config["miniocl"] = miniocl
         for bucket in ["pictures", "submissions", "testsuites"]:
             if not miniocl.bucket_exists(bucket):
                 miniocl.make_bucket(bucket)
