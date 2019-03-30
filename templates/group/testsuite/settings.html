@@ -56,7 +56,7 @@
             </div>
             <i class="file outline icon"></i>                            
             <div class="content">
-                <div class="header">{{attachment}}</div>
+                <a class="header" href="/api/groups/{{group.uid}}/testsuites/{{testsuite.uid}}/attachments/{{attachment}}" traget="blank">{{attachment}}</a>
             </div>
         </div>
     {% endfor %}

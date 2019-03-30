@@ -1,5 +1,5 @@
 import json, os
-from flask import Blueprint, request
+from flask import Blueprint, request, redirect
 from db.models import *
 from tools.tools import *
 from tools.http import HttpResponse
@@ -156,9 +156,9 @@ def UpdateTestsuite(** kwargs):
     attachments_list = []
     if attachments:
         for attachment in attachments:
-            name = attachment.filename
+            attachment_name = attachment.filename
             length = get_object_length(attachment.stream)
-            path = "{}/{}".format(testsuiteId, name)
+            path = "{}/{}".format(testsuiteId, attachment_name)
             miniocl.put_object("testsuites", path, attachment.stream, length)
     try:
         user = User.get(username=username)
@@ -399,3 +399,16 @@ def DeleteAttachment(** kwargs):
     miniocl.remove_object("testsuites", object_name)
     return http.NoContent()
 
+
+@testsuites_api.route("/testsuites/<testsuiteId>/attachments/<attachmentId>")
+@auth_required
+@group_access_level('admin')
+def DownlodFile(**kwargs):
+    testsuiteId = kwargs.get('testsuiteId')
+    attachmentId = kwargs.get('attachmentId')
+    try:
+        attachmentpath = os.path.join(testsuiteId, attachmentId)
+        url = miniocl.presigned_get_object('testsuites', attachmentpath)
+    except:
+        return http.NotFound("file not found")
+    return redirect(url)
