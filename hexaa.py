@@ -14,7 +14,7 @@ class HEXAA:
         # load config
         self._load_config()
         # set session secret
-        self._app.secret_key = os.urandom(32)
+        self._app.secret_key = os.environ.get("SESSION_SECRET")
         # connect to database
         self._connect_to_database(self._config['database'])
         # load api blueprints
