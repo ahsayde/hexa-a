@@ -1,6 +1,7 @@
 import json, os
 from flask import Blueprint, request, redirect
 from db.models import *
+from urllib import parse
 from tools.tools import *
 from tools.http import HttpResponse
 from authentication.authenticator import auth_required, group_access_level
@@ -404,6 +405,7 @@ def DeleteAttachment(** kwargs):
 @auth_required
 @group_access_level('admin')
 def DownlodFile(**kwargs):
+    domain = config["server"]["domain"]
     testsuiteId = kwargs.get('testsuiteId')
     attachmentId = kwargs.get('attachmentId')
     try:
@@ -411,4 +413,6 @@ def DownlodFile(**kwargs):
         url = miniocl.presigned_get_object('testsuites', attachmentpath)
     except:
         return http.NotFound("file not found")
-    return redirect(url)
+    parsedurl = parse.urlparse(url)
+    downloadurl = "{}/files/{}".format(domain, parsedurl.path)
+    return redirect(downloadurl)
