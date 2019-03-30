@@ -408,11 +408,12 @@ def DownlodFile(**kwargs):
     domain = config["server"]["domain"]
     testsuiteId = kwargs.get('testsuiteId')
     attachmentId = kwargs.get('attachmentId')
+    domain = config["server"]["domain"]
     try:
         attachmentpath = os.path.join(testsuiteId, attachmentId)
         url = miniocl.presigned_get_object('testsuites', attachmentpath)
     except:
         return http.NotFound("file not found")
     parsedurl = parse.urlparse(url)
-    downloadurl = "{}/files/{}".format(domain, parsedurl.path)
+    downloadurl = "{}/files{}?{}".format(domain, parsedurl.path, parsedurl.query)
     return redirect(downloadurl)
