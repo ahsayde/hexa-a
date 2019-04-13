@@ -62,6 +62,9 @@ def timestamp_to_age(target):
 
 
 def parse_testcases_file(file, username, timestamp):
+    def escape_line(line):
+        return line.replace("\\n", "\n").replace("\\t", "\t").replace("\\r", "\r")
+
     content = file.read().decode('utf-8')
     lines = content.splitlines()
     if len(lines) % 2 != 0:
@@ -69,10 +72,12 @@ def parse_testcases_file(file, username, timestamp):
 
     testcases = []
     for i in range(int(len(lines)/2)):
+        stdin = escape_line(lines.pop(0))
+        stdout = escape_line(lines.pop(0))
         testcase = {
             'uid': generate_uuid(5),
-            'stdin': lines.pop(0),
-            'expected_stdout': lines.pop(0),
+            'stdin': stdin,
+            'expected_stdout': stdout,
             'added_by': username,
             'added_at': timestamp
         }
